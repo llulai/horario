@@ -2,11 +2,14 @@ import forms from '@tailwindcss/forms';
 import type { Config } from 'tailwindcss';
 
 export default {
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+  content: ['./src/**/*.{html,js,svelte,ts}'],
 
-	theme: {
-		extend: {}
-	},
+  theme: {
+    fontFamily: {
+      mono: ['Andale Mono']
+    },
+    extend: {}
+  },
 
-	plugins: [forms]
+  plugins: [forms]
 } satisfies Config;
