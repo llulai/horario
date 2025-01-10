@@ -1,6 +1,14 @@
+<script lang="ts">
+  const props = $props();
+</script>
+
 <div
-  class="grid grid-flow-row grid-cols-[8px_24px_24px_24px_24px_24px] grid-rows-[10px_24px_24px_24px_12px] gap-1"
+  class="group relative grid grid-flow-row grid-cols-[8px_24px_24px_24px_24px_24px] grid-rows-[10px_24px_24px_24px_12px] gap-1"
 >
+  <button
+    class="absolute inset-0 z-10 hidden flex-row items-center justify-center rounded-[2px] bg-gray-200/90 underline group-hover:flex"
+    onclick={props.onclick}>editar</button
+  >
   {#each ['', 'L', 'M', 'M', 'J', 'V'] as day}
     <div class="text-center text-[8px]">{day}</div>
   {/each}
