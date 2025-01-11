@@ -13,8 +13,10 @@
       <Scheduler setTimeslotForLecture={props.setTimeslotForLecture} />
       <div class="flew-row flex w-[272px] flex-wrap gap-2">
         {#if props.currentlySelected.kind == 'class'}
-          {#each props.lecturesByCourse[props.currentlySelected.name].filter((l) => l.timeslot === undefined) as lecture}
-            <SubjectCard {lecture} />
+          {#each props.lecturesByCourse[props.currentlySelected.name].unassigned as lecture}
+            {#key lecture.id}
+              <SubjectCard {lecture} />
+            {/key}
           {/each}
         {/if}
       </div>

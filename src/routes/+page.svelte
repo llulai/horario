@@ -13,9 +13,12 @@
     hours: number;
   };
 
+  type Day = 1 | 2 | 3 | 4 | 5;
+  type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
   type Timeslot = {
-    day: 1 | 2 | 3 | 4 | 5;
-    period: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    day: Day;
+    period: Period;
   };
 
   type Lecture = {
@@ -27,17 +30,45 @@
     timeslot?: Timeslot;
   };
 
+  type Schedule = Record<Day, Record<Period, Lecture | null>>;
+
+  type TeacherSchedule = {
+    unassigned: Lecture[];
+    assigned: Schedule;
+  };
+
+  type ClassSchedule = {
+    unassigned: Lecture[];
+    assigned: Schedule;
+  };
+
   let lessons = $state<Lesson[]>([]);
 
   let lectures = $state<Record<string, Lecture>>({});
 
-  const lecturesByTeacher = $derived.by<Record<string, Lecture[]>>(() => {
+  const getEmptySchedule: () => Schedule = () => {
+    return {
+      1: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
+      2: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
+      3: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
+      4: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
+      5: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null }
+    };
+  };
+
+  const lecturesByTeacher = $derived.by<Record<string, TeacherSchedule>>(() => {
     return Object.values(lectures).reduce(
-      (lecByTeach: Record<string, Lecture[]>, lecture: Lecture) => {
+      (lecByTeach: Record<string, TeacherSchedule>, lecture: Lecture) => {
         if (!(lecture.teacher in lecByTeach)) {
-          lecByTeach[lecture.teacher] = [];
+          lecByTeach[lecture.teacher] = { assigned: getEmptySchedule(), unassigned: [] };
         }
-        lecByTeach[lecture.teacher].push(lecture);
+
+        if (lecture.timeslot !== undefined) {
+          lecByTeach[lecture.teacher].assigned[lecture.timeslot.day][lecture.timeslot.period] =
+            lecture;
+        } else {
+          lecByTeach[lecture.teacher].unassigned.push(lecture);
+        }
 
         return lecByTeach;
       },
@@ -45,13 +76,19 @@
     );
   });
 
-  const lecturesByCourse = $derived.by<Record<string, Lecture[]>>(() => {
+  const lecturesByCourse = $derived.by<Record<string, ClassSchedule>>(() => {
     return Object.values(lectures).reduce(
-      (lecByCourse: Record<string, Lecture[]>, lecture: Lecture) => {
+      (lecByCourse: Record<string, ClassSchedule>, lecture: Lecture) => {
         if (!(lecture.course in lecByCourse)) {
-          lecByCourse[lecture.course] = [];
+          lecByCourse[lecture.course] = { assigned: getEmptySchedule(), unassigned: [] };
         }
-        lecByCourse[lecture.course].push(lecture);
+
+        if (lecture.timeslot !== undefined) {
+          lecByCourse[lecture.course].assigned[lecture.timeslot.day][lecture.timeslot.period] =
+            lecture;
+        } else {
+          lecByCourse[lecture.course].unassigned.push(lecture);
+        }
 
         return lecByCourse;
       },

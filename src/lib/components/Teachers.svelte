@@ -11,7 +11,10 @@
     {#each Object.keys(props.lecturesByTeacher) as teacher}
       <div class="flex flex-col items-center gap-1">
         <div>{teacher}</div>
-        <Schedule onclick={() => props.selectTeacher(teacher)} />
+        <Schedule
+          onclick={() => props.selectTeacher(teacher)}
+          schedule={props.lecturesByTeacher[teacher].assigned}
+        />
       </div>
     {/each}
   </div>
