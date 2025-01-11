@@ -10,7 +10,14 @@
   {#if props.currentlySelected}
     <div class="text-[24px]">{props.currentlySelected.name}</div>
     <div class="flex flex-col flex-wrap justify-center gap-6">
-      <Scheduler setTimeslotForLecture={props.setTimeslotForLecture} />
+      {#if props.currentlySelected.kind === 'class'}
+        <Scheduler
+          setTimeslotForLecture={props.setTimeslotForLecture}
+          schedule={props.lecturesByCourse[props.currentlySelected.name].assigned}
+        />
+      {:else}
+        <Scheduler setTimeslotForLecture={props.setTimeslotForLecture} />
+      {/if}
       <div class="flew-row flex w-[272px] flex-wrap gap-2">
         {#if props.currentlySelected.kind == 'class'}
           {#each props.lecturesByCourse[props.currentlySelected.name].unassigned as lecture}
