@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     CurrentlySelected,
+    Lecture,
     LecturesByCourse,
     LecturesByTeacher,
     Timeslot
@@ -39,12 +40,25 @@
           show="classGroup"
         />
       {/if}
-      <div class="flew-row flex w-[272px] flex-wrap gap-2">
+      <div class="flex w-[500px] flex-col gap-6">
         {#if currentlySelected.kind == 'classGroup'}
-          {#each lecturesByCourse[currentlySelected.name].unassigned as lecture}
-            {#key lecture.id}
-              <SubjectCard {lecture} show="subject" />
-            {/key}
+          {#each Object.entries(lecturesByCourse[currentlySelected.name].unassigned.reduce( (lbt: Record<string, Lecture[]>, lec: Lecture) => {
+                if (!(lec.teacher in lbt)) {
+                  lbt[lec.teacher] = [];
+                }
+                lbt[lec.teacher].push(lec);
+                return lbt;
+              }, {} )) as [teacher, lectures]}
+            <div class="flex flex-row gap-2">
+              {teacher}
+              <div class="flex w-[222px] flex-row flex-wrap gap-2">
+                {#each lectures as lecture}
+                  {#key lecture.id}
+                    <SubjectCard {lecture} show="subject" />
+                  {/key}
+                {/each}
+              </div>
+            </div>
           {/each}
         {/if}
       </div>
