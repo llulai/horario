@@ -2,10 +2,14 @@
   import type { Schedule } from '$lib/Types';
   import SubjectCardSmall from './SubjectCardSmall.svelte';
   const {
-    schedule,
     onclick,
+    schedule,
     show
-  }: { schedule: Schedule; onclick: () => void; show: 'classGroup' | 'subject' } = $props();
+  }: {
+    onclick: () => void;
+    schedule: Schedule;
+    show: 'classGroup' | 'subject';
+  } = $props();
 
   const periods = [1, 2, 3, 4, 5, 6, 7] as const;
   const days = [1, 2, 3, 4, 5] as const;

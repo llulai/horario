@@ -1,7 +1,15 @@
 <script lang="ts">
-  import type { Lecture } from '$lib/Types';
+  import type { CurrentlyDragging, Lecture } from '$lib/Types';
 
-  const { lecture, show }: { lecture: Lecture; show: 'classGroup' | 'subject' } = $props();
+  const {
+    setCurrentlyDragging,
+    lecture,
+    show
+  }: {
+    setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
+    lecture: Lecture;
+    show: 'classGroup' | 'subject';
+  } = $props();
   const height = lecture.duration == 1 ? 'h-[24px]' : 'h-[48px]';
 
   let dragging = $state(false);
@@ -32,12 +40,22 @@
   } as const;
 
   // @ts-ignore
-  const color = show === 'class' ? classesColors[lecture.class] : subjectColors[lecture.subject];
+  const color =
+    show === 'classGroup' ? classesColors[lecture.classGroup] : subjectColors[lecture.subject];
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
 
   const handleDragStart = (event: DragEvent) => {
     dragging = true;
     if (event.dataTransfer) event.dataTransfer.setData('text/plain', lecture.id);
+    setCurrentlyDragging({
+      kind: show === 'classGroup' ? 'classGroup' : 'teacher',
+      name: show === 'classGroup' ? lecture.classGroup : lecture.teacher
+    });
+  };
+
+  const handleDragEnd = () => {
+    dragging = false;
+    setCurrentlyDragging(null);
   };
 </script>
 
@@ -45,7 +63,7 @@
   class={`w-[48px] rounded-[2px] ${height} ${color} ${opacity} flex flex-col items-center justify-center text-[20px] text-white`}
   draggable="true"
   ondragstart={handleDragStart}
-  ondragend={() => (dragging = false)}
+  ondragend={handleDragEnd}
 >
   {lecture[show]}
 </div>

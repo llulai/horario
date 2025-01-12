@@ -1,21 +1,27 @@
 <script lang="ts">
   import type {
+    CurrentlyDragging,
     CurrentlySelected,
-    Lecture,
     LecturesByCourse,
     LecturesByTeacher,
+    SlotAvailability,
     Timeslot
   } from '$lib/Types';
   import Scheduler from './Scheduler.svelte';
-  import SubjectCard from './SubjectCard.svelte';
+  import UnassignedCourses from './UnassignedCourses.svelte';
+  import UnassignedLectures from './UnassignedLectures.svelte';
 
   const {
     setLectureTimeslot,
+    setCurrentlyDragging,
+    slotAvailability,
     lecturesByCourse,
     lecturesByTeacher,
     currentlySelected
   }: {
     setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
+    slotAvailability: SlotAvailability | null;
     lecturesByCourse: LecturesByCourse;
     lecturesByTeacher: LecturesByTeacher;
     currentlySelected: CurrentlySelected | null;
@@ -30,36 +36,25 @@
       {#if currentlySelected.kind === 'classGroup'}
         <Scheduler
           {setLectureTimeslot}
+          {setCurrentlyDragging}
+          {slotAvailability}
           schedule={lecturesByCourse[currentlySelected.name].assigned}
           show="subject"
         />
       {:else}
         <Scheduler
           {setLectureTimeslot}
+          {setCurrentlyDragging}
+          {slotAvailability}
           schedule={lecturesByTeacher[currentlySelected.name].assigned}
           show="classGroup"
         />
       {/if}
       <div class="flex w-[500px] flex-col gap-6">
         {#if currentlySelected.kind == 'classGroup'}
-          {#each Object.entries(lecturesByCourse[currentlySelected.name].unassigned.reduce( (lbt: Record<string, Lecture[]>, lec: Lecture) => {
-                if (!(lec.teacher in lbt)) {
-                  lbt[lec.teacher] = [];
-                }
-                lbt[lec.teacher].push(lec);
-                return lbt;
-              }, {} )) as [teacher, lectures]}
-            <div class="flex flex-row gap-2">
-              {teacher}
-              <div class="flex w-[222px] flex-row flex-wrap gap-2">
-                {#each lectures as lecture}
-                  {#key lecture.id}
-                    <SubjectCard {lecture} show="subject" />
-                  {/key}
-                {/each}
-              </div>
-            </div>
-          {/each}
+          <UnassignedLectures {lecturesByCourse} {currentlySelected} {setCurrentlyDragging} />
+        {:else}
+          <UnassignedCourses {lecturesByTeacher} {currentlySelected} {setCurrentlyDragging} />
         {/if}
       </div>
     </div>

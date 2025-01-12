@@ -11,12 +11,17 @@
     Lecture,
     TeacherSchedule,
     Timeslot,
-    CurrentlySelected
+    CurrentlySelected,
+    CurrentlyDragging,
+    Day,
+    Period,
+    SlotAvailability
   } from '$lib/Types';
 
   let lessons = $state<Lesson[]>([]);
-
   let lectures = $state<Record<string, Lecture>>({});
+  let currentlySelected = $state<CurrentlySelected | null>(null);
+  let currentlyDragging = $state<CurrentlyDragging | null>(null);
 
   const getEmptySchedule: () => Schedule = () => {
     return {
@@ -68,7 +73,42 @@
     );
   });
 
-  let currentlySelected = $state<CurrentlySelected | null>(null);
+  const slotAvailability: SlotAvailability | null = $derived.by(() => {
+    if (currentlyDragging === null) return null;
+    const days = [1, 2, 3, 4, 5] as const;
+    const periods = [1, 2, 3, 4, 5, 6, 7] as const;
+    const availability = {
+      1: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
+      2: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
+      3: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
+      4: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
+      5: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false }
+    };
+
+    if (currentlyDragging?.kind === 'teacher') {
+      days.forEach((day: Day) => {
+        periods.forEach((period: Period) => {
+          if (currentlyDragging !== null) {
+            availability[day][period] =
+              lecturesByTeacher[currentlyDragging.name].assigned[day][period] === null;
+          }
+        });
+      });
+    }
+
+    if (currentlyDragging?.kind === 'classGroup') {
+      days.forEach((day: Day) => {
+        periods.forEach((period: Period) => {
+          if (currentlyDragging !== null) {
+            availability[day][period] =
+              lecturesByCourse[currentlyDragging.name].assigned[day][period] === null;
+          }
+        });
+      });
+    }
+
+    return availability;
+  });
 
   const selectTeacher = (name: string) => {
     currentlySelected = { kind: 'teacher', name };
@@ -104,10 +144,21 @@
       timeslot
     };
   };
+
+  const setCurrentlyDragging = (newCurrentlyDragging: CurrentlyDragging | null) => {
+    currentlyDragging = newCurrentlyDragging;
+  };
 </script>
 
 <div class="absolute bottom-0 left-0 right-0 top-20 grid grid-cols-[1fr_440px_1fr] grid-rows-1">
   <Teachers {selectTeacher} {lecturesByTeacher} />
   <ClassGroups {selectClass} {lecturesByCourse} />
-  <Current {currentlySelected} {lecturesByCourse} {lecturesByTeacher} {setLectureTimeslot} />
+  <Current
+    {currentlySelected}
+    {lecturesByCourse}
+    {lecturesByTeacher}
+    {slotAvailability}
+    {setLectureTimeslot}
+    {setCurrentlyDragging}
+  />
 </div>

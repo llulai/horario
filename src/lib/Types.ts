@@ -40,5 +40,11 @@ export type CurrentlySelected = {
   name: string;
 };
 
+export type CurrentlyDragging = {
+  kind: 'teacher' | 'classGroup';
+  name: string;
+};
+
 export type LecturesByCourse = Record<string, ClassSchedule>;
 export type LecturesByTeacher = Record<string, ClassSchedule>;
+export type SlotAvailability = Record<Day, Record<Period, boolean>>;

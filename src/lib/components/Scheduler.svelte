@@ -1,15 +1,19 @@
 <script lang="ts">
-  import type { Schedule, Timeslot } from '$lib/Types';
+  import type { CurrentlyDragging, Schedule, SlotAvailability, Timeslot } from '$lib/Types';
   import SchedulerBlock from './SchedulerBlock.svelte';
   import SubjectCard from './SubjectCard.svelte';
   let {
     schedule,
     show,
-    setLectureTimeslot
+    slotAvailability,
+    setLectureTimeslot,
+    setCurrentlyDragging
   }: {
+    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
+    slotAvailability: SlotAvailability | null;
     schedule: Schedule;
     show: 'classGroup' | 'subject';
-    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
   } = $props();
 
   const periods = [1, 2, 3, 4, 5, 6, 7] as const;
@@ -28,10 +32,15 @@
     {#each days as day}
       {#if schedule && schedule[day] && schedule[day][period] !== null}
         {#key schedule[day][period]}
-          <SubjectCard lecture={schedule[day][period]} {show} />
+          <SubjectCard lecture={schedule[day][period]} {show} {setCurrentlyDragging} />
         {/key}
       {:else}
-        <SchedulerBlock {setLectureTimeslot} {period} {day} />
+        <SchedulerBlock
+          {setLectureTimeslot}
+          {day}
+          {period}
+          isAvailable={slotAvailability !== null ? slotAvailability[day][period] : null}
+        />
       {/if}
     {/each}
   {/each}

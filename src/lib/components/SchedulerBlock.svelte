@@ -4,11 +4,18 @@
   let {
     setLectureTimeslot,
     day,
-    period
-  }: { setLectureTimeslot: (id: string, timeslot: Timeslot) => void; day: Day; period: Period } =
-    $props();
+    period,
+    isAvailable
+  }: {
+    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    isAvailable: boolean | null;
+    day: Day;
+    period: Period;
+  } = $props();
   let isHover = $state(false);
-  let bg = $derived(isHover ? 'bg-green-100' : 'bg-gray-100');
+  let bg = $derived(
+    isAvailable !== null ? (isAvailable ? 'bg-green-100' : 'bg-red-100') : 'bg-gray-100'
+  );
 
   const handleDragEnter = (ev: DragEvent) => {
     ev.preventDefault();
