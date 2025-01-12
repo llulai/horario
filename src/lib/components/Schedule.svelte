@@ -21,7 +21,7 @@
           <div>{period}</div>
         </div>
       {:else if props.schedule && props.schedule[day] && props.schedule[day][period] !== null}
-        <SubjectCardSmall lecture={props.schedule[day][period]} />
+        <SubjectCardSmall lecture={props.schedule[day][period]} by={props.by} />
       {:else}
         <div class="rounded-[2px] bg-gray-100"></div>
       {/if}

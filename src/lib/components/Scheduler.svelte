@@ -16,7 +16,7 @@
       {#if day === 0}
         <div class="text-[16px]">{period}</div>
       {:else if props.schedule && props.schedule[day] && props.schedule[day][period] !== null}
-        <SubjectCard lecture={props.schedule[day][period]} />
+        <SubjectCard lecture={props.schedule[day][period]} show={props.show} />
       {:else}
         <SchedulerBlock setTimeslotForLecture={props.setTimeslotForLecture} {period} {day} />
       {/if}

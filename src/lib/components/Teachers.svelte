@@ -14,6 +14,7 @@
         <Schedule
           onclick={() => props.selectTeacher(teacher)}
           schedule={props.lecturesByTeacher[teacher].assigned}
+          by="class"
         />
       </div>
     {/each}

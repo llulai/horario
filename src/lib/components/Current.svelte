@@ -14,15 +14,20 @@
         <Scheduler
           setTimeslotForLecture={props.setTimeslotForLecture}
           schedule={props.lecturesByCourse[props.currentlySelected.name].assigned}
+          show="subject"
         />
       {:else}
-        <Scheduler setTimeslotForLecture={props.setTimeslotForLecture} />
+        <Scheduler
+          setTimeslotForLecture={props.setTimeslotForLecture}
+          schedule={props.lecturesByTeacher[props.currentlySelected.name].assigned}
+          show="course"
+        />
       {/if}
       <div class="flew-row flex w-[272px] flex-wrap gap-2">
         {#if props.currentlySelected.kind == 'class'}
           {#each props.lecturesByCourse[props.currentlySelected.name].unassigned as lecture}
             {#key lecture.id}
-              <SubjectCard {lecture} />
+              <SubjectCard {lecture} show="subject" />
             {/key}
           {/each}
         {/if}

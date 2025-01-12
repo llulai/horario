@@ -33,5 +33,5 @@
   ondragstart={handleDragStart}
   ondragend={() => (dragging = false)}
 >
-  {props.lecture.subject}
+  {props.lecture[props.show]}
 </div>

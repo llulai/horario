@@ -18,7 +18,21 @@
     REL: 'bg-[#E879F9]'
   } as const;
 
-  const color = subjectColors[props.lecture.subject];
+  const classesColors = {
+    '2A': 'bg-[#2563EB]',
+    '2B': 'bg-[#9333EA]',
+    '3A': 'bg-[#DC2626]',
+    '3B': 'bg-[#EA580C]',
+    '4A': 'bg-[#D97706]',
+    '4B': 'bg-[#38BDF8]',
+    '5A': 'bg-[#16A34A]',
+    '5B': 'bg-[#FACC15]'
+  } as const;
+
+  const color =
+    props.by === 'class'
+      ? classesColors[props.lecture.course]
+      : subjectColors[props.lecture.subject];
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
 
   const handleDragStart = (event) => {
@@ -33,5 +47,9 @@
   ondragstart={handleDragStart}
   ondragend={() => (dragging = false)}
 >
-  {props.lecture.subject}
+  {#if props.by === 'class'}
+    {props.lecture.course}
+  {:else}
+    {props.lecture.subject}
+  {/if}
 </div>
