@@ -1,4 +1,4 @@
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 import { createClient } from '@supabase/supabase-js';
@@ -36,12 +36,13 @@ export const GET: RequestHandler = async () => {
   if (error) throw error;
 
   return json(
+    // @ts-ignore
     data.map((lesson: RawLesson) => {
       return {
         id: lesson.id,
         hours: lesson.hours,
         teacher: lesson.lesson_teacher.name,
-        course: lesson.lesson_course.name,
+        classGroup: lesson.lesson_course.name,
         subject: lesson.lesson_subject.name
       };
     })

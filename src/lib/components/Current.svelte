@@ -1,31 +1,47 @@
 <script lang="ts">
+  import type {
+    CurrentlySelected,
+    LecturesByCourse,
+    LecturesByTeacher,
+    Timeslot
+  } from '$lib/Types';
   import Scheduler from './Scheduler.svelte';
   import SubjectCard from './SubjectCard.svelte';
 
-  let props = $props();
+  const {
+    setLectureTimeslot,
+    lecturesByCourse,
+    lecturesByTeacher,
+    currentlySelected
+  }: {
+    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    lecturesByCourse: LecturesByCourse;
+    lecturesByTeacher: LecturesByTeacher;
+    currentlySelected: CurrentlySelected | null;
+  } = $props();
 </script>
 
 <!-- teachers -->
 <div class="flex h-full flex-col items-center gap-6 px-12 py-6">
-  {#if props.currentlySelected}
-    <div class="text-[24px]">{props.currentlySelected.name}</div>
+  {#if currentlySelected}
+    <div class="text-[24px]">{currentlySelected.name}</div>
     <div class="flex flex-col flex-wrap justify-center gap-6">
-      {#if props.currentlySelected.kind === 'class'}
+      {#if currentlySelected.kind === 'classGroup'}
         <Scheduler
-          setTimeslotForLecture={props.setTimeslotForLecture}
-          schedule={props.lecturesByCourse[props.currentlySelected.name].assigned}
+          {setLectureTimeslot}
+          schedule={lecturesByCourse[currentlySelected.name].assigned}
           show="subject"
         />
       {:else}
         <Scheduler
-          setTimeslotForLecture={props.setTimeslotForLecture}
-          schedule={props.lecturesByTeacher[props.currentlySelected.name].assigned}
-          show="course"
+          {setLectureTimeslot}
+          schedule={lecturesByTeacher[currentlySelected.name].assigned}
+          show="classGroup"
         />
       {/if}
       <div class="flew-row flex w-[272px] flex-wrap gap-2">
-        {#if props.currentlySelected.kind == 'class'}
-          {#each props.lecturesByCourse[props.currentlySelected.name].unassigned as lecture}
+        {#if currentlySelected.kind == 'classGroup'}
+          {#each lecturesByCourse[currentlySelected.name].unassigned as lecture}
             {#key lecture.id}
               <SubjectCard {lecture} show="subject" />
             {/key}

@@ -1,46 +1,18 @@
 <script lang="ts">
   import Current from '$lib/components/Current.svelte';
-  import Grades from '$lib/components/Grades.svelte';
+  import ClassGroups from '$lib/components/ClassGroups.svelte';
   import Teachers from '$lib/components/Teachers.svelte';
   import { onMount } from 'svelte';
   import { v4 as uuidv4 } from 'uuid';
-
-  type Lesson = {
-    id: number;
-    teacher: string;
-    course: string;
-    subject: string;
-    hours: number;
-  };
-
-  type Day = 1 | 2 | 3 | 4 | 5;
-  type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
-  type Timeslot = {
-    day: Day;
-    period: Period;
-  };
-
-  type Lecture = {
-    id: string;
-    teacher: string;
-    course: string;
-    subject: string;
-    duration: number;
-    timeslot?: Timeslot;
-  };
-
-  type Schedule = Record<Day, Record<Period, Lecture | null>>;
-
-  type TeacherSchedule = {
-    unassigned: Lecture[];
-    assigned: Schedule;
-  };
-
-  type ClassSchedule = {
-    unassigned: Lecture[];
-    assigned: Schedule;
-  };
+  import type {
+    Lesson,
+    Schedule,
+    ClassSchedule,
+    Lecture,
+    TeacherSchedule,
+    Timeslot,
+    CurrentlySelected
+  } from '$lib/Types';
 
   let lessons = $state<Lesson[]>([]);
 
@@ -79,15 +51,15 @@
   const lecturesByCourse = $derived.by<Record<string, ClassSchedule>>(() => {
     return Object.values(lectures).reduce(
       (lecByCourse: Record<string, ClassSchedule>, lecture: Lecture) => {
-        if (!(lecture.course in lecByCourse)) {
-          lecByCourse[lecture.course] = { assigned: getEmptySchedule(), unassigned: [] };
+        if (!(lecture.classGroup in lecByCourse)) {
+          lecByCourse[lecture.classGroup] = { assigned: getEmptySchedule(), unassigned: [] };
         }
 
         if (lecture.timeslot !== undefined) {
-          lecByCourse[lecture.course].assigned[lecture.timeslot.day][lecture.timeslot.period] =
+          lecByCourse[lecture.classGroup].assigned[lecture.timeslot.day][lecture.timeslot.period] =
             lecture;
         } else {
-          lecByCourse[lecture.course].unassigned.push(lecture);
+          lecByCourse[lecture.classGroup].unassigned.push(lecture);
         }
 
         return lecByCourse;
@@ -96,11 +68,6 @@
     );
   });
 
-  type CurrentlySelected = {
-    kind: 'teacher' | 'class';
-    name: string;
-  };
-
   let currentlySelected = $state<CurrentlySelected | null>(null);
 
   const selectTeacher = (name: string) => {
@@ -108,7 +75,7 @@
   };
 
   const selectClass = (name: string) => {
-    currentlySelected = { kind: 'class', name };
+    currentlySelected = { kind: 'classGroup', name };
   };
 
   onMount(async () => {
@@ -116,24 +83,12 @@
     lessons = data;
 
     lectures = lessons.reduce((lec: Record<string, Lecture>, lesson) => {
-      // const twoBlocksLessons = Math.floor(lesson.hours / 2);
-      // const oneBlockLessons = lesson.hours % 2;
-      //
-      // for (let i = 0; i < twoBlocksLessons; i++) {
-      //   lec.push({
-      //     teacher: lesson.teacher,
-      //     course: lesson.course,
-      //     subject: lesson.subject,
-      //     duration: 2
-      //   });
-      // }
-      //
       for (let i = 0; i < lesson.hours; i++) {
         const uuid = uuidv4();
         lec[uuid] = {
           id: uuid,
           teacher: lesson.teacher,
-          course: lesson.course,
+          classGroup: lesson.classGroup,
           subject: lesson.subject,
           duration: 1
         };
@@ -143,7 +98,7 @@
     }, {});
   });
 
-  const setTimeslotForLecture = (lectureId: string, timeslot: Timeslot) => {
+  const setLectureTimeslot = (lectureId: string, timeslot: Timeslot) => {
     lectures[lectureId] = {
       ...lectures[lectureId],
       timeslot
@@ -152,7 +107,7 @@
 </script>
 
 <div class="absolute bottom-0 left-0 right-0 top-20 grid grid-cols-[1fr_440px_1fr] grid-rows-1">
-  <Teachers {lectures} {selectTeacher} {lecturesByTeacher} />
-  <Grades {lectures} {selectClass} {lecturesByCourse} />
-  <Current {currentlySelected} {lecturesByCourse} {lecturesByTeacher} {setTimeslotForLecture} />
+  <Teachers {selectTeacher} {lecturesByTeacher} />
+  <ClassGroups {selectClass} {lecturesByCourse} />
+  <Current {currentlySelected} {lecturesByCourse} {lecturesByTeacher} {setLectureTimeslot} />
 </div>

@@ -1,6 +1,8 @@
 <script lang="ts">
-  const props = $props();
-  const height = props.lecture.duration == 1 ? 'h-[12px]' : 'h-[24 sfsx]';
+  import type { Lecture } from '$lib/Types';
+
+  const { lecture, show }: { lecture: Lecture; show: 'classGroup' | 'subject' } = $props();
+  const height = lecture.duration == 1 ? 'h-[12px]' : 'h-[24 sfsx]';
 
   let dragging = $state(false);
 
@@ -29,15 +31,14 @@
     '5B': 'bg-[#FACC15]'
   } as const;
 
+  // @ts-ignore
   const color =
-    props.by === 'class'
-      ? classesColors[props.lecture.course]
-      : subjectColors[props.lecture.subject];
+    show === 'classGroup' ? classesColors[lecture.classGroup] : subjectColors[lecture.subject];
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event: DragEvent) => {
     dragging = true;
-    event.dataTransfer.setData('text/plain', props.lecture.id);
+    if (event.dataTransfer) event.dataTransfer.setData('text/plain', lecture.id);
   };
 </script>
 
@@ -47,9 +48,5 @@
   ondragstart={handleDragStart}
   ondragend={() => (dragging = false)}
 >
-  {#if props.by === 'class'}
-    {props.lecture.course}
-  {:else}
-    {props.lecture.subject}
-  {/if}
+  {lecture[show]}
 </div>

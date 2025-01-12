@@ -1,6 +1,8 @@
 <script lang="ts">
-  const props = $props();
-  const height = props.lecture.duration == 1 ? 'h-[24px]' : 'h-[48px]';
+  import type { Lecture } from '$lib/Types';
+
+  const { lecture, show }: { lecture: Lecture; show: 'classGroup' | 'subject' } = $props();
+  const height = lecture.duration == 1 ? 'h-[24px]' : 'h-[48px]';
 
   let dragging = $state(false);
 
@@ -18,12 +20,24 @@
     REL: 'bg-[#E879F9]'
   } as const;
 
-  const color = subjectColors[props.lecture.subject];
+  const classesColors = {
+    '2A': 'bg-[#2563EB]',
+    '2B': 'bg-[#9333EA]',
+    '3A': 'bg-[#DC2626]',
+    '3B': 'bg-[#EA580C]',
+    '4A': 'bg-[#D97706]',
+    '4B': 'bg-[#38BDF8]',
+    '5A': 'bg-[#16A34A]',
+    '5B': 'bg-[#FACC15]'
+  } as const;
+
+  // @ts-ignore
+  const color = show === 'class' ? classesColors[lecture.class] : subjectColors[lecture.subject];
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event: DragEvent) => {
     dragging = true;
-    event.dataTransfer.setData('text/plain', props.lecture.id);
+    if (event.dataTransfer) event.dataTransfer.setData('text/plain', lecture.id);
   };
 </script>
 
@@ -33,5 +47,5 @@
   ondragstart={handleDragStart}
   ondragend={() => (dragging = false)}
 >
-  {props.lecture[props.show]}
+  {lecture[show]}
 </div>

@@ -1,7 +1,19 @@
-<script>
+<script lang="ts">
+  import type { Schedule, Timeslot } from '$lib/Types';
   import SchedulerBlock from './SchedulerBlock.svelte';
   import SubjectCard from './SubjectCard.svelte';
-  let props = $props();
+  let {
+    schedule,
+    show,
+    setLectureTimeslot
+  }: {
+    schedule: Schedule;
+    show: 'classGroup' | 'subject';
+    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+  } = $props();
+
+  const periods = [1, 2, 3, 4, 5, 6, 7] as const;
+  const days = [1, 2, 3, 4, 5] as const;
 </script>
 
 <div
@@ -11,14 +23,15 @@
     <div class="text-center text-[16px]">{day}</div>
   {/each}
 
-  {#each [1, 2, 3, 4, 5, 6, 7] as period}
-    {#each [0, 1, 2, 3, 4, 5] as day}
-      {#if day === 0}
-        <div class="text-[16px]">{period}</div>
-      {:else if props.schedule && props.schedule[day] && props.schedule[day][period] !== null}
-        <SubjectCard lecture={props.schedule[day][period]} show={props.show} />
+  {#each periods as period}
+    <div class="text-[16px]">{period}</div>
+    {#each days as day}
+      {#if schedule && schedule[day] && schedule[day][period] !== null}
+        {#key schedule[day][period]}
+          <SubjectCard lecture={schedule[day][period]} {show} />
+        {/key}
       {:else}
-        <SchedulerBlock setTimeslotForLecture={props.setTimeslotForLecture} {period} {day} />
+        <SchedulerBlock {setLectureTimeslot} {period} {day} />
       {/if}
     {/each}
   {/each}

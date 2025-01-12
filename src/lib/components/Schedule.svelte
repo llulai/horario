@@ -1,6 +1,14 @@
 <script lang="ts">
+  import type { Schedule } from '$lib/Types';
   import SubjectCardSmall from './SubjectCardSmall.svelte';
-  const props = $props();
+  const {
+    schedule,
+    onclick,
+    show
+  }: { schedule: Schedule; onclick: () => void; show: 'classGroup' | 'subject' } = $props();
+
+  const periods = [1, 2, 3, 4, 5, 6, 7] as const;
+  const days = [1, 2, 3, 4, 5] as const;
 </script>
 
 <div
@@ -8,20 +16,21 @@
 >
   <button
     class="absolute inset-0 z-10 hidden flex-row items-center justify-center rounded-[2px] bg-gray-200/90 underline group-hover:flex"
-    onclick={props.onclick}>editar</button
+    {onclick}>editar</button
   >
   {#each ['', 'L', 'M', 'M', 'J', 'V'] as day}
     <div class="text-center text-[8px]">{day}</div>
   {/each}
 
-  {#each [1, 2, 3, 4, 5, 6, 7] as period}
-    {#each [0, 1, 2, 3, 4, 5] as day}
-      {#if day === 0}
-        <div class="flex flex-col gap-[2px] text-[8px]">
-          <div>{period}</div>
-        </div>
-      {:else if props.schedule && props.schedule[day] && props.schedule[day][period] !== null}
-        <SubjectCardSmall lecture={props.schedule[day][period]} by={props.by} />
+  {#each periods as period}
+    <div class="flex flex-col gap-[2px] text-[8px]">
+      <div>{period}</div>
+    </div>
+    {#each days as day}
+      {#if schedule && schedule[day] && schedule[day][period] !== null}
+        {#key schedule[day][period]}
+          <SubjectCardSmall lecture={schedule[day][period]} {show} />
+        {/key}
       {:else}
         <div class="rounded-[2px] bg-gray-100"></div>
       {/if}
