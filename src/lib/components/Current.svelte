@@ -19,7 +19,7 @@
     lecturesByTeacher,
     currentlySelected
   }: {
-    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
     setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
     slotAvailability: SlotAvailability | null;
     lecturesByCourse: LecturesByCourse;
@@ -52,9 +52,19 @@
       {/if}
       <div class="flex w-[500px] flex-col gap-6">
         {#if currentlySelected.kind == 'classGroup'}
-          <UnassignedLectures {lecturesByCourse} {currentlySelected} {setCurrentlyDragging} />
+          <UnassignedLectures
+            {lecturesByCourse}
+            {currentlySelected}
+            {setCurrentlyDragging}
+            {setLectureTimeslot}
+          />
         {:else}
-          <UnassignedCourses {lecturesByTeacher} {currentlySelected} {setCurrentlyDragging} />
+          <UnassignedCourses
+            {lecturesByTeacher}
+            {currentlySelected}
+            {setCurrentlyDragging}
+            {setLectureTimeslot}
+          />
         {/if}
       </div>
     </div>

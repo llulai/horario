@@ -19,10 +19,7 @@
 
   const handleDragEnter = (ev: DragEvent) => {
     ev.preventDefault();
-    if (ev.dataTransfer) {
-      ev.dataTransfer.dropEffect = 'move';
-      isHover = true;
-    }
+    isHover = true;
   };
 
   const handleDragOver = (ev: DragEvent) => {
@@ -34,7 +31,7 @@
   };
 
   const handleOnDrop = (event: DragEvent) => {
-    if (event.dataTransfer) {
+    if (event.dataTransfer && isAvailable) {
       const lectureId = event.dataTransfer.getData('text/plain');
       setLectureTimeslot(lectureId, { day: day, period: period });
     }

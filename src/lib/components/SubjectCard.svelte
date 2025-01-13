@@ -1,11 +1,13 @@
 <script lang="ts">
-  import type { CurrentlyDragging, Lecture } from '$lib/Types';
+  import type { CurrentlyDragging, Lecture, Timeslot } from '$lib/Types';
 
   const {
+    setLectureTimeslot,
     setCurrentlyDragging,
     lecture,
     show
   }: {
+    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
     setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
     lecture: Lecture;
     show: 'classGroup' | 'subject';
@@ -15,7 +17,7 @@
   let dragging = $state(false);
 
   const subjectColors = {
-    LEN: 'bg-[#ea580c]',
+    LEN: 'bg-[#EA580C]',
     MAT: 'bg-[#DB2777]',
     HIS: 'bg-[#2563EB]',
     CsN: 'bg-[#059669]',
@@ -39,7 +41,6 @@
     '5B': 'bg-[#FACC15]'
   } as const;
 
-  // @ts-ignore
   const color =
     show === 'classGroup' ? classesColors[lecture.classGroup] : subjectColors[lecture.subject];
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
@@ -57,13 +58,18 @@
     dragging = false;
     setCurrentlyDragging(null);
   };
+
+  const handleDblClick = () => {
+    setLectureTimeslot(lecture.id, undefined);
+  };
 </script>
 
 <div
-  class={`w-[48px] rounded-[2px] ${height} ${color} ${opacity} flex flex-col items-center justify-center text-[20px] text-white`}
+  class={`w-[48px] rounded-[2px] ${height} ${color} ${opacity} flex flex-col items-center justify-center text-[20px] text-white hover:cursor-pointer`}
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
+  ondblclick={handleDblClick}
 >
   {lecture[show]}
 </div>

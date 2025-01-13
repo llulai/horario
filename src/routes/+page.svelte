@@ -138,7 +138,7 @@
     }, {});
   });
 
-  const setLectureTimeslot = (lectureId: string, timeslot: Timeslot) => {
+  const setLectureTimeslot = (lectureId: string, timeslot: Timeslot | undefined) => {
     lectures[lectureId] = {
       ...lectures[lectureId],
       timeslot

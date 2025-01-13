@@ -1,12 +1,20 @@
 <script lang="ts">
-  import type { CurrentlyDragging, CurrentlySelected, Lecture, LecturesByCourse } from '$lib/Types';
+  import type {
+    CurrentlyDragging,
+    CurrentlySelected,
+    Lecture,
+    LecturesByCourse,
+    Timeslot
+  } from '$lib/Types';
   import SubjectCard from './SubjectCard.svelte';
 
   const {
+    setLectureTimeslot,
     setCurrentlyDragging,
     lecturesByCourse,
     currentlySelected
   }: {
+    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
     setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
     lecturesByCourse: LecturesByCourse;
     currentlySelected: CurrentlySelected;
@@ -25,7 +33,7 @@
     <div class="flex w-[222px] flex-row flex-wrap gap-2">
       {#each lectures as lecture}
         {#key lecture.id}
-          <SubjectCard {lecture} show="subject" {setCurrentlyDragging} />
+          <SubjectCard {lecture} show="subject" {setCurrentlyDragging} {setLectureTimeslot} />
         {/key}
       {/each}
     </div>

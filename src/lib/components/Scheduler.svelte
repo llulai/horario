@@ -9,7 +9,7 @@
     setLectureTimeslot,
     setCurrentlyDragging
   }: {
-    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
+    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
     setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
     slotAvailability: SlotAvailability | null;
     schedule: Schedule;
@@ -32,7 +32,12 @@
     {#each days as day}
       {#if schedule && schedule[day] && schedule[day][period] !== null}
         {#key schedule[day][period]}
-          <SubjectCard lecture={schedule[day][period]} {show} {setCurrentlyDragging} />
+          <SubjectCard
+            lecture={schedule[day][period]}
+            {show}
+            {setCurrentlyDragging}
+            {setLectureTimeslot}
+          />
         {/key}
       {:else}
         <SchedulerBlock
