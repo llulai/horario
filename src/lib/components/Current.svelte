@@ -1,70 +1,35 @@
 <script lang="ts">
-  import type {
-    CurrentlyDragging,
-    CurrentlySelected,
-    LecturesByCourse,
-    LecturesByTeacher,
-    SlotAvailability,
-    Timeslot
-  } from '$lib/Types';
   import Scheduler from './Scheduler.svelte';
   import UnassignedCourses from './UnassignedCourses.svelte';
   import UnassignedLectures from './UnassignedLectures.svelte';
 
-  const {
-    setLectureTimeslot,
-    setCurrentlyDragging,
-    slotAvailability,
-    lecturesByCourse,
-    lecturesByTeacher,
-    currentlySelected
-  }: {
-    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
-    setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
-    slotAvailability: SlotAvailability | null;
-    lecturesByCourse: LecturesByCourse;
-    lecturesByTeacher: LecturesByTeacher;
-    currentlySelected: CurrentlySelected | null;
-  } = $props();
+  import timetable from '$lib/state/timetable.svelte';
+  import currently from '$lib/state/currently.svelte';
 </script>
 
 <!-- teachers -->
 <div class="flex h-full flex-col items-center gap-6 px-12 py-6">
-  {#if currentlySelected}
-    <div class="text-[24px]">{currentlySelected.name}</div>
-    <div class="flex flex-col flex-wrap justify-center gap-6">
-      {#if currentlySelected.kind === 'classGroup'}
+  {#if currently.selected}
+    <div class="pl-4 text-[24px]">{currently.selected.name}</div>
+    <div class="flex flex-col flex-wrap items-center gap-6">
+      {#if currently.selected.kind === 'classGroup'}
         <Scheduler
-          {setLectureTimeslot}
-          {setCurrentlyDragging}
-          {slotAvailability}
-          schedule={lecturesByCourse[currentlySelected.name].assigned}
+          assignedSchedule={timetable.byClass[currently.selected.name].assignedSchedule}
+          blockedSchedule={timetable.byClass[currently.selected.name].blockedSchedule}
           show="subject"
         />
       {:else}
         <Scheduler
-          {setLectureTimeslot}
-          {setCurrentlyDragging}
-          {slotAvailability}
-          schedule={lecturesByTeacher[currentlySelected.name].assigned}
+          assignedSchedule={timetable.byTeacher[currently.selected.name].assignedSchedule}
+          blockedSchedule={timetable.byTeacher[currently.selected.name].blockedSchedule}
           show="classGroup"
         />
       {/if}
       <div class="flex w-[500px] flex-col gap-6">
-        {#if currentlySelected.kind == 'classGroup'}
-          <UnassignedLectures
-            {lecturesByCourse}
-            {currentlySelected}
-            {setCurrentlyDragging}
-            {setLectureTimeslot}
-          />
+        {#if currently.selected.kind == 'classGroup'}
+          <UnassignedLectures />
         {:else}
-          <UnassignedCourses
-            {lecturesByTeacher}
-            {currentlySelected}
-            {setCurrentlyDragging}
-            {setLectureTimeslot}
-          />
+          <UnassignedCourses />
         {/if}
       </div>
     </div>

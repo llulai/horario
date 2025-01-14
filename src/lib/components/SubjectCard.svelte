@@ -1,14 +1,12 @@
 <script lang="ts">
-  import type { CurrentlyDragging, Lecture, Timeslot } from '$lib/Types';
+  import currently from '$lib/state/currently.svelte';
+  import type { Lecture } from '$lib/state/timetable.svelte';
+  import timetable from '$lib/state/timetable.svelte';
 
   const {
-    setLectureTimeslot,
-    setCurrentlyDragging,
     lecture,
     show
   }: {
-    setLectureTimeslot: (id: string, timeslot: Timeslot | undefined) => void;
-    setCurrentlyDragging: (newCurrentlyDragging: CurrentlyDragging | null) => void;
     lecture: Lecture;
     show: 'classGroup' | 'subject';
   } = $props();
@@ -48,7 +46,7 @@
   const handleDragStart = (event: DragEvent) => {
     dragging = true;
     if (event.dataTransfer) event.dataTransfer.setData('text/plain', lecture.id);
-    setCurrentlyDragging({
+    currently.setDragging({
       kind: show === 'classGroup' ? 'classGroup' : 'teacher',
       name: show === 'classGroup' ? lecture.classGroup : lecture.teacher
     });
@@ -56,11 +54,11 @@
 
   const handleDragEnd = () => {
     dragging = false;
-    setCurrentlyDragging(null);
+    currently.setDragging(null);
   };
 
   const handleDblClick = () => {
-    setLectureTimeslot(lecture.id, undefined);
+    timetable.removeLectureTimeslot(lecture.id);
   };
 </script>
 

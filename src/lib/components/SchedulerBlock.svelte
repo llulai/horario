@@ -1,47 +1,38 @@
 <script lang="ts">
-  import type { Day, Period, Timeslot } from '$lib/Types';
+  import currently from '$lib/state/currently.svelte';
+  import type { Day, Period } from '$lib/state/timetable.svelte';
+  import timetable from '$lib/state/timetable.svelte';
 
   let {
-    setLectureTimeslot,
     day,
     period,
     isAvailable
   }: {
-    setLectureTimeslot: (id: string, timeslot: Timeslot) => void;
     isAvailable: boolean | null;
     day: Day;
     period: Period;
   } = $props();
-  let isHover = $state(false);
   let bg = $derived(
     isAvailable !== null ? (isAvailable ? 'bg-green-100' : 'bg-red-100') : 'bg-gray-100'
   );
-
-  const handleDragEnter = (ev: DragEvent) => {
-    ev.preventDefault();
-    isHover = true;
-  };
 
   const handleDragOver = (ev: DragEvent) => {
     ev.preventDefault();
   };
 
-  const handleDragLeave = () => {
-    isHover = false;
-  };
-
   const handleOnDrop = (event: DragEvent) => {
     if (event.dataTransfer && isAvailable) {
-      const lectureId = event.dataTransfer.getData('text/plain');
-      setLectureTimeslot(lectureId, { day: day, period: period });
+      if (currently.dragging?.kind === 'blockedPeriod') {
+        timetable.addBlockedPeriod({
+          ...currently.dragging.blockedPeriod,
+          timeslot: { day, period }
+        });
+      } else {
+        const lectureId = event.dataTransfer.getData('text/plain');
+        timetable.setLectureTimeslot(lectureId, { day: day, period: period });
+      }
     }
   };
 </script>
 
-<div
-  class={`rounded-[2px] ${bg}`}
-  ondragenter={handleDragEnter}
-  ondragover={handleDragOver}
-  ondragleave={handleDragLeave}
-  ondrop={handleOnDrop}
-></div>
+<div class={`rounded-[2px] ${bg}`} ondragover={handleDragOver} ondrop={handleOnDrop}></div>

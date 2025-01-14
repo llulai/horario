@@ -1,13 +1,16 @@
 <script lang="ts">
-  import type { Schedule } from '$lib/Types';
+  import type { BlockedSchedule, AssignedSchedule } from '$lib/state/timetable.svelte';
+  import BlockedPeriodCardSmall from './BlockedPeriodCardSmall.svelte';
   import SubjectCardSmall from './SubjectCardSmall.svelte';
   const {
     onclick,
-    schedule,
+    assignedSchedule,
+    blockedSchedule,
     show
   }: {
     onclick: () => void;
-    schedule: Schedule;
+    assignedSchedule: AssignedSchedule;
+    blockedSchedule: BlockedSchedule;
     show: 'classGroup' | 'subject';
   } = $props();
 
@@ -31,9 +34,13 @@
       <div>{period}</div>
     </div>
     {#each days as day}
-      {#if schedule && schedule[day] && schedule[day][period] !== null}
-        {#key schedule[day][period]}
-          <SubjectCardSmall lecture={schedule[day][period]} {show} />
+      {#if assignedSchedule && assignedSchedule[day] && assignedSchedule[day][period] !== null}
+        {#key assignedSchedule[day][period]}
+          <SubjectCardSmall lecture={assignedSchedule[day][period]} {show} />
+        {/key}
+      {:else if blockedSchedule[day][period] !== null}
+        {#key blockedSchedule[day][period]}
+          <BlockedPeriodCardSmall />
         {/key}
       {:else}
         <div class="rounded-[2px] bg-gray-100"></div>

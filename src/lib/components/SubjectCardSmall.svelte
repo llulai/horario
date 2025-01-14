@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Lecture } from '$lib/Types';
+  import type { Lecture } from '$lib/state/timetable.svelte';
 
   const {
     lecture,
