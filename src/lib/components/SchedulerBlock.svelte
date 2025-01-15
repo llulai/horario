@@ -2,6 +2,7 @@
   import currently from '$lib/state/currently.svelte';
   import type { Day, Period } from '$lib/state/timetable.svelte';
   import timetable from '$lib/state/timetable.svelte';
+  import { getColor } from '$lib/utils';
 
   let {
     day,
@@ -12,15 +13,44 @@
     day: Day;
     period: Period;
   } = $props();
-  let bg = $derived(
-    isAvailable !== null ? (isAvailable ? 'bg-green-100' : 'bg-red-100') : 'bg-gray-100'
-  );
+
+  let isHover = $state(false);
+
+  const bg = $derived.by(() => {
+    if (isAvailable && isHover && currently.dragging !== null) {
+      if (currently.dragging.kind === 'teacher')
+        return getColor(currently.dragging.lecture, 'subject');
+      if (currently.dragging.kind === 'classGroup')
+        return getColor(currently.dragging.lecture, 'classGroup');
+    }
+    return isAvailable !== null ? (isAvailable ? 'bg-green-100' : 'bg-red-100') : 'bg-gray-100';
+  });
+
+  const text = $derived.by(() => {
+    if (isAvailable && isHover && currently.dragging !== null) {
+      if (currently.dragging.kind === 'teacher') return currently.dragging.lecture.subject;
+      if (currently.dragging.kind === 'classGroup') return currently.dragging.lecture.classGroup;
+    }
+
+    return '';
+  });
+
+  const handleDragEnter = (ev: DragEvent) => {
+    ev.preventDefault();
+    isHover = true;
+  };
+
+  const handleDragLeave = (ev: DragEvent) => {
+    ev.preventDefault();
+    isHover = false;
+  };
 
   const handleDragOver = (ev: DragEvent) => {
     ev.preventDefault();
   };
 
   const handleOnDrop = (event: DragEvent) => {
+    isHover = false;
     if (event.dataTransfer && isAvailable) {
       if (currently.dragging?.kind === 'blockedPeriod') {
         timetable.addBlockedPeriod({
@@ -36,4 +66,12 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class={`rounded-[2px] ${bg}`} ondragover={handleDragOver} ondrop={handleOnDrop}></div>
+<div
+  class={`rounded-[2px] ${bg} flex flex-col items-center justify-center text-[20px] text-white`}
+  ondragenter={handleDragEnter}
+  ondragleave={handleDragLeave}
+  ondragover={handleDragOver}
+  ondrop={handleOnDrop}
+>
+  {text}
+</div>

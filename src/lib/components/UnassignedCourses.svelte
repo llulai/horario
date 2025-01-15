@@ -18,7 +18,12 @@
       <div class="flex w-[222px] flex-row flex-wrap gap-2">
         {#each lectures as lecture}
           {#key lecture.id}
-            <SubjectCard {lecture} show="classGroup" />
+            <SubjectCard
+              {lecture}
+              show="classGroup"
+              double={lecture.duration === 2}
+              rounded={true}
+            />
           {/key}
         {/each}
       </div>

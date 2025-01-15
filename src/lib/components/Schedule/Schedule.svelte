@@ -31,7 +31,7 @@
   {/each}
 
   {#each periodPairs as periods}
-    <div class="flex flex-col gap-[2px] text-[8px]">
+    <div class="flex flex-col items-center justify-center text-[8px]">
       {#each periods as period}
         <div>{period}</div>
       {/each}
@@ -46,7 +46,7 @@
           {show}
         />
       {:else if assignedSchedule[day][7] !== null}
-        {#key assignedSchedule[day][periods[0]]}
+        {#key assignedSchedule[day][7]}
           <SubjectCardSmall
             lecture={assignedSchedule[day][7]}
             {show}
@@ -54,8 +54,8 @@
             rounded={true}
           />
         {/key}
-      {:else if blockedSchedule[day][periods[0]] !== null}
-        {#key blockedSchedule[day][periods[0]]}
+      {:else if blockedSchedule[day][7] !== null}
+        {#key blockedSchedule[day][7]}
           <BlockedPeriodCardSmall />
         {/key}
       {:else}

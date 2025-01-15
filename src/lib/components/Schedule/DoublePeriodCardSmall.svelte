@@ -26,7 +26,7 @@
   });
 </script>
 
-{#if sameLecture && firstLecture}
+{#if firstLecture && (sameLecture || firstLecture.duration === 2)}
   <SubjectCardSmall lecture={firstLecture} {show} double={true} rounded={true} />
 {:else}
   <div class="flex flex-col overflow-hidden rounded-[2px] bg-gray-100">

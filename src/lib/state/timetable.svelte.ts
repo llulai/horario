@@ -183,7 +183,18 @@ const timetable: Timetable = {
   setLessons(lessons: Lesson[]) {
     // update lectures
     lectures = lessons.reduce((lec: Record<string, Lecture>, lesson) => {
-      for (let i = 0; i < lesson.hours; i++) {
+      for (let i = 0; i < Math.floor(lesson.hours / 2); i++) {
+        const uuid = uuidv4();
+        lec[uuid] = {
+          id: uuid,
+          teacher: lesson.teacher,
+          classGroup: lesson.classGroup,
+          subject: lesson.subject,
+          duration: 2
+        };
+      }
+
+      for (let i = 0; i < lesson.hours % 2; i++) {
         const uuid = uuidv4();
         lec[uuid] = {
           id: uuid,
