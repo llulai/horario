@@ -11,8 +11,6 @@
     await writableStream.write(JSON.stringify(exportedLectures));
     await writableStream.close();
   };
-
-  $inspect(timetable.byTeacher['Ana Luisa Barraza']);
 </script>
 
 <div class="flex h-20 flex-row items-center justify-between border-b border-gray-200 px-6">
