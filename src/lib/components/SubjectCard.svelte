@@ -39,6 +39,11 @@
   const handleDblClick = () => {
     timetable.removeLectureTimeslot(lecture.id);
   };
+
+  const handleContextMenu = (ev: MouseEvent) => {
+    ev.preventDefault();
+    timetable.splitLecture(lecture.id);
+  };
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -48,6 +53,7 @@
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   ondblclick={handleDblClick}
+  oncontextmenu={handleContextMenu}
 >
   {lecture[show]}
 </div>

@@ -63,6 +63,7 @@ type Timetable = {
   setLessons: (lessons: Lesson[]) => void;
   setLectureTimeslot: (lectureId: string, timeslot: Timeslot) => void;
   removeLectureTimeslot: (lectureId: string) => void;
+  splitLecture: (lectureId: string) => void;
   addBlockedPeriod: (blockedPeriod: BlockedPeriod) => void;
   removeBlockedPeriod: (blockedPeriodId: string) => void;
   exportLectures: () => LectureExport[];
@@ -216,6 +217,19 @@ const timetable: Timetable = {
   removeLectureTimeslot(id: string) {
     const lecture = lectures[id];
     delete lecture.timeslot;
+  },
+
+  splitLecture(id: string) {
+    const lecture = lectures[id];
+    if (lecture.duration === 2) {
+      const id1 = uuidv4();
+      const id2 = uuidv4();
+
+      lectures[id1] = { ...lecture, id: id1, duration: 1, timeslot: undefined };
+      lectures[id2] = { ...lecture, id: id2, duration: 1, timeslot: undefined };
+
+      delete lectures[id];
+    }
   },
 
   addBlockedPeriod(blockedPeriod: BlockedPeriod) {
