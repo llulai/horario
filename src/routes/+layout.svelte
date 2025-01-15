@@ -4,6 +4,7 @@
   let { children } = $props();
 
   const saveFile = async () => {
+    // @ts-expect-error: Using a new web api for saving file
     const newHandle = await window.showSaveFilePicker({ suggestedName: 'lectures.json' });
     const writableStream = await newHandle.createWritable();
     const exportedLectures = timetable.exportLectures();

@@ -34,7 +34,7 @@
       <div>{period}</div>
     </div>
     {#each days as day}
-      {#if assignedSchedule && assignedSchedule[day] && assignedSchedule[day][period] !== null}
+      {#if assignedSchedule[day][period] !== null}
         {#key assignedSchedule[day][period]}
           <SubjectCardSmall lecture={assignedSchedule[day][period]} {show} />
         {/key}

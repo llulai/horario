@@ -36,7 +36,7 @@ export const GET: RequestHandler = async () => {
   if (error) throw error;
 
   return json(
-    // @ts-ignore
+    // @ts-expect-error: Boring type casting from supabase
     data.map((lesson: RawLesson) => {
       return {
         id: lesson.id,

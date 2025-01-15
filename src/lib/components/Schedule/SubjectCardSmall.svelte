@@ -58,7 +58,7 @@
         case '5B':
           return 'bg-[#FACC15]';
         default:
-          'bg-gray-200';
+          return 'bg-gray-200';
       }
     }
   };

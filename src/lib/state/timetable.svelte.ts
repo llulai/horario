@@ -57,6 +57,17 @@ type LectureExport = {
   possibleTimeslots: Timeslot[];
 };
 
+type Timetable = {
+  byTeacher: ScheduleByTeacher;
+  byClass: ScheduleByCourse;
+  setLessons: (lessons: Lesson[]) => void;
+  setLectureTimeslot: (lectureId: string, timeslot: Timeslot) => void;
+  removeLectureTimeslot: (lectureId: string) => void;
+  addBlockedPeriod: (blockedPeriod: BlockedPeriod) => void;
+  removeBlockedPeriod: (blockedPeriodId: string) => void;
+  exportLectures: () => LectureExport[];
+};
+
 export const getEmptySchedule: <T>(val: T) => Record<Day, Record<Period, T>> = (val) => {
   return {
     1: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
@@ -71,9 +82,8 @@ export const getEmptySchedule: <T>(val: T) => Record<Day, Record<Period, T>> = (
 /****** interactions ******/
 /*************************/
 
-let lessons = $state<Record<string, Lesson>>({});
 let lectures = $state<Record<string, Lecture>>({});
-let blockedPeriods = $state<Record<string, BlockedPeriod>>({});
+const blockedPeriods = $state<Record<string, BlockedPeriod>>({});
 
 const byTeacher = $derived.by<ScheduleByTeacher>(() => {
   const lecturesByTeacher = Object.values(lectures).reduce(
@@ -163,21 +173,16 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
 /****** timetable ******/
 /**********************/
 
-const timetable = {
+const timetable: Timetable = {
   get byTeacher() {
     return byTeacher;
   },
   get byClass() {
     return byClass;
   },
-  setLessons(newLessons: Lesson[]) {
-    lessons = newLessons.reduce((nLessons: Record<string, Lesson>, nLesson: Lesson) => {
-      nLessons[nLesson.id] = nLesson;
-      return nLessons;
-    }, {});
-
+  setLessons(lessons: Lesson[]) {
     // update lectures
-    lectures = newLessons.reduce((lec: Record<string, Lecture>, lesson) => {
+    lectures = lessons.reduce((lec: Record<string, Lecture>, lesson) => {
       for (let i = 0; i < lesson.hours; i++) {
         const uuid = uuidv4();
         lec[uuid] = {

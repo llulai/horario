@@ -1,7 +1,7 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
   import timetable from '$lib/state/timetable.svelte';
-  import Schedule from './Schedule.svelte';
+  import Schedule from '$lib/components/Schedule/Schedule.svelte';
 </script>
 
 <!-- teachers -->
