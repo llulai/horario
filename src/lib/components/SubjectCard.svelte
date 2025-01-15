@@ -15,7 +15,7 @@
   let dragging = $state(false);
 
   const getColor = (lecture: Lecture) => {
-    if (show === 'classGroup') {
+    if (show === 'subject') {
       switch (lecture.subject) {
         case 'LEN':
           return 'bg-[#ea580c]';
@@ -43,7 +43,7 @@
           return 'bg-gray-200';
       }
     }
-    if (show === 'subject') {
+    if (show === 'classGroup') {
       switch (lecture.classGroup) {
         case '2A':
           return 'bg-[#2563EB]';

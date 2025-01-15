@@ -3,15 +3,20 @@
 
   const {
     lecture,
+    double,
+    rounded,
     show
   }: {
     lecture: Lecture;
+    double: boolean;
+    rounded: boolean;
     show: 'classGroup' | 'subject';
   } = $props();
-  const height = lecture.duration == 1 ? 'h-[12px]' : 'h-[24 sfsx]';
+
+  const height = double ? 'h-[24px]' : 'h-[12px]';
 
   const getColor = (lecture: Lecture) => {
-    if (show === 'classGroup') {
+    if (show === 'subject') {
       switch (lecture.subject) {
         case 'LEN':
           return 'bg-[#ea580c]';
@@ -39,7 +44,7 @@
           return 'bg-gray-200';
       }
     }
-    if (show === 'subject') {
+    if (show === 'classGroup') {
       switch (lecture.classGroup) {
         case '2A':
           return 'bg-[#2563EB]';
@@ -67,7 +72,7 @@
 </script>
 
 <div
-  class={`w-[24px] rounded-[2px] ${height} ${color} flex flex-col items-center justify-center text-[10px] text-white`}
+  class={`w-[24px] ${height} ${color} ${rounded ? 'rounded-[2px]' : ''} flex flex-col items-center justify-center text-[10px] text-white`}
 >
   {lecture[show]}
 </div>
