@@ -69,10 +69,16 @@
         <BlockedPeriodCard blockedPeriod={firstBlockedPeriod} />
       {/key}
     {:else}
+      <!-- TODO: fixt isAvailable -->
       <SchedulerBlock
         {day}
         period={periods[0]}
-        isAvailable={currently.dragging !== null ? true : null}
+        isAvailable={currently.dragging !== null
+          ? (availability[day][periods[0]] &&
+              currently.dragging.kind !== 'blockedPeriod' &&
+              currently.dragging.lecture.duration === 1) ||
+            currently.dragging.kind === 'blockedPeriod'
+          : null}
       />
     {/if}
     {#if secondLecture !== null}
