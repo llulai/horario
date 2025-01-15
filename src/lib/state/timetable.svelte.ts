@@ -50,6 +50,14 @@ export type ClassSchedule = {
 type ScheduleByCourse = Record<string, ClassSchedule>;
 type ScheduleByTeacher = Record<string, ClassSchedule>;
 
+
+type LectureExport = {
+  teacher: string;
+  className: string;
+  subject: string;
+  possibleTimeslots: Timeslot[];
+}
+
 export const getEmptySchedule: <T>(val: T) => Record<Day, Record<Period, T>> = (val) => {
   return {
     1: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
@@ -202,6 +210,43 @@ const timetable = {
 
   removeBlockedPeriod(id: string) {
     delete blockedPeriods[id];
+  },
+
+  exportLectures() {
+    return Object.values(lectures).map((lecture) => {
+      if (lecture.timeslot === undefined) {
+        const possibleTimeslots: Timeslot[] = [];
+
+        const days = [1, 2, 3, 4, 5] as const;
+        const periods = [1, 2, 3, 4, 5, 6, 7] as const;
+
+        days.forEach(day => {
+          periods.forEach(period => {
+
+            if (byTeacher[lecture.teacher].availabilitySchedule[day][period] && byClass[lecture.classGroup].availabilitySchedule[day][period]) {
+              possibleTimeslots.push({ day, period });
+            }
+
+          });
+        });
+
+        return {
+          teacher: lecture.teacher,
+          subject: lecture.subject,
+          className: lecture.classGroup,
+          possibleTimeslots
+        }
+      } else {
+        return {
+          teacher: lecture.teacher,
+          subject: lecture.subject,
+          className: lecture.classGroup,
+          possibleTimeslots: [{ day: lecture.timeslot.day, period: lecture.timeslot.period }],
+        }
+      }
+    });
+
+
   }
 };
 
