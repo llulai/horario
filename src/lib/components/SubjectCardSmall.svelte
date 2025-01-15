@@ -10,34 +10,60 @@
   } = $props();
   const height = lecture.duration == 1 ? 'h-[12px]' : 'h-[24 sfsx]';
 
-  const subjectColors = {
-    LEN: 'bg-[#ea580c]',
-    MAT: 'bg-[#DB2777]',
-    HIS: 'bg-[#2563EB]',
-    CsN: 'bg-[#059669]',
-    ING: 'bg-[#DC2626]',
-    MUS: 'bg-[#FBBF24]',
-    ArV: 'bg-[#5EEAD4]',
-    TEC: 'bg-[#9333EA]',
-    EdF: 'bg-[#22D3EE]',
-    ORI: 'bg-[#65A30D]',
-    REL: 'bg-[#E879F9]'
-  } as const;
+  const getColor = (lecture: Lecture) => {
+    if (show === 'classGroup') {
+      switch (lecture.subject) {
+        case 'LEN':
+          return 'bg-[#ea580c]';
+        case 'MAT':
+          return 'bg-[#DB2777]';
+        case 'HIS':
+          return 'bg-[#2563EB]';
+        case 'CsN':
+          return 'bg-[#059669]';
+        case 'ING':
+          return 'bg-[#DC2626]';
+        case 'MUS':
+          return 'bg-[#FBBF24]';
+        case 'ArV':
+          return 'bg-[#5EEAD4]';
+        case 'TEC':
+          return 'bg-[#9333EA]';
+        case 'EdF':
+          return 'bg-[#22D3EE]';
+        case 'ORI':
+          return 'bg-[#65A30D]';
+        case 'REL':
+          return 'bg-[#E879F9]';
+        default:
+          return 'bg-gray-200';
+      }
+    }
+    if (show === 'subject') {
+      switch (lecture.classGroup) {
+        case '2A':
+          return 'bg-[#2563EB]';
+        case '2B':
+          return 'bg-[#9333EA]';
+        case '3A':
+          return 'bg-[#DC2626]';
+        case '3B':
+          return 'bg-[#EA580C]';
+        case '4A':
+          return 'bg-[#D97706]';
+        case '4B':
+          return 'bg-[#38BDF8]';
+        case '5A':
+          return 'bg-[#16A34A]';
+        case '5B':
+          return 'bg-[#FACC15]';
+        default:
+          'bg-gray-200';
+      }
+    }
+  };
 
-  const classesColors = {
-    '2A': 'bg-[#2563EB]',
-    '2B': 'bg-[#9333EA]',
-    '3A': 'bg-[#DC2626]',
-    '3B': 'bg-[#EA580C]',
-    '4A': 'bg-[#D97706]',
-    '4B': 'bg-[#38BDF8]',
-    '5A': 'bg-[#16A34A]',
-    '5B': 'bg-[#FACC15]'
-  } as const;
-
-  // @ts-ignore
-  const color =
-    show === 'classGroup' ? classesColors[lecture.classGroup] : subjectColors[lecture.subject];
+  const color = getColor(lecture);
 </script>
 
 <div

@@ -32,6 +32,7 @@
   };
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   class={`h-[24px] w-12 rounded-[2px] border border-red-600 bg-white text-red-600 ${opacity} flex flex-col items-center justify-center text-[20px] hover:cursor-pointer`}
   draggable="true"

@@ -35,4 +35,5 @@
   };
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class={`rounded-[2px] ${bg}`} ondragover={handleDragOver} ondrop={handleOnDrop}></div>
