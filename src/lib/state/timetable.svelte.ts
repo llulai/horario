@@ -25,14 +25,15 @@ export type Lecture = {
   teacher: string;
   classGroup: string;
   subject: string;
-  duration: number;
+  duration: 1 | 2;
   timeslot?: Timeslot;
 };
 
 export type BlockedPeriod = {
-  id: string;
+  id: string | null;
   kind: 'teacher' | 'classGroup';
   name: string;
+  duration: 1 | 2;
   timeslot: Timeslot;
 };
 
@@ -65,6 +66,7 @@ type Timetable = {
   removeLectureTimeslot: (lectureId: string) => void;
   splitLecture: (lectureId: string) => void;
   addBlockedPeriod: (blockedPeriod: BlockedPeriod) => void;
+  setBlockedPeriodTimeslot: (blockedPeriodId: string, timeslot: Timeslot) => void;
   removeBlockedPeriod: (blockedPeriodId: string) => void;
   exportLectures: () => LectureExport[];
   problemScale: bigint;
@@ -309,6 +311,10 @@ const timetable: Timetable = {
   addBlockedPeriod(blockedPeriod: BlockedPeriod) {
     const id = uuidv4();
     blockedPeriods[id] = { ...blockedPeriod, id };
+  },
+
+  setBlockedPeriodTimeslot(id: string, timeslot: Timeslot) {
+    blockedPeriods[id] = { ...blockedPeriods[id], timeslot };
   },
 
   removeBlockedPeriod(id: string) {

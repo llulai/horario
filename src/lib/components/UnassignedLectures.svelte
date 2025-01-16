@@ -27,7 +27,8 @@
   <div class="flex flex-row gap-2">
     Bloquear Horario
     <div class="flex w-[222px] flex-row flex-wrap gap-2">
-      <BlockedPeriodCard blockedPeriod={{ ...currently.selected, id: 'newId' }} />
+      <BlockedPeriodCard blockedPeriod={{ ...currently.selected, id: null, duration: 1 }} />
+      <BlockedPeriodCard blockedPeriod={{ ...currently.selected, id: null, duration: 2 }} />
     </div>
   </div>
 {/if}

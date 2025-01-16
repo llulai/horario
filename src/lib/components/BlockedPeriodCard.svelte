@@ -11,6 +11,7 @@
   let dragging = $state(false);
 
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
+  const height = $derived(blockedPeriod.duration === 1 ? 'h-6' : 'h-12');
 
   const handleDragStart = (event: DragEvent) => {
     dragging = true;
@@ -28,13 +29,13 @@
   };
 
   const handleDblClick = () => {
-    timetable.removeBlockedPeriod(blockedPeriod.id);
+    if (blockedPeriod.id) timetable.removeBlockedPeriod(blockedPeriod.id);
   };
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class={`h-[24px] w-12 rounded-[2px] border border-red-600 bg-white text-red-600 ${opacity} flex flex-col items-center justify-center text-[20px] hover:cursor-pointer`}
+  class={`${height} w-12 rounded-[2px] border border-red-600 bg-white text-red-600 ${opacity} flex flex-col items-center justify-center text-[20px] hover:cursor-pointer`}
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}

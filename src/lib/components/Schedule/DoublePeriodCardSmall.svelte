@@ -28,6 +28,8 @@
 
 {#if firstLecture && (sameLecture || firstLecture.duration === 2)}
   <SubjectCardSmall lecture={firstLecture} {show} double={true} rounded={true} />
+{:else if firstBlockedPeriod && firstBlockedPeriod.duration === 2}
+  <BlockedPeriodCardSmall duration={2} />
 {:else}
   <div class="flex flex-col overflow-hidden rounded-[2px] bg-gray-100">
     {#if firstLecture !== null}
@@ -36,10 +38,10 @@
       {/key}
     {:else if firstBlockedPeriod !== null}
       {#key firstBlockedPeriod.id}
-        <BlockedPeriodCardSmall />
+        <BlockedPeriodCardSmall duration={1} />
       {/key}
     {:else}
-      <div class="h-[12px] w-6 bg-gray-100"></div>
+      <div class="h-3 w-6 bg-gray-100"></div>
     {/if}
     {#if secondLecture !== null}
       {#key secondLecture.id}
@@ -47,10 +49,10 @@
       {/key}
     {:else if secondBlockedPeriod !== null}
       {#key secondBlockedPeriod.id}
-        <BlockedPeriodCardSmall />
+        <BlockedPeriodCardSmall duration={1} />
       {/key}
     {:else}
-      <div class="h-[12px] w-6 bg-gray-100"></div>
+      <div class="h-3 w-6 bg-gray-100"></div>
     {/if}
   </div>
 {/if}

@@ -52,7 +52,11 @@
   {#key firstLecture.id}
     <SubjectCard lecture={firstLecture} {show} double={true} rounded={true} />
   {/key}
-{:else if bothAvailable && currently.dragging !== null && currently.dragging.kind !== 'blockedPeriod' && currently.dragging.lecture.duration === 2}
+{:else if firstBlockedPeriod && firstBlockedPeriod.duration === 2}
+  {#key firstBlockedPeriod.id}
+    <BlockedPeriodCard blockedPeriod={firstBlockedPeriod} />
+  {/key}
+{:else if bothAvailable && currently.dragging !== null && ((currently.dragging.kind !== 'blockedPeriod' && currently.dragging.lecture.duration === 2) || (currently.dragging.kind === 'blockedPeriod' && currently.dragging.blockedPeriod.duration === 2))}
   <SchedulerBlock
     {day}
     period={periods[0]}

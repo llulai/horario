@@ -56,7 +56,7 @@
         {/key}
       {:else if blockedSchedule[day][7] !== null}
         {#key blockedSchedule[day][7].id}
-          <BlockedPeriodCardSmall />
+          <BlockedPeriodCardSmall duration={1} />
         {/key}
       {:else}
         <div class="rounded-[2px] bg-gray-100"></div>

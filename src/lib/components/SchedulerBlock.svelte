@@ -56,10 +56,14 @@
     isHover = false;
     if (event.dataTransfer && isAvailable) {
       if (currently.dragging?.kind === 'blockedPeriod') {
-        timetable.addBlockedPeriod({
-          ...currently.dragging.blockedPeriod,
-          timeslot: { day, period }
-        });
+        if (currently.dragging.blockedPeriod.id) {
+          timetable.setBlockedPeriodTimeslot(currently.dragging.blockedPeriod.id, { day, period });
+        } else {
+          timetable.addBlockedPeriod({
+            ...currently.dragging.blockedPeriod,
+            timeslot: { day, period }
+          });
+        }
       } else {
         const lectureId = event.dataTransfer.getData('text/plain');
         timetable.setLectureTimeslot(lectureId, { day: day, period: period });
