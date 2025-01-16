@@ -15,6 +15,12 @@
 
 <div class="flex h-20 flex-row items-center justify-between border-b border-gray-200 px-6">
   <div class="text-[24px]">Super Horario</div>
+  <div>
+    {timetable.problemScale.toLocaleString('es-CL', {
+      notation: 'scientific',
+      maximumFractionDigits: 3
+    })}
+  </div>
   <div class="flex flex-row items-center gap-6 text-[14px]">
     <button onclick={saveFile}>Export</button>
     <div>Profesores</div>

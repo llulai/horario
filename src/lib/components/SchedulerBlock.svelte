@@ -19,9 +19,11 @@
   const bg = $derived.by(() => {
     if (isAvailable && isHover && currently.dragging !== null) {
       if (currently.dragging.kind === 'teacher')
-        return getColor(currently.dragging.lecture, 'subject');
+        return `${getColor(currently.dragging.lecture, 'subject')} text-white`;
       if (currently.dragging.kind === 'classGroup')
-        return getColor(currently.dragging.lecture, 'classGroup');
+        return `${getColor(currently.dragging.lecture, 'classGroup')} text-white`;
+      if (currently.dragging.kind === 'blockedPeriod')
+        return 'bg-white border border-red-600 text-red-600';
     }
     return isAvailable !== null ? (isAvailable ? 'bg-green-100' : 'bg-red-100') : 'bg-gray-100';
   });
@@ -30,6 +32,7 @@
     if (isAvailable && isHover && currently.dragging !== null) {
       if (currently.dragging.kind === 'teacher') return currently.dragging.lecture.subject;
       if (currently.dragging.kind === 'classGroup') return currently.dragging.lecture.classGroup;
+      if (currently.dragging.kind === 'blockedPeriod') return 'X';
     }
 
     return '';
@@ -67,7 +70,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class={`rounded-[2px] ${bg} flex flex-col items-center justify-center text-[20px] text-white`}
+  class={`rounded-[2px] ${bg} flex flex-col items-center justify-center text-[20px]`}
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}

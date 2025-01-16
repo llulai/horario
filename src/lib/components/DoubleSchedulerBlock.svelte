@@ -49,7 +49,9 @@
 </script>
 
 {#if firstLecture && (sameLecture || firstLecture.duration === 2)}
-  <SubjectCard lecture={firstLecture} {show} double={true} rounded={true} />
+  {#key firstLecture.id}
+    <SubjectCard lecture={firstLecture} {show} double={true} rounded={true} />
+  {/key}
 {:else if bothAvailable && currently.dragging !== null && currently.dragging.kind !== 'blockedPeriod' && currently.dragging.lecture.duration === 2}
   <SchedulerBlock
     {day}
@@ -69,7 +71,6 @@
         <BlockedPeriodCard blockedPeriod={firstBlockedPeriod} />
       {/key}
     {:else}
-      <!-- TODO: fixt isAvailable -->
       <SchedulerBlock
         {day}
         period={periods[0]}

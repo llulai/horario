@@ -67,6 +67,7 @@ type Timetable = {
   addBlockedPeriod: (blockedPeriod: BlockedPeriod) => void;
   removeBlockedPeriod: (blockedPeriodId: string) => void;
   exportLectures: () => LectureExport[];
+  problemScale: bigint;
 };
 
 export const getEmptySchedule: <T>(val: T) => Record<Day, Record<Period, T>> = (val) => {
@@ -153,12 +154,22 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
       }
 
       if (lecture.timeslot !== undefined) {
+        // assign lecture to schedule
         lecByCourse[lecture.classGroup].assignedSchedule[lecture.timeslot.day][
           lecture.timeslot.period
         ] = lecture;
+
+        // update availability
         lecByCourse[lecture.classGroup].availabilitySchedule[lecture.timeslot.day][
           lecture.timeslot.period
         ] = false;
+
+        if (lecture.duration === 2) {
+          //@ts-expect-error: the first period in a lecture of duration 2 is either 1, 3, 5
+          lecByCourse[lecture.classGroup].availabilitySchedule[lecture.timeslot.day][
+            lecture.timeslot.period + 1
+          ] = false;
+        }
       } else {
         lecByCourse[lecture.classGroup].unassignedLectures.push(lecture);
       }
@@ -182,55 +193,53 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
   return lecturesByClass;
 });
 
-// const problemScale = $derived.by(() => {
-//   const scale: Record<number, number> = {};
-//   const days = [1, 2, 3, 4, 5] as const;
-//   const singlePeriods = [1, 2, 3, 4, 5, 6, 7] as const;
-//   const doublePeriods = [1, 3, 5] as const;
-//
-//   Object.values(lectures).forEach((lecture) => {
-//     if (lecture.timeslot === undefined) {
-//       const options = days.reduce((accDays: number, day: Day) => {
-//         if (lecture.duration == 1) {
-//           accDays += singlePeriods.reduce((accPeriods: number, period) => {
-//             accPeriods +=
-//               byTeacher[lecture.teacher].availabilitySchedule[day][period] &&
-//               byClass[lecture.classGroup].availabilitySchedule[day][period]
-//                 ? 1
-//                 : 0;
-//
-//             return accPeriods;
-//           }, 0);
-//         } else {
-//           accDays += doublePeriods.reduce((accPeriods: number, period) => {
-//             accPeriods +=
-//               byTeacher[lecture.teacher].availabilitySchedule[day][period] &&
-//               byClass[lecture.classGroup].availabilitySchedule[day][period]
-//                 ? 1
-//                 : 0;
-//
-//             return accPeriods;
-//           }, 0);
-//         }
-//
-//         return accDays;
-//       }, 0);
-//
-//       if (!(options in scale)) {
-//         scale[options] = 0;
-//       }
-//
-//       scale[options] += 1;
-//     }
-//   });
-//
-//   console.warn(scale);
-//
-//   return Object.entries(scale).reduce((acc: number, [k, v]) => {
-//     acc = acc * k ** v;
-//     return acc;
-//   }, 0);
-// });
+const problemScale = $derived.by(() => {
+  const scale: Record<number, number> = {};
+  const days = [1, 2, 3, 4, 5] as const;
+  const singlePeriods = [1, 2, 3, 4, 5, 6, 7] as const;
+  const doublePeriods = [1, 3, 5] as const;
+
+  Object.values(lectures).forEach((lecture) => {
+    if (lecture.timeslot === undefined) {
+      const options = days.reduce((accDays: number, day: Day) => {
+        if (lecture.duration == 1) {
+          accDays += singlePeriods.reduce((accPeriods: number, period) => {
+            accPeriods +=
+              byTeacher[lecture.teacher].availabilitySchedule[day][period] &&
+              byClass[lecture.classGroup].availabilitySchedule[day][period]
+                ? 1
+                : 0;
+
+            return accPeriods;
+          }, 0);
+        } else {
+          accDays += doublePeriods.reduce((accPeriods: number, period) => {
+            accPeriods +=
+              byTeacher[lecture.teacher].availabilitySchedule[day][period] &&
+              byClass[lecture.classGroup].availabilitySchedule[day][period]
+                ? 1
+                : 0;
+
+            return accPeriods;
+          }, 0);
+        }
+
+        return accDays;
+      }, 0);
+
+      if (!(options in scale)) {
+        scale[options] = 0;
+      }
+
+      scale[options] += 1;
+    }
+  });
+
+  return Object.entries(scale).reduce((acc: bigint, [k, v]) => {
+    acc = acc * BigInt(k) ** BigInt(v);
+    return acc;
+  }, BigInt(1));
+});
 
 /************************/
 /****** timetable ******/
@@ -242,6 +251,9 @@ const timetable: Timetable = {
   },
   get byClass() {
     return byClass;
+  },
+  get problemScale() {
+    return problemScale;
   },
   setLessons(lessons: Lesson[]) {
     // update lectures

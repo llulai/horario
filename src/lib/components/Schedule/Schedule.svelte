@@ -46,7 +46,7 @@
           {show}
         />
       {:else if assignedSchedule[day][7] !== null}
-        {#key assignedSchedule[day][7]}
+        {#key assignedSchedule[day][7].id}
           <SubjectCardSmall
             lecture={assignedSchedule[day][7]}
             {show}
@@ -55,7 +55,7 @@
           />
         {/key}
       {:else if blockedSchedule[day][7] !== null}
-        {#key blockedSchedule[day][7]}
+        {#key blockedSchedule[day][7].id}
           <BlockedPeriodCardSmall />
         {/key}
       {:else}
