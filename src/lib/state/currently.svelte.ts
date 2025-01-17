@@ -17,13 +17,19 @@ export type Dragging =
 
 let selected = $state<Selected | null>(null);
 let dragging = $state<Dragging | null>(null);
+let hovering = $state<Dragging | null>(null);
 
 const currently = {
   get selected() {
     return selected;
   },
+
   get dragging() {
     return dragging;
+  },
+
+  get hovering() {
+    return hovering;
   },
 
   selectTeacher(name: string) {
@@ -42,6 +48,10 @@ const currently = {
 
   setDragging(currentlyDragging: Dragging | null) {
     dragging = currentlyDragging;
+  },
+
+  setHovering(currentlyDragging: Dragging | null) {
+    hovering = currentlyDragging;
   }
 };
 

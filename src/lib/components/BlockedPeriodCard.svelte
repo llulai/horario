@@ -31,6 +31,17 @@
   const handleDblClick = () => {
     if (blockedPeriod.id) timetable.removeBlockedPeriod(blockedPeriod.id);
   };
+
+  const handleMouseEnter = () => {
+    currently.setHovering({
+      kind: 'blockedPeriod',
+      blockedPeriod
+    });
+  };
+
+  const handleMouseLeave = () => {
+    currently.setHovering(null);
+  };
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -40,6 +51,8 @@
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   ondblclick={handleDblClick}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
 >
   X
 </div>

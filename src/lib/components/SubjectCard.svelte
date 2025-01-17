@@ -44,6 +44,17 @@
     ev.preventDefault();
     timetable.splitLecture(lecture.id);
   };
+
+  const handleMouseEnter = () => {
+    currently.setHovering({
+      kind: show === 'classGroup' ? 'classGroup' : 'teacher',
+      lecture
+    });
+  };
+
+  const handleMouseLeave = () => {
+    currently.setHovering(null);
+  };
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -54,6 +65,8 @@
   ondragend={handleDragEnd}
   ondblclick={handleDblClick}
   oncontextmenu={handleContextMenu}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
 >
   {lecture[show]}
 </div>

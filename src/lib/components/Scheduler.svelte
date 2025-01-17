@@ -1,7 +1,5 @@
 <script lang="ts">
-  import currently from '$lib/state/currently.svelte';
   import type { BlockedSchedule, AssignedSchedule } from '$lib/state/timetable.svelte';
-  import timetable, { getEmptySchedule } from '$lib/state/timetable.svelte';
   import BlockedPeriodCard from './BlockedPeriodCard.svelte';
   import DoubleSchedulerBlock from './DoubleSchedulerBlock.svelte';
   import SchedulerBlock from './SchedulerBlock.svelte';
@@ -18,16 +16,6 @@
 
   const periodPairs = [[1, 2], [3, 4], [5, 6], [7]] as const;
   const days = [1, 2, 3, 4, 5] as const;
-  let availability = $derived.by(() => {
-    if (currently.dragging != null) {
-      if (currently.dragging.kind === 'teacher') {
-        return timetable.byTeacher[currently.dragging.lecture.teacher].availabilitySchedule;
-      } else if (currently.dragging.kind === 'classGroup') {
-        return timetable.byClass[currently.dragging.lecture.classGroup].availabilitySchedule;
-      }
-    }
-    return getEmptySchedule(true);
-  });
 </script>
 
 <div
@@ -50,7 +38,6 @@
           secondLecture={assignedSchedule[day][periods[1]]}
           firstBlockedPeriod={blockedSchedule[day][periods[0]]}
           secondBlockedPeriod={blockedSchedule[day][periods[1]]}
-          {availability}
           {show}
           {day}
           {periods}
@@ -62,16 +49,7 @@
       {:else if blockedSchedule[day][7] !== null}
         <BlockedPeriodCard blockedPeriod={blockedSchedule[day][7]} />
       {:else}
-        <SchedulerBlock
-          {day}
-          period={7}
-          isAvailable={currently.dragging !== null
-            ? (availability[day][7] &&
-                currently.dragging.kind !== 'blockedPeriod' &&
-                currently.dragging.lecture.duration === 1) ||
-              currently.dragging.kind === 'blockedPeriod'
-            : null}
-        />
+        <SchedulerBlock {day} period={7} />
       {/if}
     {/each}
   {/each}

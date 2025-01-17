@@ -6,15 +6,24 @@
 
   let {
     day,
-    period,
-    isAvailable
+    period
   }: {
-    isAvailable: boolean | null;
     day: Day;
     period: Period;
   } = $props();
 
   let isHover = $state(false);
+
+  let isAvailable = $derived.by(() => {
+    if (currently.hovering) {
+      if (currently.hovering.kind !== 'blockedPeriod') {
+        return timetable.availabilityByLecture[currently.hovering.lecture.id][day][period];
+      } else {
+        return true;
+      }
+    }
+    return null;
+  });
 
   const bg = $derived.by(() => {
     if (isAvailable && isHover && currently.dragging !== null) {
