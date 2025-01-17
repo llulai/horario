@@ -54,8 +54,17 @@ export const getColor = (lecture: Lecture, show: 'subject' | 'classGroup') => {
 };
 
 export const formatComplexity = (complexity: bigint) => {
-  return complexity.toLocaleString('es-CL', {
+  const regex = new RegExp(/.*E(\d+)/);
+  const parsedComplexity = complexity.toLocaleString('es-CL', {
     notation: 'scientific',
     maximumFractionDigits: 3
   });
+
+  const match = regex.exec(parsedComplexity);
+
+  if (match && match.length >= 2) {
+    return match[1];
+  }
+
+  return parsedComplexity;
 };

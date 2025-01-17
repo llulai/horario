@@ -23,6 +23,14 @@
         return true;
       }
     }
+    if (currently.dragging) {
+      if (currently.dragging.kind !== 'blockedPeriod') {
+        if (currently.dragging.lecture.id in timetable.availabilityByLecture)
+          return timetable.availabilityByLecture[currently.dragging.lecture.id][day][period];
+      } else {
+        return true;
+      }
+    }
     return null;
   });
 
