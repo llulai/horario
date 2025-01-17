@@ -49,6 +49,7 @@ export type ClassSchedule = {
   assignedLoad: number;
   unassignedLoad: number;
   totalLoad: number;
+  availableLoad: number;
 };
 
 type ScheduleByCourse = Record<string, ClassSchedule>;
@@ -65,6 +66,7 @@ type ProblemScale = {
   total: bigint;
   byTeacher: Record<string, bigint>;
   byClass: Record<string, bigint>;
+  byLecture: Record<string, number>;
 };
 
 type Timetable = {
@@ -111,7 +113,8 @@ const byTeacher = $derived.by<ScheduleByTeacher>(() => {
           blockedSchedule: getEmptySchedule(null),
           assignedLoad: 0,
           unassignedLoad: 0,
-          totalLoad: 0
+          totalLoad: 0,
+          availableLoad: 35
         };
       }
 
@@ -140,6 +143,7 @@ const byTeacher = $derived.by<ScheduleByTeacher>(() => {
     if (kind === 'teacher') {
       // add blocked period
       lecturesByTeacher[name].blockedSchedule[day][period] = blockedPeriod;
+      lecturesByTeacher[name].availableLoad += 1;
     }
   });
 
@@ -158,7 +162,8 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
           blockedSchedule: getEmptySchedule(null),
           assignedLoad: 0,
           unassignedLoad: 0,
-          totalLoad: 0
+          totalLoad: 0,
+          availableLoad: 35
         };
       }
 
@@ -187,6 +192,7 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
     } = blockedPeriod;
     if (kind === 'classGroup') {
       lecturesByClass[name].blockedSchedule[day][period] = blockedPeriod;
+      lecturesByClass[name].availableLoad -= 1;
     }
   });
 
@@ -282,32 +288,42 @@ const problemScale = $derived.by(() => {
   const singlePeriods = [1, 2, 3, 4, 5, 6, 7] as const;
   const doublePeriods = [1, 3, 5] as const;
 
+  const byLecture: ProblemScale['byLecture'] = Object.values(lectures).reduce(
+    (scaleByLecture: Record<string, number>, lecture) => {
+      scaleByLecture[lecture.id] = days.reduce((t, day) => {
+        if (lecture.timeslot) return 1;
+        if (lecture.duration === 1)
+          t += singlePeriods.reduce(
+            (acc, period) => (acc += availabilityByLecture[lecture.id][day][period] ? 1 : 0),
+            0
+          );
+        else
+          t += doublePeriods.reduce(
+            (acc, period) =>
+              (acc +=
+                availabilityByLecture[lecture.id][day][period] &&
+                // @ts-expect-error double duration lectures
+                availabilityByLecture[lecture.id][day][period + 1]
+                  ? 1
+                  : 0),
+            0
+          );
+        return t;
+      }, 0);
+      return scaleByLecture;
+    },
+    {}
+  );
+
   const byTeacher: ProblemScale['byTeacher'] = Object.values(lectures).reduce(
     (scaleByTeacher: Record<string, bigint>, lecture) => {
-      const { teacher, id, timeslot, duration } = lecture;
+      const { teacher, id } = lecture;
 
       if (!(teacher in scaleByTeacher)) {
         scaleByTeacher[teacher] = BigInt(1);
       }
 
-      if (timeslot === undefined) {
-        let options = 0;
-        days.forEach((day) => {
-          if (duration === 1) {
-            singlePeriods.forEach((period) => {
-              options += availabilityByLecture[id][day][period] ? 1 : 0;
-            });
-          } else {
-            doublePeriods.forEach((period) => {
-              options += availabilityByLecture[id][day][period] ? 1 : 0;
-              // @ts-expect-error double periods start at 1, 3 or 5
-              options += availabilityByLecture[id][day][period + 1] ? 1 : 0;
-            });
-          }
-        });
-
-        scaleByTeacher[teacher] *= BigInt(options);
-      }
+      scaleByTeacher[teacher] *= BigInt(byLecture[id]);
       return scaleByTeacher;
     },
     {}
@@ -315,30 +331,13 @@ const problemScale = $derived.by(() => {
 
   const byClass: ProblemScale['byClass'] = Object.values(lectures).reduce(
     (scaleByClass: Record<string, bigint>, lecture) => {
-      const { classGroup, id, timeslot, duration } = lecture;
+      const { classGroup, id } = lecture;
 
       if (!(classGroup in scaleByClass)) {
         scaleByClass[classGroup] = BigInt(1);
       }
 
-      if (timeslot === undefined) {
-        let options = 0;
-        days.forEach((day) => {
-          if (duration === 1) {
-            singlePeriods.forEach((period) => {
-              options += availabilityByLecture[id][day][period] ? 1 : 0;
-            });
-          } else {
-            doublePeriods.forEach((period) => {
-              options += availabilityByLecture[id][day][period] ? 1 : 0;
-              // @ts-expect-error double periods start at 1, 3 or 5
-              options += availabilityByLecture[id][day][period + 1] ? 1 : 0;
-            });
-          }
-        });
-
-        scaleByClass[classGroup] *= BigInt(options);
-      }
+      scaleByClass[classGroup] *= BigInt(byLecture[id]);
       return scaleByClass;
     },
     {}
@@ -360,6 +359,7 @@ const problemScale = $derived.by(() => {
   return {
     byTeacher,
     byClass,
+    byLecture,
     total: totalByTeacher
   };
 });
