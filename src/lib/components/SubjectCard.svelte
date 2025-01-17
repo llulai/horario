@@ -55,18 +55,36 @@
   const handleMouseLeave = () => {
     currently.setHovering(null);
   };
+
+  const nOptions = $derived.by(() => {
+    return Object.values(timetable.availabilityByLecture[lecture.id]).reduce(
+      (accDay, day) =>
+        (accDay += Object.values(day).reduce(
+          (acc, isAvailable: boolean) => (acc += isAvailable ? 1 : 0),
+          0
+        )),
+      0
+    );
+  });
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-  class={`w-12 ${rounded ? 'rounded-[2px]' : ''} ${height} ${color} ${opacity} flex flex-col items-center justify-center text-[20px] text-white hover:cursor-pointer`}
-  draggable="true"
-  ondragstart={handleDragStart}
-  ondragend={handleDragEnd}
-  ondblclick={handleDblClick}
-  oncontextmenu={handleContextMenu}
-  onmouseenter={handleMouseEnter}
-  onmouseleave={handleMouseLeave}
->
-  {lecture[show]}
+<div class="relative">
+  <div
+    class={`w-12 ${rounded ? 'rounded-[2px]' : ''} ${height} ${color} ${opacity} flex flex-col items-center justify-center text-[20px] text-white hover:cursor-pointer`}
+    draggable="true"
+    ondragstart={handleDragStart}
+    ondragend={handleDragEnd}
+    ondblclick={handleDblClick}
+    oncontextmenu={handleContextMenu}
+    onmouseenter={handleMouseEnter}
+    onmouseleave={handleMouseLeave}
+  >
+    {lecture[show]}
+  </div>
+  <div
+    class="absolute right-0 top-0 flex h-4 w-4 -translate-y-1/2 translate-x-1/2 flex-col items-center justify-center rounded-full bg-blue-500 text-[10px] text-white"
+  >
+    {nOptions}
+  </div>
 </div>

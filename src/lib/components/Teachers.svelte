@@ -2,6 +2,7 @@
   import currently from '$lib/state/currently.svelte';
   import timetable from '$lib/state/timetable.svelte';
   import Schedule from '$lib/components/Schedule/Schedule.svelte';
+  import { formatComplexity } from '$lib/utils';
 </script>
 
 <!-- teachers -->
@@ -11,6 +12,13 @@
     {#each Object.keys(timetable.byTeacher) as teacher}
       <div class="flex flex-col items-center gap-1">
         <div class="pl-4 text-[12px]">{teacher}</div>
+        <div class="pl-4 text-[10px]">
+          complexity: {formatComplexity(timetable.problemScale.byTeacher[teacher])}
+        </div>
+        <div class="pl-4 text-[10px]">
+          {timetable.byTeacher[teacher].assignedLoad} out of {timetable.byTeacher[teacher]
+            .totalLoad}
+        </div>
         <Schedule
           onclick={() => currently.selectTeacher(teacher)}
           assignedSchedule={timetable.byTeacher[teacher].assignedSchedule}

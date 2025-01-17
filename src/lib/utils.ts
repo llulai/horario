@@ -52,3 +52,10 @@ export const getColor = (lecture: Lecture, show: 'subject' | 'classGroup') => {
     }
   }
 };
+
+export const formatComplexity = (complexity: bigint) => {
+  return complexity.toLocaleString('es-CL', {
+    notation: 'scientific',
+    maximumFractionDigits: 3
+  });
+};

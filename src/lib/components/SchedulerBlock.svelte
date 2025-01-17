@@ -17,7 +17,8 @@
   let isAvailable = $derived.by(() => {
     if (currently.hovering) {
       if (currently.hovering.kind !== 'blockedPeriod') {
-        return timetable.availabilityByLecture[currently.hovering.lecture.id][day][period];
+        if (currently.hovering.lecture.id in timetable.availabilityByLecture)
+          return timetable.availabilityByLecture[currently.hovering.lecture.id][day][period];
       } else {
         return true;
       }
