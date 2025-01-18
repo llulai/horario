@@ -26,7 +26,7 @@
   {/each}
 
   {#each periodPairs as periods}
-    <div class="flex flex-col items-center justify-center text-[8px]">
+    <div class="flex flex-col items-center justify-center gap-1 text-[16px]">
       {#each periods as period}
         <div>{period}</div>
       {/each}

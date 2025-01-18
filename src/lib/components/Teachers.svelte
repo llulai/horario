@@ -12,33 +12,33 @@
     {#each Object.keys(timetable.byTeacher) as teacher}
       <div class="flex flex-col items-center gap-1">
         <div class="pl-4 text-[12px]">{teacher}</div>
-        <div class="pl-4 text-[10px]">
-          complexity: {formatComplexity(timetable.problemScale.byTeacher[teacher])}
-        </div>
+        <!-- <div class="pl-4 text-[10px]"> -->
+        <!--   complexity: {formatComplexity(timetable.problemScale.byTeacher[teacher])} -->
+        <!-- </div> -->
 
         <!-- tags -->
         <div class="flex flex-row gap-2">
           <!-- priority -->
           {#if timetable.byTeacher[teacher].assignedLoad < timetable.byTeacher[teacher].totalLoad}
             {#if timetable.byTeacher[teacher].totalLoad / timetable.byTeacher[teacher].availableLoad > 0.8}
-              <div class="rounded-[2px] bg-indigo-100 px-2 text-[10px] text-indigo-500">
+              <div class="rounded-[2px] bg-indigo-200 px-2 text-[10px] text-indigo-900">
                 priority
               </div>
             {/if}
 
             <!-- low-availability -->
             {#if timetable.byTeacher[teacher].unassignedLectures.filter((l) => timetable.problemScale.byLecture[l.id] === 0).length > 0}
-              <div class="rounded-[2px] bg-red-100 px-2 text-[10px] text-red-500">conflict</div>
+              <div class="rounded-[2px] bg-red-200 px-2 text-[10px] text-red-900">conflict</div>
 
               <!-- conflict -->
             {:else if timetable.byTeacher[teacher].unassignedLectures.filter((l) => timetable.problemScale.byLecture[l.id] <= 3).length > 0}
-              <div class="rounded-[2px] bg-yellow-100 px-2 text-[10px] text-yellow-500">
+              <div class="rounded-[2px] bg-yellow-200 px-2 text-[10px] text-yellow-900">
                 low-availability
               </div>
             {/if}
           {:else}
             <!-- completed -->
-            <div class="rounded-[2px] bg-green-100 px-2 text-[10px] text-green-500">completed</div>
+            <div class="rounded-[2px] bg-green-200 px-2 text-[10px] text-green-900">completed</div>
           {/if}
         </div>
         <Schedule

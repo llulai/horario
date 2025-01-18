@@ -3,6 +3,7 @@
   import type { Lecture } from '$lib/state/timetable.svelte';
   import timetable from '$lib/state/timetable.svelte';
   import { getColor } from '$lib/utils';
+  import NumberOptions from './NumberOptions.svelte';
 
   const {
     lecture,
@@ -72,10 +73,6 @@
     {lecture[show]}
   </div>
   {#if lecture.timeslot === undefined}
-    <div
-      class="absolute right-0 top-0 flex h-4 w-4 -translate-y-1/2 translate-x-1/2 flex-col items-center justify-center rounded-full bg-blue-500 text-[10px] text-white"
-    >
-      {timetable.problemScale.byLecture[lecture.id]}
-    </div>
+    <NumberOptions {lecture} />
   {/if}
 </div>
