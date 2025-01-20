@@ -2,7 +2,6 @@
   import currently from '$lib/state/currently.svelte';
   import timetable from '$lib/state/timetable.svelte';
   import Schedule from '$lib/components/Schedule/Schedule.svelte';
-  import { formatComplexity } from '$lib/utils';
 </script>
 
 <!-- teachers -->

@@ -267,15 +267,36 @@ const availabilityByLecture = $derived.by(() => {
     Object.values(lectures).map((lecture) => {
       const days = [1, 2, 3, 4, 5] as const;
       const periods = [1, 2, 3, 4, 5, 6, 7] as const;
+      const doublePeriods = [
+        [1, 2],
+        [3, 4],
+        [5, 6]
+      ] as const;
 
-      const availability = getEmptySchedule(true);
+      const availability = getEmptySchedule(false);
+      const { teacher, classGroup, duration } = lecture;
 
       days.forEach((day) => {
-        periods.forEach((period) => {
-          availability[day][period] =
-            availabilityByTeacher[lecture.teacher][day][period] &&
-            availabilityByClass[lecture.classGroup][day][period];
-        });
+        if (duration === 1) {
+          periods.forEach((period) => {
+            availability[day][period] =
+              availabilityByTeacher[teacher][day][period] &&
+              availabilityByClass[classGroup][day][period];
+          });
+        } else {
+          doublePeriods.forEach(([firstPeriod, secondPeriod]) => {
+            availability[day][firstPeriod] =
+              availabilityByTeacher[teacher][day][firstPeriod] &&
+              availabilityByTeacher[teacher][day][secondPeriod] &&
+              availabilityByClass[classGroup][day][firstPeriod] &&
+              availabilityByClass[classGroup][day][secondPeriod];
+            availability[day][secondPeriod] =
+              availabilityByTeacher[teacher][day][firstPeriod] &&
+              availabilityByTeacher[teacher][day][secondPeriod] &&
+              availabilityByClass[classGroup][day][firstPeriod] &&
+              availabilityByClass[classGroup][day][secondPeriod];
+          });
+        }
       });
 
       return [lecture.id, availability];
