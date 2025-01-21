@@ -17,11 +17,11 @@
         <!-- tags -->
         <div class="flex flex-row gap-2">
           {#if timetable.byClass[course].assignedLoad < timetable.byClass[course].totalLoad}
-            <!-- low-availability -->
+            <!-- conflict -->
             {#if timetable.byClass[course].unassignedLectures.filter((l) => timetable.problemScale.byLecture[l.id] === 0).length > 0}
               <div class="rounded-[2px] bg-red-200 px-2 text-[10px] text-red-900">conflict</div>
 
-              <!-- conflict -->
+              <!-- low-availability -->
             {:else if timetable.byClass[course].unassignedLectures.filter((l) => timetable.problemScale.byLecture[l.id] <= 3).length > 0}
               <div class="rounded-[2px] bg-yellow-200 px-2 text-[10px] text-yellow-900">
                 low-availability
