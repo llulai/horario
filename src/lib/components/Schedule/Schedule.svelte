@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { BlockedSchedule, AssignedSchedule } from '$lib/state/timetable.svelte';
+  import type { BlockedSchedule, AssignedSchedule, Lecture } from '$lib/state/timetable.svelte';
+  import timetable from '$lib/state/timetable.svelte';
   import BlockedPeriodCardSmall from './BlockedPeriodCardSmall.svelte';
   import DoublePeriodCardSmall from './DoublePeriodCardSmall.svelte';
   import SubjectCardSmall from './SubjectCardSmall.svelte';
@@ -15,13 +16,13 @@
     show: 'classGroup' | 'subject';
   } = $props();
 
-  const periodPairs = [[1, 2], [3, 4], [5, 6], [7]] as const;
-  const days = [1, 2, 3, 4, 5] as const;
+  const h = {
+    1: 'h-3',
+    2: 'h-6'
+  };
 </script>
 
-<div
-  class="group relative grid grid-flow-row grid-cols-[8px_24px_24px_24px_24px_24px] grid-rows-[10px_24px_24px_24px_12px] gap-1"
->
+<div class="group relative grid grid-flow-row grid-cols-[8px_24px_24px_24px_24px_24px] gap-1">
   <button
     class="absolute inset-0 z-10 hidden flex-row items-center justify-center rounded-[2px] bg-gray-200/90 underline group-hover:flex"
     {onclick}>editar</button
@@ -30,32 +31,32 @@
     <div class="text-center text-[8px]">{day}</div>
   {/each}
 
-  {#each periodPairs as periods}
-    <div class="flex flex-col items-center justify-center text-[8px]">
-      {#each periods as period}
+  {#each timetable.periods.blocks as block}
+    <div class={`flex flex-col items-center justify-center text-[8px] ${h[block.length]}`}>
+      {#each block as period}
         <div>{period}</div>
       {/each}
     </div>
-    {#each days as day}
-      {#if periods.length === 2}
+    {#each timetable.periods.days as day}
+      {#if block.length === 2}
         <DoublePeriodCardSmall
-          firstLecture={assignedSchedule[day][periods[0]]}
-          secondLecture={assignedSchedule[day][periods[1]]}
-          firstBlockedPeriod={blockedSchedule[day][periods[0]]}
-          secondBlockedPeriod={blockedSchedule[day][periods[1]]}
+          firstLecture={assignedSchedule[day][block[0]]}
+          secondLecture={assignedSchedule[day][block[1]]}
+          firstBlockedPeriod={blockedSchedule[day][block[0]]}
+          secondBlockedPeriod={blockedSchedule[day][block[1]]}
           {show}
         />
-      {:else if assignedSchedule[day][7] !== null}
-        {#key assignedSchedule[day][7].id}
+      {:else if assignedSchedule[day][block[0]] !== null}
+        {#key assignedSchedule[day][block[0]]}
           <SubjectCardSmall
-            lecture={assignedSchedule[day][7]}
+            lecture={assignedSchedule[day][block[0]] as unknown as Lecture}
             {show}
             double={false}
             rounded={true}
           />
         {/key}
-      {:else if blockedSchedule[day][7] !== null}
-        {#key blockedSchedule[day][7].id}
+      {:else if blockedSchedule[day][block[0]] !== null}
+        {#key blockedSchedule[day][block[0]]}
           <BlockedPeriodCardSmall duration={1} />
         {/key}
       {:else}

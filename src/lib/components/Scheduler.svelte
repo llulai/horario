@@ -1,5 +1,11 @@
 <script lang="ts">
-  import type { BlockedSchedule, AssignedSchedule } from '$lib/state/timetable.svelte';
+  import type {
+    BlockedSchedule,
+    AssignedSchedule,
+    Lecture,
+    BlockedPeriod
+  } from '$lib/state/timetable.svelte';
+  import timetable from '$lib/state/timetable.svelte';
   import BlockedPeriodCard from './BlockedPeriodCard.svelte';
   import DoubleSchedulerBlock from './DoubleSchedulerBlock.svelte';
   import SchedulerBlock from './SchedulerBlock.svelte';
@@ -14,42 +20,49 @@
     show: 'classGroup' | 'subject';
   } = $props();
 
-  const periodPairs = [[1, 2], [3, 4], [5, 6], [7]] as const;
-  const days = [1, 2, 3, 4, 5] as const;
+  const h = {
+    1: 'h-6',
+    2: 'h-12'
+  };
 </script>
 
-<div
-  class="grid w-[290px] grid-cols-[10px_48px_48px_48px_48px_48px] grid-rows-[18px_48px_48px_48px_24px] gap-2"
->
+<div class="grid w-[290px] grid-cols-[10px_48px_48px_48px_48px_48px] gap-2">
   {#each ['', 'L', 'M', 'M', 'J', 'V'] as day}
     <div class="text-center text-[16px]">{day}</div>
   {/each}
 
-  {#each periodPairs as periods}
-    <div class="flex flex-col items-center justify-center gap-1 text-[16px]">
-      {#each periods as period}
+  {#each timetable.periods.blocks as block}
+    <div class={`flex flex-col items-center justify-center gap-1 text-[16px] ${h[block.length]}`}>
+      {#each block as period}
         <div>{period}</div>
       {/each}
     </div>
-    {#each days as day}
-      {#if periods.length === 2}
+    {#each timetable.periods.days as day}
+      {#if block.length === 2}
         <DoubleSchedulerBlock
-          firstLecture={assignedSchedule[day][periods[0]]}
-          secondLecture={assignedSchedule[day][periods[1]]}
-          firstBlockedPeriod={blockedSchedule[day][periods[0]]}
-          secondBlockedPeriod={blockedSchedule[day][periods[1]]}
+          firstLecture={assignedSchedule[day][block[0]]}
+          secondLecture={assignedSchedule[day][block[1]]}
+          firstBlockedPeriod={blockedSchedule[day][block[0]]}
+          secondBlockedPeriod={blockedSchedule[day][block[1]]}
           {show}
           {day}
-          {periods}
+          {block}
         />
-      {:else if assignedSchedule[day][7] !== null}
-        {#key assignedSchedule[day][7]}
-          <SubjectCard lecture={assignedSchedule[day][7]} {show} double={false} rounded={true} />
+      {:else if assignedSchedule[day][block[0]] !== null}
+        {#key assignedSchedule[day][block[0]]}
+          <SubjectCard
+            lecture={assignedSchedule[day][block[0]] as unknown as Lecture}
+            {show}
+            double={false}
+            rounded={true}
+          />
         {/key}
-      {:else if blockedSchedule[day][7] !== null}
-        <BlockedPeriodCard blockedPeriod={blockedSchedule[day][7]} />
+      {:else if blockedSchedule[day][block[0]] !== null}
+        <BlockedPeriodCard
+          blockedPeriod={blockedSchedule[day][block[0]] as unknown as BlockedPeriod}
+        />
       {:else}
-        <SchedulerBlock {day} period={7} />
+        <SchedulerBlock {day} period={block[0]} double={false} />
       {/if}
     {/each}
   {/each}

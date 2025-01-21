@@ -6,13 +6,17 @@
 
   let {
     day,
-    period
+    period,
+    double
   }: {
     day: Day;
     period: Period;
+    double: boolean;
   } = $props();
 
   let isHover = $state(false);
+
+  let height = $derived(double ? 'h-12' : 'h-6');
 
   let isAvailable = $derived.by(() => {
     if (currently.hovering) {
@@ -92,7 +96,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class={`rounded-[2px] ${bg} flex flex-col items-center justify-center text-[20px]`}
+  class={`rounded-[2px] ${bg} flex flex-col items-center justify-center text-[20px] ${height}`}
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}

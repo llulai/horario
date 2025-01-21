@@ -13,7 +13,7 @@ export type Lesson = {
 };
 
 export type Day = 1 | 2 | 3 | 4 | 5;
-export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type Timeslot = {
   day: Day;
@@ -69,7 +69,15 @@ type ProblemScale = {
   byLecture: Record<string, number>;
 };
 
+type Periods = {
+  maxPeriods: Period;
+  periods: Period[];
+  blocks: [Period, Period][];
+  days: Day[];
+};
+
 type Timetable = {
+  periods: Periods;
   byTeacher: ScheduleByTeacher;
   byClass: ScheduleByCourse;
   availabilityByLecture: Record<string, AvailabilitySchedule>;
@@ -84,20 +92,43 @@ type Timetable = {
   problemScale: ProblemScale;
 };
 
-export const getEmptySchedule: <T>(val: T) => Record<Day, Record<Period, T>> = (val) => {
-  return {
-    1: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
-    2: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
-    3: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
-    4: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val },
-    5: { 1: val, 2: val, 3: val, 4: val, 5: val, 6: val, 7: val }
-  };
+export const getEmptySchedule: <T>(
+  val: T,
+  days: Day[],
+  periods: Period[]
+) => Record<Day, Record<Period, T>> = (val) => {
+  const schedule = {} as unknown as Record<Day, Record<Period, typeof val>>;
+
+  days.forEach((day) => {
+    schedule[day] = {} as unknown as Record<Period, typeof val>;
+    periods.forEach((period) => {
+      schedule[day][period] = val;
+    });
+  });
+
+  return schedule;
 };
 
 /***************************/
 /****** interactions ******/
 /*************************/
 
+const maxPeriods = $state<Period>(7);
+const days: Day[] = [1, 2, 3, 4, 5] as const;
+const periods: Period[] = $derived(
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((p) => p <= maxPeriods)
+) as unknown as Period[];
+const blocks: [Period, Period][] = $derived.by(() => {
+  const b = [];
+  for (let p = 1; p <= maxPeriods; p++) {
+    if (p % 2 === 1) {
+      b.push([p]);
+    } else {
+      b[p / 2 - 1].push(p);
+    }
+  }
+  return b;
+}) as unknown as [Period, Period][];
 let lectures = $state<Record<string, Lecture>>({});
 const blockedPeriods = $state<Record<string, BlockedPeriod>>({});
 
@@ -109,8 +140,8 @@ const byTeacher = $derived.by<ScheduleByTeacher>(() => {
         lecByTeach[teacher] = {
           assignedLectures: [],
           unassignedLectures: [],
-          assignedSchedule: getEmptySchedule(null),
-          blockedSchedule: getEmptySchedule(null),
+          assignedSchedule: getEmptySchedule(null, days, periods),
+          blockedSchedule: getEmptySchedule(null, days, periods),
           assignedLoad: 0,
           unassignedLoad: 0,
           totalLoad: 0,
@@ -158,8 +189,8 @@ const byClass = $derived.by<ScheduleByCourse>(() => {
         lecByCourse[classGroup] = {
           assignedLectures: [],
           unassignedLectures: [],
-          assignedSchedule: getEmptySchedule(null),
-          blockedSchedule: getEmptySchedule(null),
+          assignedSchedule: getEmptySchedule(null, days, periods),
+          blockedSchedule: getEmptySchedule(null, days, periods),
           assignedLoad: 0,
           unassignedLoad: 0,
           totalLoad: 0,
@@ -205,7 +236,7 @@ const availabilityByLecture = $derived.by(() => {
   ).reduce((abt: Record<string, AvailabilitySchedule>, lecture: Lecture) => {
     const { teacher, timeslot } = lecture;
     if (!(teacher in abt)) {
-      abt[teacher] = getEmptySchedule(true);
+      abt[teacher] = getEmptySchedule(true, days, periods);
     }
 
     if (timeslot) {
@@ -224,7 +255,7 @@ const availabilityByLecture = $derived.by(() => {
     (abc: Record<string, AvailabilitySchedule>, lecture: Lecture) => {
       const { classGroup, timeslot, duration } = lecture;
       if (!(classGroup in abc)) {
-        abc[classGroup] = getEmptySchedule(true);
+        abc[classGroup] = getEmptySchedule(true, days, periods);
       }
 
       if (timeslot) {
@@ -265,15 +296,7 @@ const availabilityByLecture = $derived.by(() => {
 
   return Object.fromEntries(
     Object.values(lectures).map((lecture) => {
-      const days = [1, 2, 3, 4, 5] as const;
-      const periods = [1, 2, 3, 4, 5, 6, 7] as const;
-      const doublePeriods = [
-        [1, 2],
-        [3, 4],
-        [5, 6]
-      ] as const;
-
-      const availability = getEmptySchedule(false);
+      const availability = getEmptySchedule(false, days, periods);
       const { teacher, classGroup, duration } = lecture;
 
       days.forEach((day) => {
@@ -284,7 +307,7 @@ const availabilityByLecture = $derived.by(() => {
               availabilityByClass[classGroup][day][period];
           });
         } else {
-          doublePeriods.forEach(([firstPeriod, secondPeriod]) => {
+          blocks.forEach(([firstPeriod, secondPeriod]) => {
             availability[day][firstPeriod] =
               availabilityByTeacher[teacher][day][firstPeriod] &&
               availabilityByTeacher[teacher][day][secondPeriod] &&
@@ -305,26 +328,21 @@ const availabilityByLecture = $derived.by(() => {
 });
 
 const problemScale = $derived.by(() => {
-  const days = [1, 2, 3, 4, 5] as const;
-  const singlePeriods = [1, 2, 3, 4, 5, 6, 7] as const;
-  const doublePeriods = [1, 3, 5] as const;
-
   const byLecture: ProblemScale['byLecture'] = Object.values(lectures).reduce(
     (scaleByLecture: Record<string, number>, lecture) => {
       scaleByLecture[lecture.id] = days.reduce((t, day) => {
         if (lecture.timeslot) return 1;
         if (lecture.duration === 1)
-          t += singlePeriods.reduce(
+          t += periods.reduce(
             (acc, period) => (acc += availabilityByLecture[lecture.id][day][period] ? 1 : 0),
             0
           );
         else
-          t += doublePeriods.reduce(
-            (acc, period) =>
+          t += blocks.reduce(
+            (acc, [firstPeriod, secondPeriod]) =>
               (acc +=
-                availabilityByLecture[lecture.id][day][period] &&
-                // @ts-expect-error double duration lectures
-                availabilityByLecture[lecture.id][day][period + 1]
+                availabilityByLecture[lecture.id][day][firstPeriod] &&
+                availabilityByLecture[lecture.id][day][secondPeriod]
                   ? 1
                   : 0),
             0
@@ -390,6 +408,9 @@ const problemScale = $derived.by(() => {
 /**********************/
 
 const timetable: Timetable = {
+  get periods() {
+    return { periods, maxPeriods, blocks, days };
+  },
   get byTeacher() {
     return byTeacher;
   },

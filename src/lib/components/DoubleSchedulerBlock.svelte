@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BlockedPeriod, Day, Lecture } from '$lib/state/timetable.svelte';
+  import type { BlockedPeriod, Day, Lecture, Period } from '$lib/state/timetable.svelte';
   import SchedulerBlock from '$lib/components/SchedulerBlock.svelte';
   import SubjectCard from '$lib/components/SubjectCard.svelte';
   import currently from '$lib/state/currently.svelte';
@@ -11,7 +11,7 @@
     firstBlockedPeriod,
     secondBlockedPeriod,
     day,
-    periods,
+    block,
     show
   }: {
     firstLecture: Lecture | null;
@@ -19,7 +19,7 @@
     firstBlockedPeriod: BlockedPeriod | null;
     secondBlockedPeriod: BlockedPeriod | null;
     day: Day;
-    periods: readonly [1, 2] | readonly [3, 4] | readonly [5, 6];
+    block: [Period, Period];
     show: 'classGroup' | 'subject';
   } = $props();
 
@@ -50,7 +50,7 @@
     <BlockedPeriodCard blockedPeriod={firstBlockedPeriod} />
   {/key}
 {:else if bothAvailable && currently.dragging !== null && ((currently.dragging.kind !== 'blockedPeriod' && currently.dragging.lecture.duration === 2) || (currently.dragging.kind === 'blockedPeriod' && currently.dragging.blockedPeriod.duration === 2))}
-  <SchedulerBlock {day} period={periods[0]} />
+  <SchedulerBlock {day} period={block[0]} double={true} />
 {:else}
   <div class="grid grid-cols-1 grid-rows-2 overflow-hidden rounded-[2px] bg-blue-100">
     {#if firstLecture !== null}
@@ -62,7 +62,7 @@
         <BlockedPeriodCard blockedPeriod={firstBlockedPeriod} />
       {/key}
     {:else}
-      <SchedulerBlock {day} period={periods[0]} />
+      <SchedulerBlock {day} period={block[0]} double={false} />
     {/if}
     {#if secondLecture !== null}
       {#key secondLecture.id}
@@ -73,7 +73,7 @@
         <BlockedPeriodCard blockedPeriod={secondBlockedPeriod} />
       {/key}
     {:else}
-      <SchedulerBlock {day} period={periods[1]} />
+      <SchedulerBlock {day} period={block[1]} double={false} />
     {/if}
   </div>
 {/if}
