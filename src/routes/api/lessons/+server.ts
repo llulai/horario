@@ -1,50 +1,47 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { v4 as uuidv4 } from 'uuid';
 
-import { createClient } from '@supabase/supabase-js';
+import pkg from 'xlsx';
+
+const { read, utils } = pkg;
 
 type RawLesson = {
-  id: number;
-  hours: number;
-  lesson_teacher: {
-    name: string;
-  };
-  lesson_course: {
-    name: string;
-  };
-  lesson_subject: {
-    name: string;
-  };
+  PROFESOR: string;
+  CURSO: string;
+  ASIGNATURA: string;
+  HORAS: number;
 };
 
-export const GET: RequestHandler = async () => {
-  // Create a single supabase client for interacting with your database
-  const supabase = createClient(
-    'https://qqvucinbvvblpxyefynp.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxdnVjaW5idnZibHB4eWVmeW5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY0Nzc0OTMsImV4cCI6MjA1MjA1MzQ5M30.n2d0-FmshLTin7mcIlwAm_IVuOy6b6d0e-Toe1K8qw0'
-  );
+type ParsedLesson = {
+  id: string;
+  hours: number;
+  teacher: string;
+  classGroup: string;
+  subject: string;
+};
 
-  const lessonsQuery = supabase.from('lessons').select(`
-		id,
-		lesson_teacher:teachers (name),
-		lesson_subject:subjects (name),
-		lesson_course:courses (name),
-		hours`);
+// FIXME: get suggested subject and classGroup names using openAI
+// FIXME: do a lot of checks
 
-  const { data, error } = await lessonsQuery;
+export const POST: RequestHandler = async ({ request }) => {
+  const buffer = await request.arrayBuffer();
+  const nodeBuffer = Buffer.from(buffer);
 
-  if (error) throw error;
+  const workbook = read(nodeBuffer, { type: 'buffer' });
+
+  const sheetName = workbook.SheetNames[0]; // Get the first sheet name
+  const sheet = workbook.Sheets[sheetName]; // Get the sheet data
+
+  const jsonData: RawLesson[] = utils.sheet_to_json(sheet);
 
   return json(
-    // @ts-expect-error: Boring type casting from supabase
-    data.map((lesson: RawLesson) => {
-      return {
-        id: lesson.id,
-        hours: lesson.hours,
-        teacher: lesson.lesson_teacher.name,
-        classGroup: lesson.lesson_course.name,
-        subject: lesson.lesson_subject.name
-      };
-    })
+    jsonData.map((rawLesson) => ({
+      id: uuidv4(),
+      hours: rawLesson.HORAS,
+      teacher: rawLesson.PROFESOR,
+      classGroup: rawLesson.CURSO,
+      subject: rawLesson.ASIGNATURA
+    }))
   );
 };

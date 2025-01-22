@@ -2,7 +2,7 @@
   import currently from '$lib/state/currently.svelte';
   import type { Lecture } from '$lib/state/timetable.svelte';
   import timetable from '$lib/state/timetable.svelte';
-  import { getColor } from '$lib/utils';
+  import { getColor } from '$lib/utils/colors';
   import NumberOptions from './NumberOptions.svelte';
 
   const {
@@ -20,7 +20,7 @@
 
   let dragging = $state(false);
 
-  const color = getColor(lecture, show);
+  const color = getColor(show === 'classGroup' ? lecture.classGroup : lecture.subject, show);
   const opacity = $derived(dragging ? 'opacity-75' : 'opacity-100');
 
   const handleDragStart = (event: DragEvent) => {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Lecture } from '$lib/state/timetable.svelte';
-  import { getColor } from '$lib/utils';
+  import { getColor } from '$lib/utils/colors';
 
   const {
     lecture,
@@ -16,7 +16,7 @@
 
   const height = double ? 'h-[24px]' : 'h-[12px]';
 
-  const color = getColor(lecture, show);
+  const color = getColor(show === 'classGroup' ? lecture.classGroup : lecture.subject, show);
 </script>
 
 <div

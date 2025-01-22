@@ -78,6 +78,7 @@ type Periods = {
 
 type Timetable = {
   periods: Periods;
+  setMaxPeriods: (newMaxPeriods: Period) => void;
   byTeacher: ScheduleByTeacher;
   byClass: ScheduleByCourse;
   availabilityByLecture: Record<string, AvailabilitySchedule>;
@@ -113,7 +114,7 @@ export const getEmptySchedule: <T>(
 /****** interactions ******/
 /*************************/
 
-const maxPeriods = $state<Period>(7);
+let maxPeriods = $state<Period>(7);
 const days: Day[] = [1, 2, 3, 4, 5] as const;
 const periods: Period[] = $derived(
   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((p) => p <= maxPeriods)
@@ -422,6 +423,9 @@ const timetable: Timetable = {
   },
   get availabilityByLecture() {
     return availabilityByLecture;
+  },
+  setMaxPeriods(newMaxPeriods: Period) {
+    maxPeriods = newMaxPeriods;
   },
   setLessons(lessons: Lesson[]) {
     // update lectures

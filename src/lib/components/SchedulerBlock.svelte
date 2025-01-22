@@ -2,7 +2,7 @@
   import currently from '$lib/state/currently.svelte';
   import type { Day, Period } from '$lib/state/timetable.svelte';
   import timetable from '$lib/state/timetable.svelte';
-  import { getColor } from '$lib/utils';
+  import { getColor } from '$lib/utils/colors';
 
   let {
     day,
@@ -41,9 +41,9 @@
   const bg = $derived.by(() => {
     if (isAvailable && isHover && currently.dragging !== null) {
       if (currently.dragging.kind === 'teacher')
-        return `${getColor(currently.dragging.lecture, 'subject')} text-white`;
+        return `${getColor(currently.dragging.lecture.subject, 'subject')} text-white`;
       if (currently.dragging.kind === 'classGroup')
-        return `${getColor(currently.dragging.lecture, 'classGroup')} text-white`;
+        return `${getColor(currently.dragging.lecture.classGroup, 'classGroup')} text-white`;
       if (currently.dragging.kind === 'blockedPeriod')
         return 'bg-white border border-red-600 text-red-600';
     }
