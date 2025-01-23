@@ -47,7 +47,7 @@ const createGetColor = () => {
   };
 
   // Explicitly set a new color for a name, overriding any previous assignment
-  const setColor = (name: string, show: 'subject' | 'classGroup', newColor: string) => {
+  const setColor = (name: string, show: 'subject' | 'classGroup', newColor: string): void => {
     const isSubject = show === 'subject';
     const colorMap = isSubject ? subjectColors : classColors;
 
