@@ -1,0 +1,17 @@
+<script lang="ts">
+  import Current from '$lib/components/Current.svelte';
+  import ClassGroups from '$lib/components/ClassGroups.svelte';
+  import Teachers from '$lib/components/Teachers.svelte';
+  import timetable from '$lib/state/timetable.svelte';
+  import TimeTableUpload from '$lib/components/TimeTableUpload.svelte';
+</script>
+
+<div class="absolute bottom-0 left-0 right-0 top-20 grid grid-cols-[1fr_418px_600px] grid-rows-1">
+  {#if Object.values(timetable.byTeacher).length > 0}
+    <Teachers />
+    <ClassGroups />
+    <Current />
+  {:else}
+    <TimeTableUpload />
+  {/if}
+</div>

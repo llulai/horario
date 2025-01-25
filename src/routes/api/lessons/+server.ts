@@ -2,9 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { v4 as uuidv4 } from 'uuid';
 
-import pkg from 'xlsx';
-
-const { read, utils } = pkg;
+import { read, utils } from 'xlsx';
 
 type RawLesson = {
   PROFESOR: string;
