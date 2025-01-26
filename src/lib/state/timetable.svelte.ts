@@ -1,523 +1,189 @@
 import { v4 as uuidv4 } from 'uuid';
 
-/********************/
-/****** types ******/
-/******************/
+////////////////
+//// TYPES ////
+//////////////
 
-export type Lesson = {
-  id: number;
-  teacher: string;
-  classGroup: string;
-  subject: string;
-  hours: number;
+type WeeklyLoad = {
+  className: string;
+  teacherName: string;
+  subjectName: string;
+  weeklyLoad: number;
 };
 
-export type Day = 1 | 2 | 3 | 4 | 5;
-export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+enum Day {
+  'MONDAY' = 1,
+  'TUESDAY' = 2,
+  'WEDNESDAY' = 3,
+  'THURSDAY' = 4,
+  'FRIDAY' = 5
+}
 
-export type Timeslot = {
+type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+type Timeslot = {
   day: Day;
   period: Period;
 };
 
-export type Lecture = {
+type Availability = Record<Day, Partial<Record<Period, boolean>>>;
+
+type Lesson = {
   id: string;
-  teacher: string;
-  classGroup: string;
-  subject: string;
-  duration: 1 | 2;
-  timeslot?: Timeslot;
-};
-
-export type BlockedPeriod = {
-  id: string | null;
-  kind: 'teacher' | 'classGroup';
-  name: string;
-  duration: 1 | 2;
-  timeslot: Timeslot;
-};
-
-export type AssignedSchedule = Record<Day, Record<Period, Lecture | null>>;
-export type BlockedSchedule = Record<Day, Record<Period, BlockedPeriod | null>>;
-export type AvailabilitySchedule = Record<Day, Record<Period, boolean>>;
-
-export type ClassSchedule = {
-  assignedLectures: Lecture[];
-  unassignedLectures: Lecture[];
-  assignedSchedule: AssignedSchedule;
-  blockedSchedule: BlockedSchedule;
-  assignedLoad: number;
-  unassignedLoad: number;
-  totalLoad: number;
-  availableLoad: number;
-};
-
-type ScheduleByCourse = Record<string, ClassSchedule>;
-type ScheduleByTeacher = Record<string, ClassSchedule>;
-
-type LectureExport = {
-  teacher: string;
+  teacherName: string;
   className: string;
-  subject: string;
-  possibleTimeslots: Timeslot[];
+  subjectName: string;
+  timeslot: Timeslot | null;
 };
 
-type ProblemScale = {
-  total: bigint;
-  byTeacher: Record<string, bigint>;
-  byClass: Record<string, bigint>;
-  byLecture: Record<string, number>;
+type ClassMapKeys = WeeklyLoad['className'];
+type SubjectMapKeys = WeeklyLoad['subjectName'];
+type TeacherMapKeys = WeeklyLoad['teacherName'];
+
+type ClassMap = Record<
+  ClassMapKeys,
+  { code: string; color: string; availableTimeslots: Availability }
+>;
+
+type SubjectMap = Record<SubjectMapKeys, { code: string; color: string }>;
+
+type TeacherMap = Record<
+  TeacherMapKeys,
+  { code: string; color: string; availableTimeslots: Availability }
+>;
+
+type Event =
+  | {
+      event: 'setLectureTimeslot';
+      payload: { lessonId: string; timeslot: Timeslot };
+    }
+  | {
+      event: 'removeLectureTimeslot';
+      payload: { lessonId: string };
+    };
+
+type TimeTable = {
+  lessons: Record<string, Lesson>;
+  classMap: ClassMap;
+  subjectMap: SubjectMap;
+  teacherMap: TeacherMap;
+  fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => void;
+  dispatch: (event: Event) => void;
+  // loadFromJSON: (json: string) => void;
+  // saveToJSON: () => string;
 };
 
-type Periods = {
-  maxPeriods: Period;
-  periods: Period[];
-  blocks: [Period, Period][];
-  days: Day[];
-};
+/////////////////////////////////
+//// STATE CHANGE FUNCTIONS ////
+///////////////////////////////
 
-type Timetable = {
-  periods: Periods;
-  byTeacher: ScheduleByTeacher;
-  byClass: ScheduleByCourse;
-  availabilityByLecture: Record<string, AvailabilitySchedule>;
-  setLessons: (lessons: Lesson[]) => void;
-  setLectureTimeslot: (lectureId: string, timeslot: Timeslot) => void;
-  removeLectureTimeslot: (lectureId: string) => void;
-  splitLecture: (lectureId: string) => void;
-  addBlockedPeriod: (blockedPeriod: BlockedPeriod) => void;
-  setBlockedPeriodTimeslot: (blockedPeriodId: string, timeslot: Timeslot) => void;
-  removeBlockedPeriod: (blockedPeriodId: string) => void;
-  exportLectures: () => LectureExport[];
-  problemScale: ProblemScale;
-};
-
-export const getEmptySchedule: <T>(
-  val: T,
-  days: Day[],
-  periods: Period[]
-) => Record<Day, Record<Period, T>> = (val) => {
-  const schedule = {} as unknown as Record<Day, Record<Period, typeof val>>;
-
-  days.forEach((day) => {
-    schedule[day] = {} as unknown as Record<Period, typeof val>;
-    periods.forEach((period) => {
-      schedule[day][period] = val;
-    });
-  });
-
-  return schedule;
-};
-
-/***************************/
-/****** interactions ******/
-/*************************/
-
-const maxPeriods = $state<Period>(7);
-const days: Day[] = [1, 2, 3, 4, 5] as const;
-const periods: Period[] = $derived(
-  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((p) => p <= maxPeriods)
-) as unknown as Period[];
-const blocks: [Period, Period][] = $derived.by(() => {
-  const b = [];
-  for (let p = 1; p <= maxPeriods; p++) {
-    if (p % 2 === 1) {
-      b.push([p]);
-    } else {
-      b[p / 2 - 1].push(p);
-    }
-  }
-  return b;
-}) as unknown as [Period, Period][];
-let lectures = $state<Record<string, Lecture>>({});
-const blockedPeriods = $state<Record<string, BlockedPeriod>>({});
-
-const byTeacher = $derived.by<ScheduleByTeacher>(() => {
-  const lecturesByTeacher = Object.values(lectures).reduce(
-    (lecByTeach: Record<string, ClassSchedule>, lecture: Lecture) => {
-      const { teacher, timeslot } = lecture;
-      if (!(teacher in lecByTeach)) {
-        lecByTeach[teacher] = {
-          assignedLectures: [],
-          unassignedLectures: [],
-          assignedSchedule: getEmptySchedule(null, days, periods),
-          blockedSchedule: getEmptySchedule(null, days, periods),
-          assignedLoad: 0,
-          unassignedLoad: 0,
-          totalLoad: 0,
-          availableLoad: 35
-        };
-      }
-
-      if (timeslot) {
-        // assign lecture to schedule
-        lecByTeach[teacher].assignedSchedule[timeslot.day][timeslot.period] = lecture;
-        lecByTeach[teacher].assignedLectures.push(lecture);
-        lecByTeach[teacher].assignedLoad += lecture.duration;
-      } else {
-        lecByTeach[teacher].unassignedLectures.push(lecture);
-        lecByTeach[teacher].unassignedLoad += lecture.duration;
-      }
-      lecByTeach[teacher].totalLoad += lecture.duration;
-
-      return lecByTeach;
-    },
-    {}
-  );
-
-  Object.values(blockedPeriods).forEach((blockedPeriod: BlockedPeriod) => {
-    const {
-      kind,
-      name,
-      timeslot: { day, period }
-    } = blockedPeriod;
-    if (kind === 'teacher') {
-      // add blocked period
-      lecturesByTeacher[name].blockedSchedule[day][period] = blockedPeriod;
-      lecturesByTeacher[name].availableLoad += 1;
-    }
-  });
-
-  return lecturesByTeacher;
-});
-
-const byClass = $derived.by<ScheduleByCourse>(() => {
-  const lecturesByClass = Object.values(lectures).reduce(
-    (lecByCourse: Record<string, ClassSchedule>, lecture: Lecture) => {
-      const { classGroup, timeslot } = lecture;
-      if (!(classGroup in lecByCourse)) {
-        lecByCourse[classGroup] = {
-          assignedLectures: [],
-          unassignedLectures: [],
-          assignedSchedule: getEmptySchedule(null, days, periods),
-          blockedSchedule: getEmptySchedule(null, days, periods),
-          assignedLoad: 0,
-          unassignedLoad: 0,
-          totalLoad: 0,
-          availableLoad: 35
-        };
-      }
-
-      if (timeslot) {
-        // assign lecture to schedule
-        lecByCourse[classGroup].assignedSchedule[timeslot.day][timeslot.period] = lecture;
-        lecByCourse[classGroup].assignedLectures.push(lecture);
-        lecByCourse[classGroup].assignedLoad += lecture.duration;
-      } else {
-        lecByCourse[classGroup].unassignedLectures.push(lecture);
-        lecByCourse[classGroup].unassignedLoad += lecture.duration;
-      }
-
-      lecByCourse[classGroup].totalLoad += lecture.duration;
-
-      return lecByCourse;
-    },
-    {}
-  );
-
-  Object.values(blockedPeriods).forEach((blockedPeriod: BlockedPeriod) => {
-    const {
-      kind,
-      name,
-      timeslot: { day, period }
-    } = blockedPeriod;
-    if (kind === 'classGroup') {
-      lecturesByClass[name].blockedSchedule[day][period] = blockedPeriod;
-      lecturesByClass[name].availableLoad -= 1;
-    }
-  });
-
-  return lecturesByClass;
-});
-
-const availabilityByLecture = $derived.by(() => {
-  const availabilityByTeacher: Record<string, AvailabilitySchedule> = Object.values(
-    lectures
-  ).reduce((abt: Record<string, AvailabilitySchedule>, lecture: Lecture) => {
-    const { teacher, timeslot } = lecture;
-    if (!(teacher in abt)) {
-      abt[teacher] = getEmptySchedule(true, days, periods);
-    }
-
-    if (timeslot) {
-      abt[teacher][timeslot.day][timeslot.period] = false;
-
-      if (lecture.duration === 2) {
-        // @ts-expect-error lectures with duration 2 start at periods 1, 3 or 5
-        abt[teacher][timeslot.day][timeslot.period + 1] = false;
-      }
-    }
-
-    return abt;
+// generate availability for a day
+const generateDayAvailability = (maxPeriods: Period): Partial<Record<Period, true>> => {
+  return [...Array(maxPeriods).fill(true)].reduce((av, val, index) => {
+    av[index + 1] = val;
+    return av;
   }, {});
+};
 
-  const availabilityByClass: Record<string, AvailabilitySchedule> = Object.values(lectures).reduce(
-    (abc: Record<string, AvailabilitySchedule>, lecture: Lecture) => {
-      const { classGroup, timeslot, duration } = lecture;
-      if (!(classGroup in abc)) {
-        abc[classGroup] = getEmptySchedule(true, days, periods);
-      }
+const generateAvailability = (maxPeriods: Period): Availability => {
+  return {
+    1: generateDayAvailability(maxPeriods),
+    2: generateDayAvailability(maxPeriods),
+    3: generateDayAvailability(maxPeriods),
+    4: generateDayAvailability(maxPeriods),
+    5: generateDayAvailability(maxPeriods)
+  };
+};
 
-      if (timeslot) {
-        abc[classGroup][timeslot.day][timeslot.period] = false;
+////////////////
+//// STATE ////
+//////////////
 
-        if (duration === 2) {
-          // @ts-expect-error lectures with duration 2 start at periods 1, 3 or 5
-          abc[classGroup][timeslot.day][timeslot.period + 1] = false;
-        }
-      }
+let lessons = $state<Record<string, Lesson>>({});
+let classMap = $state<ClassMap>({});
+let subjectMap = $state<SubjectMap>({});
+let teacherMap = $state<TeacherMap>({});
 
-      return abc;
-    },
-    {}
-  );
+// this function loads the timetable from a list of weekly loads
+const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => {
+  // clear existing state
+  lessons = {};
+  classMap = {};
+  subjectMap = {};
+  teacherMap = {};
 
-  Object.values(blockedPeriods).forEach((blockedPeriod: BlockedPeriod) => {
-    const {
-      name,
-      kind,
-      duration,
-      timeslot: { day, period }
-    } = blockedPeriod;
-    if (kind === 'teacher') {
-      availabilityByTeacher[name][day][period] = false;
-      if (duration === 2) {
-        // @ts-expect-error if blocked period duration is 2 it starts on period 1, 3 or 5
-        availabilityByTeacher[name][day][period + 1] = false;
-      }
-    } else {
-      availabilityByClass[name][day][period] = false;
-      if (duration === 2) {
-        // @ts-expect-error if blocked period duration is 2 it starts on period 1, 3 or 5
-        availabilityByClass[name][day][period + 1] = false;
-      }
+  weeklyLoads.forEach((load) => {
+    // create lessons
+    for (let i = 0; i < load.weeklyLoad; i++) {
+      const id = uuidv4();
+      lessons[id] = {
+        id,
+        teacherName: load.teacherName,
+        className: load.className,
+        subjectName: load.subjectName,
+        timeslot: null
+      };
+    }
+
+    // update classMap
+    if (!(load.className in classMap)) {
+      classMap[load.className] = {
+        code: '',
+        color: '',
+        availableTimeslots: generateAvailability(maxPeriods)
+      };
+    }
+
+    // update subjectMap
+    if (!(load.subjectName in subjectMap)) {
+      subjectMap[load.subjectName] = { code: '', color: '' };
+    }
+
+    // update teacherMap
+    if (!(load.teacherName in teacherMap)) {
+      teacherMap[load.teacherName] = {
+        code: '',
+        color: '',
+        availableTimeslots: generateAvailability(maxPeriods)
+      };
     }
   });
+};
 
-  return Object.fromEntries(
-    Object.values(lectures).map((lecture) => {
-      const availability = getEmptySchedule(false, days, periods);
-      const { teacher, classGroup, duration } = lecture;
-
-      days.forEach((day) => {
-        if (duration === 1) {
-          periods.forEach((period) => {
-            availability[day][period] =
-              availabilityByTeacher[teacher][day][period] &&
-              availabilityByClass[classGroup][day][period];
-          });
-        } else {
-          blocks.forEach(([firstPeriod, secondPeriod]) => {
-            availability[day][firstPeriod] =
-              availabilityByTeacher[teacher][day][firstPeriod] &&
-              availabilityByTeacher[teacher][day][secondPeriod] &&
-              availabilityByClass[classGroup][day][firstPeriod] &&
-              availabilityByClass[classGroup][day][secondPeriod];
-            availability[day][secondPeriod] =
-              availabilityByTeacher[teacher][day][firstPeriod] &&
-              availabilityByTeacher[teacher][day][secondPeriod] &&
-              availabilityByClass[classGroup][day][firstPeriod] &&
-              availabilityByClass[classGroup][day][secondPeriod];
-          });
-        }
-      });
-
-      return [lecture.id, availability];
-    })
-  );
-});
-
-const problemScale = $derived.by(() => {
-  const byLecture: ProblemScale['byLecture'] = Object.values(lectures).reduce(
-    (scaleByLecture: Record<string, number>, lecture) => {
-      scaleByLecture[lecture.id] = days.reduce((t, day) => {
-        if (lecture.timeslot) return 1;
-        if (lecture.duration === 1)
-          t += periods.reduce(
-            (acc, period) => (acc += availabilityByLecture[lecture.id][day][period] ? 1 : 0),
-            0
-          );
-        else
-          t += blocks.reduce(
-            (acc, [firstPeriod, secondPeriod]) =>
-              (acc +=
-                availabilityByLecture[lecture.id][day][firstPeriod] &&
-                availabilityByLecture[lecture.id][day][secondPeriod]
-                  ? 1
-                  : 0),
-            0
-          );
-        return t;
-      }, 0);
-      return scaleByLecture;
-    },
-    {}
-  );
-
-  const byTeacher: ProblemScale['byTeacher'] = Object.values(lectures).reduce(
-    (scaleByTeacher: Record<string, bigint>, lecture) => {
-      const { teacher, id } = lecture;
-
-      if (!(teacher in scaleByTeacher)) {
-        scaleByTeacher[teacher] = BigInt(1);
-      }
-
-      scaleByTeacher[teacher] *= BigInt(byLecture[id]);
-      return scaleByTeacher;
-    },
-    {}
-  );
-
-  const byClass: ProblemScale['byClass'] = Object.values(lectures).reduce(
-    (scaleByClass: Record<string, bigint>, lecture) => {
-      const { classGroup, id } = lecture;
-
-      if (!(classGroup in scaleByClass)) {
-        scaleByClass[classGroup] = BigInt(1);
-      }
-
-      scaleByClass[classGroup] *= BigInt(byLecture[id]);
-      return scaleByClass;
-    },
-    {}
-  );
-
-  const totalByTeacher = Object.values(byTeacher).reduce((acc, num) => {
-    acc *= num;
-    return acc;
-  }, BigInt(1));
-
-  const totalByClass = Object.values(byClass).reduce((acc, num) => {
-    acc *= num;
-    return acc;
-  }, BigInt(1));
-
-  if (totalByTeacher !== totalByClass)
-    throw new Error('total problem scale should be the same if calculated by teacher or by class');
-
-  return {
-    byTeacher,
-    byClass,
-    byLecture,
-    total: totalByTeacher
-  };
-});
-
-/************************/
-/****** timetable ******/
-/**********************/
-
-const timetable: Timetable = {
-  get periods() {
-    return { periods, maxPeriods, blocks, days };
-  },
-  get byTeacher() {
-    return byTeacher;
-  },
-  get byClass() {
-    return byClass;
-  },
-  get problemScale() {
-    return problemScale;
-  },
-  get availabilityByLecture() {
-    return availabilityByLecture;
-  },
-  setLessons(lessons: Lesson[]) {
-    // update lectures
-    lectures = lessons.reduce((lec: Record<string, Lecture>, lesson) => {
-      for (let i = 0; i < Math.floor(lesson.hours / 2); i++) {
-        const uuid = uuidv4();
-        lec[uuid] = {
-          id: uuid,
-          teacher: lesson.teacher,
-          classGroup: lesson.classGroup,
-          subject: lesson.subject,
-          duration: 2
-        };
-      }
-
-      for (let i = 0; i < lesson.hours % 2; i++) {
-        const uuid = uuidv4();
-        lec[uuid] = {
-          id: uuid,
-          teacher: lesson.teacher,
-          classGroup: lesson.classGroup,
-          subject: lesson.subject,
-          duration: 1
-        };
-      }
-
-      return lec;
-    }, {});
-  },
-
-  setLectureTimeslot(lectureId: string, timeslot: Timeslot) {
-    lectures[lectureId] = { ...lectures[lectureId], timeslot };
-  },
-
-  removeLectureTimeslot(id: string) {
-    const lecture = lectures[id];
-    delete lecture.timeslot;
-  },
-
-  splitLecture(id: string) {
-    const lecture = lectures[id];
-    if (lecture.duration === 2) {
-      const id1 = uuidv4();
-      const id2 = uuidv4();
-
-      lectures[id1] = { ...lecture, id: id1, duration: 1, timeslot: undefined };
-      lectures[id2] = { ...lecture, id: id2, duration: 1, timeslot: undefined };
-
-      delete lectures[id];
+const dispatch = (dispatchedEvent: Event): void => {
+  const { event, payload } = dispatchedEvent;
+  switch (event) {
+    case 'setLectureTimeslot': {
+      lessons[payload.lessonId].timeslot = payload.timeslot;
+      break;
     }
+    case 'removeLectureTimeslot': {
+      lessons[payload.lessonId].timeslot = null;
+      break;
+    }
+    default:
+      throw new Error(`Invalid event type: ${event}`);
+  }
+};
+
+//////////////////
+//// EXPORTS ////
+////////////////
+
+const timetable: TimeTable = {
+  fromWeeklyLoad,
+  dispatch,
+  get lessons() {
+    return lessons;
   },
-
-  addBlockedPeriod(blockedPeriod: BlockedPeriod) {
-    const id = uuidv4();
-    blockedPeriods[id] = { ...blockedPeriod, id };
+  get classMap() {
+    return classMap;
   },
-
-  setBlockedPeriodTimeslot(id: string, timeslot: Timeslot) {
-    blockedPeriods[id] = { ...blockedPeriods[id], timeslot };
+  get subjectMap() {
+    return subjectMap;
   },
-
-  removeBlockedPeriod(id: string) {
-    delete blockedPeriods[id];
-  },
-
-  exportLectures() {
-    return Object.values(lectures).map((lecture) => {
-      if (lecture.timeslot === undefined) {
-        const possibleTimeslots: Timeslot[] = [];
-
-        const days = [1, 2, 3, 4, 5] as const;
-        const periods = [1, 2, 3, 4, 5, 6, 7] as const;
-
-        days.forEach((day) => {
-          periods.forEach((period) => {
-            if (availabilityByLecture[lecture.id][day][period]) {
-              possibleTimeslots.push({ day, period });
-            }
-          });
-        });
-
-        return {
-          teacher: lecture.teacher,
-          subject: lecture.subject,
-          className: lecture.classGroup,
-          possibleTimeslots
-        };
-      } else {
-        return {
-          teacher: lecture.teacher,
-          subject: lecture.subject,
-          className: lecture.classGroup,
-          possibleTimeslots: [{ day: lecture.timeslot.day, period: lecture.timeslot.period }]
-        };
-      }
-    });
+  get teacherMap() {
+    return teacherMap;
   }
 };
 
