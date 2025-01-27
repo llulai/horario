@@ -5,607 +5,132 @@ export const GET: RequestHandler = async () => {
   // Create a single supabase client for interacting with your database
 
   return json([
-    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '6ºA', subjectName: 'Ciencias' },
-    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '6ºB', subjectName: 'Ciencias' },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '7ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '7ºB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '6ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '6ºB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '5ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '5ªB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '1ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    { weeklyLoad: 8, teacherName: 'Romina Zúñiga', gradeName: '2ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Romina Zúñiga', gradeName: '2ºA', subjectName: 'Matemática' },
-    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '2ºA', subjectName: 'Historia' },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Romina Zúñiga',
-      gradeName: '2ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '2ºA', subjectName: 'Cs. Naturales' },
-    { weeklyLoad: 1, teacherName: 'Romina Zúñiga', gradeName: '2ºA', subjectName: 'Orientación' },
-    { weeklyLoad: 8, teacherName: 'Jessica Escobar', gradeName: '2ºB', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Jessica Escobar', gradeName: '2ºB', subjectName: 'Matemática' },
-    { weeklyLoad: 3, teacherName: 'Jessica Escobar', gradeName: '2ºB', subjectName: 'Historia' },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Jessica Escobar',
-      gradeName: '2ºB',
-      subjectName: 'Ciencias Naturales'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Jessica Escobar',
-      gradeName: '4ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Jessica Escobar',
-      gradeName: '4ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    { weeklyLoad: 1, teacherName: 'Jessica Escobar', gradeName: '2ºB', subjectName: 'Orientación' },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Jessica Escobar',
-      gradeName: '2ºB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Jessica Escobar',
-      gradeName: '8ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Jessica Escobar',
-      gradeName: '8ºB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    { weeklyLoad: 17, teacherName: 'Paola Cofré', gradeName: 'Pre Kínder A' },
-    { weeklyLoad: 3, teacherName: 'Paola Cofré', gradeName: '1ºA', subjectName: 'Historia' },
-    { weeklyLoad: 8, teacherName: 'Paola Cofré', gradeName: '1ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Paola Cofré', gradeName: '1ºA', subjectName: 'Matemática' },
-    { weeklyLoad: 3, teacherName: 'Paola Cofré', gradeName: '1ºA', subjectName: 'Cs. Naturales' },
-    { weeklyLoad: 1, teacherName: 'Paola Cofré', gradeName: '1ºA', subjectName: 'Orientación' },
-    { weeklyLoad: 22, teacherName: 'Jacqueline Castro', gradeName: 'Kínder A' },
-    { weeklyLoad: 8, teacherName: 'Fabiola Reyes', gradeName: '3°A', subjectName: 'Lenguaje' },
-    { weeklyLoad: 8, teacherName: 'Fabiola Reyes', gradeName: '3°B', subjectName: 'Lenguaje' },
-    { weeklyLoad: 8, teacherName: 'Fabiola Reyes', gradeName: '4°A', subjectName: 'Lenguaje' },
-    { weeklyLoad: 8, teacherName: 'Fabiola Reyes', gradeName: '4°B', subjectName: 'Lenguaje' },
-    { weeklyLoad: 4, teacherName: 'Fabiola Reyes', gradeName: '6ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 1, teacherName: 'Fabiola Reyes', gradeName: '3ºB', subjectName: 'Orientación' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '5ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '5°B ', subjectName: 'Lenguaje' },
-    { weeklyLoad: 2, teacherName: 'Mauro Lucero', gradeName: '6°A', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '6ºB', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '7ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '7ºB', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '8ºA', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '8°B', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '1M A', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '1M B', subjectName: 'Lenguaje' },
-    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '2M', subjectName: 'Lenguaje' },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Loreto Jorquera',
-      gradeName: '3M',
-      subjectName: 'Lenguaje electivo'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Loreto Jorquera',
-      gradeName: '4M',
-      subjectName: 'Lenguaje electivo'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Loreto Jorquera',
-      gradeName: '1M B',
-      subjectName: 'Orientación'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Liliana Barraza',
-      gradeName: '3M',
-      subjectName: 'Lenguaje común'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Liliana Barraza',
-      gradeName: '4M',
-      subjectName: 'Lenguaje  común'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Francia Miranda',
-      gradeName: '1ºM B',
-      subjectName: 'Matemática'
-    },
-    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '5°B', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '6ºA', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '6ºB', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '8ºA', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '8ºB', subjectName: 'Matemática' },
-    { weeklyLoad: 1, teacherName: 'Francia Miranda', gradeName: '7ºA', subjectName: 'Orientación' },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '3°A',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '3°B',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '4°A',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '4°B',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '5ºA',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Katherine Rubilar',
-      gradeName: '4ºB',
-      subjectName: 'Orientación'
-    },
-    { weeklyLoad: 6, teacherName: 'Teresa Dittus', gradeName: '6°A', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Teresa Dittus', gradeName: '7°B', subjectName: 'Matemática' },
-    { weeklyLoad: 6, teacherName: 'Valentin  Araya', gradeName: '1M A', subjectName: 'Matemática' },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Valentin  Araya',
-      gradeName: '1M B',
-      subjectName: 'Matemática '
-    },
-    { weeklyLoad: 6, teacherName: 'Valentin  Araya', gradeName: '2M', subjectName: 'Matemática' },
-    { weeklyLoad: 9, teacherName: 'Valentin  Araya', gradeName: '3M', subjectName: 'Matemática' },
-    { weeklyLoad: 9, teacherName: 'Valentin  Araya', gradeName: '4M', subjectName: 'Matemática' },
-    { weeklyLoad: 1, teacherName: 'Valentin  Araya', gradeName: '2ºM', subjectName: 'Orientación' },
-    { weeklyLoad: 3, teacherName: 'Alejandra Herrera', gradeName: '3ºA', subjectName: 'Historia' },
-    { weeklyLoad: 3, teacherName: 'Alejandra Herrera', gradeName: '3ºB', subjectName: 'Historia' },
-    { weeklyLoad: 3, teacherName: 'Alejandra Herrera', gradeName: '4°A', subjectName: 'Historia' },
-    { weeklyLoad: 3, teacherName: 'Alejandra Herrera', gradeName: '4°B', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '5°A', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '5°B', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '6°B', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '6ºA', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '7°A', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '7°B', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '8°A', subjectName: 'Historia' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '1M A', subjectName: 'Historia ' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '1M B', subjectName: 'Historia ' },
-    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '2M', subjectName: 'Historia ' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Javiera Yañez',
-      gradeName: '3M',
-      subjectName: 'Formación Ciudadana'
-    },
-    { weeklyLoad: 1, teacherName: 'Javiera Yañez', gradeName: '3º M', subjectName: 'Orientación' },
-    { weeklyLoad: 4, teacherName: 'Yuri Quintupurrai', gradeName: '8°B', subjectName: 'Historia' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Yuri Quintupurrai',
-      gradeName: '4ºM',
-      subjectName: 'Formación Ciudadana'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Yuri Quintupurrai',
-      gradeName: '3M/4M',
-      subjectName: 'Electivo'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Yuri Quintupurrai',
-      gradeName: '4M',
-      subjectName: 'Orientación'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '3ºA',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '3ºB',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '4°A',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '4°B',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '5°A',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 3,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '5°B',
-      subjectName: 'Cs. Naturales'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '4ºA',
-      subjectName: 'Orientación'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '6°A',
-      subjectName: 'Matemática'
-    },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Ana Luisa Barraza',
-      gradeName: '7°B',
-      subjectName: 'Matemática'
-    },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '7ºA', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '7ºB', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '8ºA', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '8°B', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '1M A', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '1M B', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '2M', subjectName: 'Química' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '7°A', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '7°B', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '8°A', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '8°B', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1M A', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1M B', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '2M', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '3M', subjectName: 'Biología' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '4M', subjectName: 'Biología' },
-    {
-      weeklyLoad: 6,
-      teacherName: 'Roberto González',
-      gradeName: '3M/4M',
-      subjectName: 'Biología electivo'
-    },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1M A', subjectName: 'Fisica' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1M B', subjectName: 'Fisica' },
-    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '2M', subjectName: 'Fisica' },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Roberto González',
-      gradeName: '1M A',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Roberto González',
-      gradeName: '1M B',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Roberto González',
-      gradeName: '2M',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Roberto González',
-      gradeName: '1M A',
-      subjectName: 'Orientación'
-    },
-    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '7ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '6ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '6ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '5ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '5ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 2, teacherName: 'Fernando Agurto', gradeName: '4ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 2, teacherName: 'Fernando Agurto', gradeName: '4ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 2, teacherName: 'Fernando Agurto', gradeName: '3ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 2, teacherName: 'Fernando Agurto', gradeName: '3ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 1, teacherName: 'Fernando Agurto', gradeName: '2ºB', subjectName: 'Inglés' },
-    { weeklyLoad: 1, teacherName: 'Fernando Agurto', gradeName: '2ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 1, teacherName: 'Fernando Agurto', gradeName: '1ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 1, teacherName: 'Fernando Agurto', gradeName: '5ºA', subjectName: 'Orientación' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '4M', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '3M', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '2M', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '1M A', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '1M B', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '8°A', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '8°B', subjectName: 'Inglés' },
-    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '7ºA', subjectName: 'Inglés' },
-    { weeklyLoad: 1, teacherName: 'Paula Arévalo', gradeName: '8ºA', subjectName: 'Orientación' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '5°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '5°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '4°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '4°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '3°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '3°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '2°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '2°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '3ºA',
-      subjectName: 'Ed. Tecnológica'
-    },
-    {
-      weeklyLoad: 1,
-      teacherName: 'Bernardita Contardo',
-      gradeName: '3ºB',
-      subjectName: 'Ed. Tecnológica'
-    },
-    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '4M', subjectName: 'Artes Visuales' },
-    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '3M', subjectName: 'Artes Visuales' },
-    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '2M', subjectName: 'Artes Visuales' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '1M A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '1M B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '8°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '8°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '7°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '7°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '6°A',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '6°B',
-      subjectName: 'Artes Visuales'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Alicia Huerta',
-      gradeName: '1°A',
-      subjectName: 'Artes Visuales'
-    },
-    { weeklyLoad: 1, teacherName: 'Alicia Huerta', gradeName: '8ºB', subjectName: 'Orientación' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '2°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '2°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '3°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '3°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '4°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 3, teacherName: 'Isabel Paillao', gradeName: '4°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Isabel Paillao', gradeName: '5°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Isabel Paillao', gradeName: '5°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 1, teacherName: 'Isabel Paillao', gradeName: '3ºA', subjectName: 'Orientación' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '6°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '6°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '7°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '7°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '8°B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '8°A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '1M A', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '1M B', subjectName: 'Ed. Física' },
-    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '2M', subjectName: 'Ed. Física' },
-    { weeklyLoad: 1, teacherName: 'Diego Cortés', gradeName: '6ºA', subjectName: 'Orientación' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '8°A', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '8°B', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '7°A', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '7°B', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6°A', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6°B', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '5°A', subjectName: 'Música' },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '5°B', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '4°A', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '4°B', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '3°A', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '3°B', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '2°A', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '2°B', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: '1°A', subjectName: 'Música' },
-    { weeklyLoad: 2, teacherName: 'Néstor Cayupán', gradeName: 'KÍNDER', subjectName: 'Música' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Néstor Cayupán',
-      gradeName: 'PRE KÍNDER',
-      subjectName: 'Música'
-    },
-    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6ºB', subjectName: 'Orientación' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '1ºA', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '2°A', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '2°B', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '3°A', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '3°B', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '4°A', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '4°B', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '5°A', subjectName: 'Religión' },
-    { weeklyLoad: 2, teacherName: 'Jaime Quintana', gradeName: '5°B', subjectName: 'Religión' },
-    { weeklyLoad: 1, teacherName: 'Jaime Quintana', gradeName: '5°B', subjectName: 'Orientación' },
-    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '4M', subjectName: 'Filosofía' },
-    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '3M', subjectName: 'Filosofía' },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '2M',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '1M A',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '1M B',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '8°A',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '8°B',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '7°A',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '7°B',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '6°A',
-      subjectName: 'Taller de pensamiento'
-    },
-    {
-      weeklyLoad: 2,
-      teacherName: 'Sara Oñate',
-      gradeName: '6°B',
-      subjectName: 'Taller de pensamiento'
-    },
-    { weeklyLoad: 1, teacherName: 'Sara Oñate', gradeName: '7ºB', subjectName: 'Orientación' }
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '1MA', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '1MB', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '2M', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '3M', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '4M', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '6ºA', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '6ºB', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '7ºA', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '7ºB', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '8ºA', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Alicia Huerta', gradeName: '8ºB', subjectName: 'ArV' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1MA', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1MB', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '2M', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '3M', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '4M', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '7ºA', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '7ºB', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '8ºA', subjectName: 'BIO' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '8ºB', subjectName: 'BIO' },
+    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '6ºA', subjectName: 'CsN' },
+    { weeklyLoad: 3, teacherName: 'Romina Zúñiga', gradeName: '6ºB', subjectName: 'CsN' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '1MA', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '1MB', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '2M', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '6ºA', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '6ºB', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '7ºA', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '7ºB', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '8ºA', subjectName: 'EdF' },
+    { weeklyLoad: 2, teacherName: 'Diego Cortés', gradeName: '8ºB', subjectName: 'EdF' },
+    { weeklyLoad: 1, teacherName: 'Roberto González', gradeName: '1MA', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Roberto González', gradeName: '1MB', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Roberto González', gradeName: '2M', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Romina Zúñiga', gradeName: '6ºA', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Romina Zúñiga', gradeName: '6ºB', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Romina Zúñiga', gradeName: '7ºA', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Romina Zúñiga', gradeName: '7ºB', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Jessica Escobar', gradeName: '8ºA', subjectName: 'TEC' },
+    { weeklyLoad: 1, teacherName: 'Jessica Escobar', gradeName: '8ºB', subjectName: 'TEC' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '3M', subjectName: 'FIL' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '4M', subjectName: 'FIL' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1MA', subjectName: 'FIS' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '1MB', subjectName: 'FIS' },
+    { weeklyLoad: 2, teacherName: 'Roberto González', gradeName: '2M', subjectName: 'FIS' },
+    { weeklyLoad: 2, teacherName: 'Javiera Yañez', gradeName: '3M', subjectName: 'CIU' },
+    { weeklyLoad: 2, teacherName: 'Javiera Yañez', gradeName: '4M', subjectName: 'CIU' },
+    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '6ºA', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Alejandra Herrera', gradeName: '6ºB', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '7ºA', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '7ºB', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '8ºA', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Yuri Quintupurrai', gradeName: '8ºB', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '1MA', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '1MB', subjectName: 'HIS' },
+    { weeklyLoad: 4, teacherName: 'Javiera Yañez', gradeName: '2M', subjectName: 'HIS' },
+    { weeklyLoad: 6, teacherName: 'Yuri Quintupurrai', gradeName: '3M', subjectName: 'ELE' },
+    { weeklyLoad: 6, teacherName: 'Roberto González', gradeName: '4M', subjectName: 'ELE' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '1MA', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '1MB', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '2M', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '3M', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '4M', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '6ºA', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '6ºB', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '7ºA', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Fernando Agurto', gradeName: '7ºB', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '8ºA', subjectName: 'ING' },
+    { weeklyLoad: 3, teacherName: 'Paula Arévalo', gradeName: '8ºB', subjectName: 'ING' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '1MA', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '1MB', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '2M', subjectName: 'LEN' },
+    { weeklyLoad: 2, teacherName: 'Mauro Lucero', gradeName: '6ºA', subjectName: 'LEN' },
+    { weeklyLoad: 4, teacherName: 'Fabiola Reyes', gradeName: '6ºA', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '6ºB', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '7ºA', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '7ºB', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Mauro Lucero', gradeName: '8ºA', subjectName: 'LEN' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '8ºB', subjectName: 'LEN' },
+    { weeklyLoad: 3, teacherName: 'Liliana Barraza', gradeName: '4M', subjectName: 'LCM' },
+    { weeklyLoad: 3, teacherName: 'Liliana Barraza', gradeName: '3M', subjectName: 'LCM' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '3M', subjectName: 'LEL' },
+    { weeklyLoad: 6, teacherName: 'Loreto Jorquera', gradeName: '4M', subjectName: 'LEL' },
+    { weeklyLoad: 6, teacherName: 'Valentin  Araya', gradeName: '1MA', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Valentin  Araya', gradeName: '2M', subjectName: 'MAT' },
+    { weeklyLoad: 9, teacherName: 'Valentin  Araya', gradeName: '3M', subjectName: 'MAT' },
+    { weeklyLoad: 9, teacherName: 'Valentin  Araya', gradeName: '4M', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Teresa Dittus', gradeName: '6ºA', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '6ºB', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Teresa Dittus', gradeName: '7ºB', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '8ºA', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '8ºB', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Francia Miranda', gradeName: '7ºA', subjectName: 'MAT' },
+    { weeklyLoad: 6, teacherName: 'Valentin  Araya', gradeName: '1MB', subjectName: 'MAT' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6ºA', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6ºB', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '7ºA', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '7ºB', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '8ºA', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '8ºB', subjectName: 'MUS' },
+    { weeklyLoad: 1, teacherName: 'Roberto González', gradeName: '1MA', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Loreto Jorquera', gradeName: '1MB', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Javiera Yañez', gradeName: '3M', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Yuri Quintupurrai', gradeName: '4M', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Diego Cortés', gradeName: '6ºA', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Néstor Cayupán', gradeName: '6ºB', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Francia Miranda', gradeName: '7ºA', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Sara Oñate', gradeName: '7ºB', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Paula Arévalo', gradeName: '8ºA', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Alicia Huerta', gradeName: '8ºB', subjectName: 'ORI' },
+    { weeklyLoad: 1, teacherName: 'Valentin  Araya', gradeName: '2M', subjectName: 'ORI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '1MA', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '1MB', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '2M', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '7ºA', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '7ºB', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '8ºA', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Pamela Díaz', gradeName: '8ºB', subjectName: 'QUI' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '1MA', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '1MB', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '2M', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '6ºA', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '6ºB', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '7ºA', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '7ºB', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '8ºA', subjectName: 'PEN' },
+    { weeklyLoad: 2, teacherName: 'Sara Oñate', gradeName: '8ºB', subjectName: 'PEN' }
   ]);
 };

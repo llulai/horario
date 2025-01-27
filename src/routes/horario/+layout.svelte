@@ -28,7 +28,7 @@
     </select>
   </div>
 
-    <!-- Teachers -->
+  <!-- Teachers -->
   <div>
     <select>
       <option>Profesor</option>
