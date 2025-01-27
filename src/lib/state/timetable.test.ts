@@ -13,30 +13,14 @@ test('fromWeeklyLoad function creates lessons and maps them correctly', () => {
 
   const maxPeriods = 3;
 
-  const initialAvailability = {
-    1: { 1: true, 2: true, 3: true },
-    2: { 1: true, 2: true, 3: true },
-    3: { 1: true, 2: true, 3: true },
-    4: { 1: true, 2: true, 3: true },
-    5: { 1: true, 2: true, 3: true }
-  };
-
   timetable.fromWeeklyLoad(weeklyLoads, maxPeriods);
 
-  const { lessons, classMap, teacherMap, subjectMap } = timetable;
+  const { lessons, classMap, subjectMap, blockedTimeslots } = timetable;
 
   expect(Object.keys(lessons)).toHaveLength(15);
   expect(Object.keys(classMap)).toHaveLength(3);
-  expect(Object.keys(teacherMap)).toHaveLength(2);
   expect(Object.keys(subjectMap)).toHaveLength(2);
-
-  Object.values(classMap).forEach((classGroup) => {
-    expect(classGroup.availableTimeslots).toEqual(initialAvailability);
-  });
-
-  Object.values(teacherMap).forEach((teacher) => {
-    expect(teacher.availableTimeslots).toEqual(initialAvailability);
-  });
+  expect(Object.keys(blockedTimeslots)).toHaveLength(0);
 });
 
 test('timetable implements setLessonTimeslot correctly', () => {
@@ -52,10 +36,10 @@ test('timetable implements setLessonTimeslot correctly', () => {
 
   timetable.dispatch({
     event: 'setLectureTimeslot',
-    payload: { lessonId, timeslot: { day: 1, period: 1 } }
+    payload: { lessonId, timeslot: [1, 1] }
   });
 
-  expect(timetable.lessons[lessonId].timeslot).toEqual({ day: 1, period: 1 });
+  expect(timetable.lessons[lessonId].timeslot).toEqual([1, 1]);
 });
 
 test('timetable implements removeLessonTimeslot correctly', () => {
@@ -72,11 +56,11 @@ test('timetable implements removeLessonTimeslot correctly', () => {
   const lessonId = Object.values(timetable.lessons)[0].id;
   timetable.dispatch({
     event: 'setLectureTimeslot',
-    payload: { lessonId, timeslot: { day: 1, period: 1 } }
+    payload: { lessonId, timeslot: [1, 1] }
   });
 
   // assert
-  expect(timetable.lessons[lessonId].timeslot).toEqual({ day: 1, period: 1 });
+  expect(timetable.lessons[lessonId].timeslot).toEqual([1, 1]);
 
   timetable.dispatch({ event: 'removeLectureTimeslot', payload: { lessonId } });
   expect(timetable.lessons[lessonId].timeslot).toBeNull();

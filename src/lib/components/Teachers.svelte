@@ -8,7 +8,7 @@
 <div class="flex h-full flex-col items-center gap-6 border-r border-gray-200 px-12 py-6">
   <div class="text-[24px]">Profesores</div>
   <div class="flex flex-row flex-wrap justify-start gap-6">
-    {#each Object.keys(timetable.byTeacher) as teacher}
+    {#each Object.keys(timetable.teacherMap) as teacher}
       <div class="flex flex-col items-center gap-1">
         <div class="pl-4 text-[12px]">{teacher}</div>
         <!-- <div class="pl-4 text-[10px]"> -->

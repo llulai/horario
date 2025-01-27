@@ -11,7 +11,7 @@ type WeeklyLoad = {
   weeklyLoad: number;
 };
 
-enum Day {
+export enum Day {
   'MONDAY' = 1,
   'TUESDAY' = 2,
   'WEDNESDAY' = 3,
@@ -19,16 +19,11 @@ enum Day {
   'FRIDAY' = 5
 }
 
-type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
-type Timeslot = {
-  day: Day;
-  period: Period;
-};
+type Timeslot = readonly [day: Day, period: Period];
 
-type Availability = Record<Day, Partial<Record<Period, boolean>>>;
-
-type Lesson = {
+export type Lesson = {
   id: string;
   teacherName: string;
   className: string;
@@ -36,21 +31,19 @@ type Lesson = {
   timeslot: Timeslot | null;
 };
 
+export type BlockedTimeslot = {
+  id: string;
+  kind: 'teacher' | 'class';
+  name: string;
+  timeslot: Timeslot;
+};
+
 type ClassMapKeys = WeeklyLoad['className'];
 type SubjectMapKeys = WeeklyLoad['subjectName'];
-type TeacherMapKeys = WeeklyLoad['teacherName'];
 
-type ClassMap = Record<
-  ClassMapKeys,
-  { code: string; color: string; availableTimeslots: Availability }
->;
+type ClassMap = Record<ClassMapKeys, { code: string; color: string }>;
 
 type SubjectMap = Record<SubjectMapKeys, { code: string; color: string }>;
-
-type TeacherMap = Record<
-  TeacherMapKeys,
-  { code: string; color: string; availableTimeslots: Availability }
->;
 
 type Event =
   | {
@@ -62,55 +55,36 @@ type Event =
       payload: { lessonId: string };
     };
 
-type TimeTable = {
+export type TimeTable = {
+  maxPeriods: Period;
   lessons: Record<string, Lesson>;
+  blockedTimeslots: Record<string, BlockedTimeslot>;
   classMap: ClassMap;
   subjectMap: SubjectMap;
-  teacherMap: TeacherMap;
   fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => void;
   dispatch: (event: Event) => void;
   // loadFromJSON: (json: string) => void;
   // saveToJSON: () => string;
 };
 
-/////////////////////////////////
-//// STATE CHANGE FUNCTIONS ////
-///////////////////////////////
-
-// generate availability for a day
-const generateDayAvailability = (maxPeriods: Period): Partial<Record<Period, true>> => {
-  return [...Array(maxPeriods).fill(true)].reduce((av, val, index) => {
-    av[index + 1] = val;
-    return av;
-  }, {});
-};
-
-const generateAvailability = (maxPeriods: Period): Availability => {
-  return {
-    1: generateDayAvailability(maxPeriods),
-    2: generateDayAvailability(maxPeriods),
-    3: generateDayAvailability(maxPeriods),
-    4: generateDayAvailability(maxPeriods),
-    5: generateDayAvailability(maxPeriods)
-  };
-};
-
 ////////////////
 //// STATE ////
 //////////////
 
+let maxPeriods = $state<Period>(7);
 let lessons = $state<Record<string, Lesson>>({});
+let blockedTimeslots = $state<Record<string, BlockedTimeslot>>({});
 let classMap = $state<ClassMap>({});
 let subjectMap = $state<SubjectMap>({});
-let teacherMap = $state<TeacherMap>({});
 
 // this function loads the timetable from a list of weekly loads
-const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => {
+const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
   // clear existing state
   lessons = {};
+  blockedTimeslots = {};
   classMap = {};
   subjectMap = {};
-  teacherMap = {};
+  maxPeriods = newMaxPeriods;
 
   weeklyLoads.forEach((load) => {
     // create lessons
@@ -129,8 +103,7 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => {
     if (!(load.className in classMap)) {
       classMap[load.className] = {
         code: '',
-        color: '',
-        availableTimeslots: generateAvailability(maxPeriods)
+        color: ''
       };
     }
 
@@ -138,17 +111,12 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => {
     if (!(load.subjectName in subjectMap)) {
       subjectMap[load.subjectName] = { code: '', color: '' };
     }
-
-    // update teacherMap
-    if (!(load.teacherName in teacherMap)) {
-      teacherMap[load.teacherName] = {
-        code: '',
-        color: '',
-        availableTimeslots: generateAvailability(maxPeriods)
-      };
-    }
   });
 };
+
+/////////////////////////////////
+//// STATE CHANGE FUNCTIONS ////
+///////////////////////////////
 
 const dispatch = (dispatchedEvent: Event): void => {
   const { event, payload } = dispatchedEvent;
@@ -173,17 +141,20 @@ const dispatch = (dispatchedEvent: Event): void => {
 const timetable: TimeTable = {
   fromWeeklyLoad,
   dispatch,
+  get maxPeriods() {
+    return maxPeriods;
+  },
   get lessons() {
     return lessons;
+  },
+  get blockedTimeslots() {
+    return blockedTimeslots;
   },
   get classMap() {
     return classMap;
   },
   get subjectMap() {
     return subjectMap;
-  },
-  get teacherMap() {
-    return teacherMap;
   }
 };
 
