@@ -1,4 +1,4 @@
-import type { BlockedPeriod, Lecture } from './timetable.svelte';
+import type { BlockedTimeslot, Lesson } from '$lib/state/Timetable.svelte';
 
 export type Selected = {
   kind: 'teacher' | 'classGroup';
@@ -8,11 +8,11 @@ export type Selected = {
 export type Dragging =
   | {
       kind: 'teacher' | 'classGroup';
-      lecture: Lecture;
+      lecture: Lesson;
     }
   | {
       kind: 'blockedPeriod';
-      blockedPeriod: Omit<BlockedPeriod, 'timeslot'>;
+      blockedPeriod: Omit<BlockedTimeslot, 'timeslot'>;
     };
 
 let selected = $state<Selected | null>(null);

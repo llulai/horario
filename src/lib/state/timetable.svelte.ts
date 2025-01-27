@@ -214,7 +214,7 @@ export type BlockedTimeslot = {
 type BlockedTimeslotEvent =
   | {
       event: 'addBlockedTimeslot';
-      payload: { kind: 'teacher' | 'class'; name: string; timeslot: Timeslot };
+      payload: { kind: 'teacher' | 'grade'; name: string; timeslot: Timeslot };
     }
   | {
       event: 'removeBlockedTimeslot';
@@ -262,7 +262,7 @@ export const blockedTimeslots: BlockedTimeslots = {
     return Object.values(SblockedTimeslots).reduce(
       (acc, blockedTimeslot) => {
         const { name, kind } = blockedTimeslot;
-        if (kind === 'class') {
+        if (kind === 'grade') {
           if (!(name in acc)) {
             acc[name] = [];
           }
@@ -294,17 +294,19 @@ let SmaxPeriods = $state<Period>(7);
 // this function loads the timetable from a list of weekly loads
 const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
   // clear existing state
-  Slessons = {};
-  SblockedTimeslots = {};
-  Ssubjects = {};
-  Sgrades = {};
-  SmaxPeriods = newMaxPeriods;
+  //Slessons = {};
+  //Ssubjects = {};
+  //Sgrades = {};
+
+  const newLessons: Record<string, Lesson> = {};
+  const newGrades: Record<string, Grade> = {};
+  const newSubjects: Record<string, Subject> = {};
 
   weeklyLoads.forEach((load) => {
     // create lessons
     for (let i = 0; i < load.weeklyLoad; i++) {
       const id = uuidv4();
-      Slessons[id] = {
+      newLessons[id] = {
         id,
         teacherName: load.teacherName,
         gradeName: load.gradeName,
@@ -314,8 +316,8 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
     }
 
     // update grades
-    if (!(load.gradeName in Sgrades)) {
-      Sgrades[load.gradeName] = {
+    if (!(load.gradeName in newGrades)) {
+      newGrades[load.gradeName] = {
         name: load.gradeName,
         code: '',
         color: ''
@@ -323,10 +325,16 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
     }
 
     // update subjects
-    if (!(load.subjectName in Ssubjects)) {
-      Ssubjects[load.subjectName] = { name: load.subjectName, code: '', color: '' };
+    if (!(load.subjectName in newSubjects)) {
+      newSubjects[load.subjectName] = { name: load.subjectName, code: '', color: '' };
     }
   });
+
+  Slessons = newLessons;
+  Sgrades = newGrades;
+  Ssubjects = newSubjects;
+  SblockedTimeslots = {};
+  SmaxPeriods = newMaxPeriods;
 };
 
 export const timetable: TimeTable = {
