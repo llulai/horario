@@ -28,7 +28,7 @@
   ondragend={handleDragEnd}
   class={`flex flex-col items-center justify-center rounded-[2px] ${bg} text-white`}
 >
-  <div class="text-[16px]">
+  <div class="text-[14px]">
     {lesson[show]}
   </div>
   <div class="text-[12px]">
