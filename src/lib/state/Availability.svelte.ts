@@ -72,20 +72,30 @@ type Availability = {
   byLesson: Record<string, ByTimeslot<boolean>>;
 };
 
-const availabilityByTeacher: Availability['byTeacher'] = $derived.by(() => {
-  const byTeacher: Availability['byTeacher'] = {};
+const [byTeacher, byGrade, byLesson] = $derived.by<
+  [Availability['byTeacher'], Availability['byGrade'], Availability['byLesson']]
+>(() => {
+  const availabilityByTeacher: Availability['byTeacher'] = {};
   const teachers = Object.keys(lessons.byTeacher);
+  const availabilityByGrade: Availability['byTeacher'] = {};
+  const grades = Object.keys(lessons.byGrade);
+  const availabilityByLesson: Availability['byLesson'] = {};
 
   teachers.forEach((teacher) => {
     availabilityByTeacher[teacher] = getByTimeslot(timetable.maxPeriods, true);
   });
 
+  grades.forEach((grade) => {
+    availabilityByGrade[grade] = getByTimeslot(timetable.maxPeriods, true);
+  });
+
   // mark assigned lectures as unavailable timeslots for teachers and classes
   lessons.list.forEach((lesson: Lesson) => {
-    const { teacherName, timeslot } = lesson;
+    const { teacherName, gradeName, timeslot } = lesson;
     if (timeslot) {
       const [day, period] = timeslot;
-      byTeacher[teacherName][day][period] = false;
+      availabilityByTeacher[teacherName][day][period] = false;
+      availabilityByGrade[gradeName][day][period] = false;
     }
   });
 
@@ -98,70 +108,34 @@ const availabilityByTeacher: Availability['byTeacher'] = $derived.by(() => {
     } = blockedTimeslot;
 
     if (kind === 'teacher') {
-      byTeacher[name][day][period] = false;
+      availabilityByTeacher[name][day][period] = false;
     }
-  });
-
-  return byTeacher;
-});
-
-const availabilityByGrade: Availability['byGrade'] = $derived.by(() => {
-  const byGrade: Availability['byTeacher'] = {};
-  const grades = Object.keys(lessons.byGrade);
-
-  grades.forEach((grade) => {
-    availabilityByTeacher[grade] = getByTimeslot(timetable.maxPeriods, true);
-  });
-
-  // mark assigned lectures as unavailable timeslots for teachers and classes
-  lessons.list.forEach((lesson: Lesson) => {
-    const { gradeName, timeslot } = lesson;
-    if (timeslot) {
-      const [day, period] = timeslot;
-      byGrade[gradeName][day][period] = false;
-    }
-  });
-
-  // mark blocked timeslots as unavailable timeslots for teachers and classes
-  blockedTimeslots.list.forEach((blockedTimeslot: BlockedTimeslot) => {
-    const {
-      kind,
-      name,
-      timeslot: [day, period]
-    } = blockedTimeslot;
-
     if (kind === 'grade') {
-      byGrade[name][day][period] = false;
+      availabilityByGrade[name][day][period] = false;
     }
   });
-
-  return byGrade;
-});
-
-const availabilityByLesson: Availability['byLesson'] = $derived.by(() => {
-  const byLesson: Availability['byLesson'] = {};
 
   lessons.list.forEach((lesson: Lesson) => {
     const { id, teacherName, gradeName } = lesson;
-    byLesson[id] = combineAvailability(
+    availabilityByLesson[id] = combineAvailability(
       availabilityByTeacher[teacherName],
       availabilityByGrade[gradeName],
       timetable.maxPeriods
     );
   });
 
-  return byLesson;
+  return [availabilityByTeacher, availabilityByGrade, availabilityByLesson];
 });
 
 const availability: Availability = {
   get byTeacher() {
-    return availabilityByTeacher;
+    return byTeacher;
   },
   get byGrade() {
-    return availabilityByGrade;
+    return byGrade;
   },
   get byLesson() {
-    return availabilityByLesson;
+    return byLesson;
   }
 };
 

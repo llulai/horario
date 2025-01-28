@@ -1,4 +1,5 @@
 <script lang="ts">
+  import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
   import { lessons, type Day, type Period } from '$lib/state/Timetable.svelte';
   const {
@@ -8,6 +9,25 @@
     day: Day;
     period: Period;
   } = $props();
+
+  const isAvailable: undefined | boolean = $derived.by(() => {
+    if (currently.dragging && currently.dragging.kind === 'lesson') {
+      if (currently.dragging.lesson.id in availability.byLesson) {
+        return availability.byLesson[currently.dragging.lesson.id][day][period];
+      }
+    }
+  });
+
+  const bg = $derived.by(() => {
+    switch (isAvailable) {
+      case true:
+        return 'bg-green-100';
+      case false:
+        return 'bg-red-100';
+      default:
+        return 'bg-[#F3F4F6]';
+    }
+  });
 
   const handleDragEnter = (ev: DragEvent) => {
     ev.preventDefault();
@@ -21,8 +41,8 @@
     ev.preventDefault();
   };
 
-  const handleOnDrop = (event: DragEvent) => {
-    if (currently.dragging) {
+  const handleOnDrop = () => {
+    if (currently.dragging && isAvailable) {
       if (currently.dragging.kind === 'lesson') {
         const lessonId = currently.dragging.lesson.id;
         lessons.dispatch({
@@ -35,7 +55,7 @@
 </script>
 
 <div
-  class="h-10 rounded-[2px] bg-[#F3F4F6]"
+  class={`h-10 rounded-[2px] ${bg}`}
   ondrop={handleOnDrop}
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
