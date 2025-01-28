@@ -46,8 +46,8 @@
 
   const handleOnDrop = () => {
     if (currently.dragging) {
-      if (currently.dragging.kind === 'lesson' && currently.dragging.lesson.timeslot) {
-        const lessonId = currently.dragging.lesson.id;
+      if (currently.dragging && currently.dragging.timeslot) {
+        const lessonId = currently.dragging.id;
         lessons.dispatch({
           event: 'removeLectureTimeslot',
           payload: { lessonId }

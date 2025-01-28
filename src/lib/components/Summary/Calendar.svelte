@@ -1,9 +1,13 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { timetable, type Lesson } from '$lib/state/Timetable.svelte';
+  import { timetable, type Lesson, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
 
-  const { name, lessons }: { name: string; lessons: Lesson[] } = $props();
+  const {
+    name,
+    lessons,
+    blockedTimeslots
+  }: { name: string; lessons: Lesson[]; blockedTimeslots: BlockedTimeslot[] } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
   const periods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
@@ -20,6 +24,32 @@
     });
 
     return lessonsByTimeslot;
+  });
+
+  const assigneBlockedTimeslots: ByTimeslot<BlockedTimeslot | undefined> = $derived.by(() => {
+    const blockedTimeslotsByTimeslot: ByTimeslot<BlockedTimeslot | undefined> = getByTimeslot(
+      timetable.maxPeriods,
+      undefined
+    );
+
+    if (currently.selected) {
+      const { kind, name } = currently.selected;
+      if (kind === 'teacher') {
+        blockedTimeslots.forEach((blockedTimeslot) => {
+          const [day, period] = blockedTimeslot.timeslot;
+          blockedTimeslotsByTimeslot[day][period] = blockedTimeslot;
+        });
+      }
+
+      if (kind === 'grade') {
+        blockedTimeslots.forEach((blockedTimeslot) => {
+          const [day, period] = blockedTimeslot.timeslot;
+          blockedTimeslotsByTimeslot[day][period] = blockedTimeslot;
+        });
+      }
+    }
+
+    return blockedTimeslotsByTimeslot;
   });
 
   const show = $derived(currently.selected?.kind === 'teacher' ? 'subjectName' : 'gradeName');
@@ -59,6 +89,8 @@
             >
               {assignedLessons[day][period][show]}
             </div>
+          {:else if assigneBlockedTimeslots[day][period]}
+            <div></div>
           {:else}
             <div class="rounded-[2px] bg-[#FAFAFA]"></div>
           {/if}

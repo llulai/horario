@@ -8,10 +8,7 @@
   let isDragging = $state(false);
 
   const handleDragStart = () => {
-    currently.setDragging({
-      kind: 'lesson',
-      lesson
-    });
+    currently.setDragging(lesson);
     isDragging = true;
   };
   const handleDragEnd = () => {

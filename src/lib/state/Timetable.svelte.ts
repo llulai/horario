@@ -274,7 +274,21 @@ export const blockedTimeslots: BlockedTimeslots = {
     );
   },
   dispatch(dispatchedEvent: BlockedTimeslotEvent) {
-    console.warn('dispatchedEvent:', dispatchedEvent);
+    const { event, payload } = dispatchedEvent;
+    switch (event) {
+      case 'addBlockedTimeslot': {
+        const id = uuidv4();
+        const { name, kind, timeslot } = payload;
+        SblockedTimeslots[id] = { id, kind, name, timeslot };
+        break;
+      }
+      case 'removeBlockedTimeslot': {
+        delete SblockedTimeslots[payload.id];
+        break;
+      }
+      default:
+        throw new Error(`Invalid event type: ${event}`);
+    }
   }
 };
 

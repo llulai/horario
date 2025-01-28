@@ -13,9 +13,9 @@
   let isHover = $state(false);
 
   const isAvailable: undefined | boolean = $derived.by(() => {
-    if (currently.dragging && currently.dragging.kind === 'lesson') {
-      if (currently.dragging.lesson.id in availability.byLesson) {
-        return availability.byLesson[currently.dragging.lesson.id][day][period];
+    if (currently.dragging) {
+      if (currently.dragging.id in availability.byLesson) {
+        return availability.byLesson[currently.dragging.id][day][period];
       }
     }
   });
@@ -50,13 +50,11 @@
 
   const handleOnDrop = () => {
     if (currently.dragging && isAvailable) {
-      if (currently.dragging.kind === 'lesson') {
-        const lessonId = currently.dragging.lesson.id;
-        lessons.dispatch({
-          event: 'setLectureTimeslot',
-          payload: { lessonId, timeslot: [day, period] }
-        });
-      }
+      const lessonId = currently.dragging.id;
+      lessons.dispatch({
+        event: 'setLectureTimeslot',
+        payload: { lessonId, timeslot: [day, period] }
+      });
     }
   };
 </script>
