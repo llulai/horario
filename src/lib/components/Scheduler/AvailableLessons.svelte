@@ -31,9 +31,39 @@
     }
     return {};
   });
+
+  const handleDragEnter = (ev: DragEvent) => {
+    ev.preventDefault();
+  };
+
+  const handleDragLeave = (ev: DragEvent) => {
+    ev.preventDefault();
+  };
+
+  const handleDragOver = (ev: DragEvent) => {
+    ev.preventDefault();
+  };
+
+  const handleOnDrop = () => {
+    if (currently.dragging) {
+      if (currently.dragging.kind === 'lesson' && currently.dragging.lesson.timeslot) {
+        const lessonId = currently.dragging.lesson.id;
+        lessons.dispatch({
+          event: 'removeLectureTimeslot',
+          payload: { lessonId }
+        });
+      }
+    }
+  };
 </script>
 
-<div class="grid grid-cols-2 gap-y-6 overflow-scroll bg-[#F4F4F5] p-8">
+<div
+  ondrop={handleOnDrop}
+  ondragenter={handleDragEnter}
+  ondragleave={handleDragLeave}
+  ondragover={handleDragOver}
+  class="grid grid-cols-2 gap-y-6 overflow-scroll bg-[#F4F4F5] p-8"
+>
   {#each Object.entries(availableLessons) as [name, lessons]}
     <div class="grid grid-cols-[max-content_1fr] gap-6">
       <p class="text-[16px]">{name}</p>
