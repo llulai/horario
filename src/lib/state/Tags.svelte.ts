@@ -1,5 +1,5 @@
 import { lessons, type Lesson } from '$lib/state/Timetable.svelte';
-import type { AvailableTimeslots } from './Availability.svelte';
+import type { ByTimeslot } from './Availability.svelte';
 
 type Tag = 'priority' | 'conflict' | 'low-availability' | 'completed';
 type Tags = Record<string, Tag[]>;
@@ -9,7 +9,7 @@ const reduceSum = (a: number, b: number): number => a + b;
 const isAssigned = (lesson: Lesson): boolean => lesson.timeslot !== null;
 const allLecturesAssigned = (lessons: Lesson[]): boolean => lessons.every(isAssigned);
 
-export const isConflict = (availability: AvailableTimeslots): boolean =>
+export const isConflict = (availability: ByTimeslot<boolean>): boolean =>
   Object.values(availability)
     .map((dayAvailability) => Object.values(dayAvailability).map(Number).reduce(reduceSum))
     .reduce(reduceSum) === 0;

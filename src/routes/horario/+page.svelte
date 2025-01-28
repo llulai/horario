@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Scheduler from '$lib/components/Scheduler.svelte';
+  import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import ScheduleSummary from '$lib/components/ScheduleSummary.svelte';
   import { timetable } from '$lib/state/Timetable.svelte';
   import { onMount } from 'svelte';
@@ -8,7 +8,7 @@
     fetch('/api/lessons')
       .then((response) => response.json())
       .then((weeklyLoad) => {
-        timetable.fromWeeklyLoad(weeklyLoad, 7);
+        timetable.fromWeeklyLoad(weeklyLoad, 8);
       });
   });
 </script>

@@ -7,8 +7,8 @@ export type Selected = {
 
 export type Dragging =
   | {
-      kind: 'teacher' | 'grade';
-      lecture: Lesson;
+      kind: 'lesson';
+      lesson: Lesson;
     }
   | {
       kind: 'blockedPeriod';

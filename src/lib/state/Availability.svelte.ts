@@ -8,36 +8,36 @@ import {
   blockedTimeslots
 } from '$lib/state/Timetable.svelte';
 
-export type AvailableTimeslots = Record<Day, Partial<Record<Period, boolean>>>;
+export type ByTimeslot<T> = Record<Day, Partial<Record<Period, T>>>;
 
 ////////////////
 //// UTILS ////
 //////////////
 
-const getFullDayAvailability = (maxPeriods: Period): Partial<Record<Period, boolean>> => {
-  return new Object(
+const getFullDayAvailability = <T>(maxPeriods: Period, fillWith: T): Partial<Record<Period, T>> => {
+  return Object.fromEntries(
     Array(maxPeriods)
-      .fill(true)
+      .fill(fillWith)
       .map((t, idx) => [(idx + 1) as Period, t])
   );
 };
 
-const getFullAvailability = (maxPeriods: Period): AvailableTimeslots => {
+export const getByTimeslot = <T>(maxPeriods: Period, fillWith: T): ByTimeslot<T> => {
   return {
-    1: getFullDayAvailability(maxPeriods),
-    2: getFullDayAvailability(maxPeriods),
-    3: getFullDayAvailability(maxPeriods),
-    4: getFullDayAvailability(maxPeriods),
-    5: getFullDayAvailability(maxPeriods)
+    1: getFullDayAvailability(maxPeriods, fillWith),
+    2: getFullDayAvailability(maxPeriods, fillWith),
+    3: getFullDayAvailability(maxPeriods, fillWith),
+    4: getFullDayAvailability(maxPeriods, fillWith),
+    5: getFullDayAvailability(maxPeriods, fillWith)
   };
 };
 
 const combineAvailability = (
-  availabilityA: AvailableTimeslots,
-  availabilityB: AvailableTimeslots,
+  availabilityA: ByTimeslot<boolean>,
+  availabilityB: ByTimeslot<boolean>,
   maxPeriods: Period
-): AvailableTimeslots => {
-  const combinedAvailability: AvailableTimeslots = {
+): ByTimeslot<boolean> => {
+  const combinedAvailability: ByTimeslot<boolean> = {
     1: {},
     2: {},
     3: {},
@@ -67,9 +67,9 @@ const combineAvailability = (
 /////////////////////
 
 type Availability = {
-  byTeacher: Record<string, AvailableTimeslots>;
-  byGrade: Record<string, AvailableTimeslots>;
-  byLesson: Record<string, AvailableTimeslots>;
+  byTeacher: Record<string, ByTimeslot<boolean>>;
+  byGrade: Record<string, ByTimeslot<boolean>>;
+  byLesson: Record<string, ByTimeslot<boolean>>;
 };
 
 const availabilityByTeacher: Availability['byTeacher'] = $derived.by(() => {
@@ -77,7 +77,7 @@ const availabilityByTeacher: Availability['byTeacher'] = $derived.by(() => {
   const teachers = Object.keys(lessons.byTeacher);
 
   teachers.forEach((teacher) => {
-    availabilityByTeacher[teacher] = getFullAvailability(timetable.maxPeriods);
+    availabilityByTeacher[teacher] = getByTimeslot(timetable.maxPeriods, true);
   });
 
   // mark assigned lectures as unavailable timeslots for teachers and classes
@@ -110,7 +110,7 @@ const availabilityByGrade: Availability['byGrade'] = $derived.by(() => {
   const grades = Object.keys(lessons.byGrade);
 
   grades.forEach((grade) => {
-    availabilityByTeacher[grade] = getFullAvailability(timetable.maxPeriods);
+    availabilityByTeacher[grade] = getByTimeslot(timetable.maxPeriods, true);
   });
 
   // mark assigned lectures as unavailable timeslots for teachers and classes

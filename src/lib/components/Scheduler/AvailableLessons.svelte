@@ -1,8 +1,9 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
   import { lessons, type Lesson } from '$lib/state/Timetable.svelte';
+  import DraggableLesson from './DraggableLesson.svelte';
 
-  const avaialbleLectures: Record<string, Lesson[]> = $derived.by(() => {
+  const availableLessons: Record<string, Lesson[]> = $derived.by(() => {
     if (currently.selected) {
       const { name, kind } = currently.selected;
 
@@ -33,16 +34,12 @@
 </script>
 
 <div class="grid grid-cols-2 gap-y-6 overflow-scroll bg-[#F4F4F5] p-8">
-  {#each Object.entries(avaialbleLectures) as [name, lessons]}
+  {#each Object.entries(availableLessons) as [name, lessons]}
     <div class="grid grid-cols-[max-content_1fr] gap-6">
       <p class="text-[16px]">{name}</p>
       <div class="flex h-14 w-min flex-col flex-wrap gap-2">
         {#each lessons as lesson}
-          <button
-            draggable="true"
-            class="flex h-6 w-12 items-center justify-center rounded-[2px] bg-[#6B7280] text-white"
-            >{lesson.subjectName}</button
-          >
+          <DraggableLesson {lesson} />
         {/each}
       </div>
     </div>
