@@ -18,7 +18,7 @@
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
-  class="flex flex-col items-center rounded-[2px] bg-[#6B7280] text-white"
+  class="flex flex-col items-center justify-center rounded-[2px] bg-[#6B7280] text-white"
 >
   <div class="text-[16px]">
     {lesson[show]}

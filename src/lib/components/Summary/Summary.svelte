@@ -1,6 +1,7 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
   import { type Lesson, lessons } from '$lib/state/Timetable.svelte';
+  import Calendar from './Calendar.svelte';
 
   const summarySchedules: Record<string, Lesson[]> = $derived.by(() => {
     if (currently.selected) {
@@ -26,12 +27,7 @@
 
     <div class="grid w-full grid-cols-[repeat(auto-fit,minmax(164px,1fr))] gap-y-6">
       {#each Object.entries(summarySchedules) as [name, lessons]}
-        <div class="mx-auto flex h-[120px] w-[140px] flex-col justify-center gap-1">
-          <div class="w-[140px] truncate text-center">
-            {name}
-          </div>
-          <div class="w-[140] flex-grow rounded-[2px] bg-white"></div>
-        </div>
+        <Calendar {name} {lessons} />
       {/each}
     </div>
   {/if}
