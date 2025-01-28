@@ -52,14 +52,14 @@
 
 <!-- calendar body -->
 <div class="grid w-full grid-cols-[61px_948px_61px]">
-  <div class="gric-cols-1 grid grid-rows-7 gap-3 text-[20px]">
+  <div class={`gric-cols-1 grid grid-rows-${timetable.maxPeriods} gap-3 text-[20px]`}>
     {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
       <div class="flex h-10 flex-col justify-center">
         <p class="h-fit text-center">{period}</p>
       </div>
     {/each}
   </div>
-  <div class="grid grid-cols-5 grid-rows-7 gap-3">
+  <div class={`grid grid-cols-5 grid-rows-${timetable.maxPeriods} gap-3`}>
     {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
       {#each days as day}
         {#if assignedLessons[day][period]}
