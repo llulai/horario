@@ -8,32 +8,31 @@ on:
       - master
 
 env:
-  PUBLIC_SUPABASE_URL: ""
-  PUBLIC_SUPABASE_ANON_KEY: ""
-  PUBLIC_ENVIRONMENT: "dev"
+  PUBLIC_SUPABASE_URL: ''
+  PUBLIC_SUPABASE_ANON_KEY: ''
+  PUBLIC_ENVIRONMENT: 'dev'
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
 
-    - name: Install dependencies
-      run: |
-        npm ci
+      - name: Install dependencies
+        run: |
+          npm ci
 
-    - name: Start Svelte server
-      run: |
-        nohup npm run dev &
+      - name: Start Svelte server
+        run: |
+          nohup npm run dev &
 
-    - name: Run Tests
-      run: |
-        bash ./.github/workflows/pre_merge_tests.sh
-
+      - name: Run Tests
+        run: |
+          bash ./.github/workflows/pre_merge_tests.sh
