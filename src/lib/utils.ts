@@ -1,8 +1,8 @@
-import type { Lecture } from './state/timetable.svelte';
+import type { Lesson } from '$lib/state/Timetable.svelte';
 
-export const getColor = (lecture: Lecture, show: 'subject' | 'classGroup') => {
+export const getColor = (lecture: Lesson, show: 'subject' | 'classGroup') => {
   if (show === 'subject') {
-    switch (lecture.subject) {
+    switch (lecture.subjectName) {
       case 'LEN':
         return 'bg-[#ea580c]';
       case 'MAT':
@@ -30,7 +30,7 @@ export const getColor = (lecture: Lecture, show: 'subject' | 'classGroup') => {
     }
   }
   if (show === 'classGroup') {
-    switch (lecture.classGroup) {
+    switch (lecture.gradeName) {
       case '2A':
         return 'bg-[#2563EB]';
       case '2B':

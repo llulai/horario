@@ -1,23 +1,14 @@
-import type { BlockedPeriod, Lecture } from './timetable.svelte';
+import type { Lesson } from '$lib/state/Timetable.svelte';
 
 export type Selected = {
-  kind: 'teacher' | 'classGroup';
+  kind: 'teacher' | 'grade';
   name: string;
 };
 
-export type Dragging =
-  | {
-      kind: 'teacher' | 'classGroup';
-      lecture: Lecture;
-    }
-  | {
-      kind: 'blockedPeriod';
-      blockedPeriod: Omit<BlockedPeriod, 'timeslot'>;
-    };
-
 let selected = $state<Selected | null>(null);
-let dragging = $state<Dragging | null>(null);
-let hovering = $state<Dragging | null>(null);
+let dragging = $state<Lesson | null>(null);
+let hovering = $state<Lesson | null>(null);
+let blocking = $state<boolean>(false);
 
 const currently = {
   get selected() {
@@ -32,6 +23,10 @@ const currently = {
     return hovering;
   },
 
+  get blocking() {
+    return blocking;
+  },
+
   selectTeacher(name: string) {
     selected = {
       kind: 'teacher',
@@ -39,19 +34,23 @@ const currently = {
     };
   },
 
-  selectClass(name: string) {
+  selectGrade(name: string) {
     selected = {
-      kind: 'classGroup',
+      kind: 'grade',
       name
     };
   },
 
-  setDragging(currentlyDragging: Dragging | null) {
+  setDragging(currentlyDragging: Lesson | null) {
     dragging = currentlyDragging;
   },
 
-  setHovering(currentlyDragging: Dragging | null) {
+  setHovering(currentlyDragging: Lesson | null) {
     hovering = currentlyDragging;
+  },
+
+  setBlocking(currentlyBlocking: boolean) {
+    blocking = currentlyBlocking;
   }
 };
 
