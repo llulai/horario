@@ -5,15 +5,18 @@
   const { lesson }: { lesson: Lesson } = $props();
 
   const bg = $derived(lesson.timeslot ? 'bg-[#E2E8F1]' : 'bg-[#6B7280]');
+  let isDragging = $state(false);
 
   const handleDragStart = () => {
     currently.setDragging({
       kind: 'lesson',
       lesson
     });
+    isDragging = true;
   };
   const handleDragEnd = () => {
     currently.setDragging(null);
+    isDragging = false;
   };
 </script>
 
@@ -21,6 +24,6 @@
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
-  class={`flex h-6 w-12 items-center justify-center rounded-[2px] ${bg} text-white`}
+  class={`flex h-6 w-12 items-center justify-center rounded-[2px] ${bg}${isDragging ? '/60' : ''} text-white`}
   >{lesson.subjectName}</button
 >

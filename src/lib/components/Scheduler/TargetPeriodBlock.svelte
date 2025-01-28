@@ -10,6 +10,8 @@
     period: Period;
   } = $props();
 
+  let isHover = $state(false);
+
   const isAvailable: undefined | boolean = $derived.by(() => {
     if (currently.dragging && currently.dragging.kind === 'lesson') {
       if (currently.dragging.lesson.id in availability.byLesson) {
@@ -19,6 +21,9 @@
   });
 
   const bg = $derived.by(() => {
+    if (isAvailable && isHover) {
+      return 'bg-[#6B7280]/70';
+    }
     switch (isAvailable) {
       case true:
         return 'bg-green-100';
@@ -31,10 +36,12 @@
 
   const handleDragEnter = (ev: DragEvent) => {
     ev.preventDefault();
+    isHover = true;
   };
 
   const handleDragLeave = (ev: DragEvent) => {
     ev.preventDefault();
+    isHover = false;
   };
 
   const handleDragOver = (ev: DragEvent) => {
