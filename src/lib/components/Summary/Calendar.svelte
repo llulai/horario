@@ -33,7 +33,7 @@
     );
 
     if (currently.selected) {
-      const { kind, name } = currently.selected;
+      const { kind } = currently.selected;
       if (kind === 'teacher') {
         blockedTimeslots.forEach((blockedTimeslot) => {
           const [day, period] = blockedTimeslot.timeslot;

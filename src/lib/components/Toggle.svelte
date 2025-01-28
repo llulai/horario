@@ -7,6 +7,7 @@
 </script>
 
 <button
+  aria-label="Toggle para bloquear períodos disponibles"
   class={`h-6 w-10 rounded-full p-1 ${bg} flex flex-row ${selected ? 'justify-end' : 'justify-start'}`}
   type="button"
   onclick={() => {

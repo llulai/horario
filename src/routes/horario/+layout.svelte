@@ -28,8 +28,8 @@
         <select
           class="rounded-[2px]"
           bind:value={selectedGrade}
-          onchange={(event) => {
-            currently.selectGrade(event.target.value);
+          onchange={() => {
+            currently.selectGrade(selectedGrade);
             selectedTeacher = 'profesor';
           }}
         >
@@ -45,8 +45,8 @@
         <select
           class="rounded-[2px]"
           bind:value={selectedTeacher}
-          onchange={(event) => {
-            currently.selectTeacher(event.target.value);
+          onchange={() => {
+            currently.selectTeacher(selectedTeacher);
             selectedGrade = 'curso';
           }}
         >
