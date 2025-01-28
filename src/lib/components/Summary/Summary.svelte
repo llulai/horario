@@ -9,6 +9,8 @@
   import Calendar from './Calendar.svelte';
 
   const summarySchedules: Record<string, Lesson[]> = $derived.by(() => {
+    // get lessons related to the selected teacher or grade
+
     if (currently.selected) {
       const { kind, name } = currently.selected;
       if (kind === 'teacher') {
@@ -26,6 +28,8 @@
   });
 
   const summaryBlockedTimeslots: Record<string, BlockedTimeslot[]> = $derived.by(() => {
+    // get blocked timeslots related to the selected teacher or grade
+
     if (currently.selected) {
       const { kind, name } = currently.selected;
       if (kind === 'teacher') {

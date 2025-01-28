@@ -13,12 +13,12 @@
   const periods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
   const assignedLessons: ByTimeslot<Lesson | null> = $derived.by(() => {
-    const lessonsByTimeslot = getByTimeslot(timetable.maxPeriods, null);
+    // put the assigned lessons into a `ByTimeslot` map for easier manipulation
+    const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(timetable.maxPeriods, null);
 
     lessons.forEach((lesson) => {
       if (lesson.timeslot) {
         const [day, period] = lesson.timeslot;
-        // @ts-expect-error lessonsByTimeslot[day][period] will never be undefined
         lessonsByTimeslot[day][period] = lesson;
       }
     });
@@ -27,6 +27,7 @@
   });
 
   const assigneBlockedTimeslots: ByTimeslot<BlockedTimeslot | undefined> = $derived.by(() => {
+    // put the assigned blocked timeslots into a `ByTimeslot` map for easier manipulation
     const blockedTimeslotsByTimeslot: ByTimeslot<BlockedTimeslot | undefined> = getByTimeslot(
       timetable.maxPeriods,
       undefined

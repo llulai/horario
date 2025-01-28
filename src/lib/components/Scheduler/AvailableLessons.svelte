@@ -7,7 +7,9 @@
     if (currently.selected) {
       const { name, kind } = currently.selected;
 
+      // if we are assinging lessons to a teacher
       if (kind === 'teacher') {
+        // group them by grade name
         return lessons.byTeacher[name].reduce((acc: Record<string, Lesson[]>, lesson) => {
           if (!(lesson.gradeName in acc)) {
             acc[lesson.gradeName] = [];
@@ -18,7 +20,9 @@
         }, {});
       }
 
+      // if we are assinging lessons to a grade
       if (kind === 'grade') {
+        // group them by teacher name
         return lessons.byGrade[name].reduce((acc: Record<string, Lesson[]>, lesson) => {
           if (!(lesson.teacherName in acc)) {
             acc[lesson.teacherName] = [];
