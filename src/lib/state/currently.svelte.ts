@@ -1,13 +1,13 @@
 import type { BlockedTimeslot, Lesson } from '$lib/state/Timetable.svelte';
 
 export type Selected = {
-  kind: 'teacher' | 'classGroup';
+  kind: 'teacher' | 'grade';
   name: string;
 };
 
 export type Dragging =
   | {
-      kind: 'teacher' | 'classGroup';
+      kind: 'teacher' | 'grade';
       lecture: Lesson;
     }
   | {
@@ -39,9 +39,9 @@ const currently = {
     };
   },
 
-  selectClass(name: string) {
+  selectGrade(name: string) {
     selected = {
-      kind: 'classGroup',
+      kind: 'grade',
       name
     };
   },
