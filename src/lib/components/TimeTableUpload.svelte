@@ -50,7 +50,7 @@
     />
   </div>
 
-    <!-- FIXME: disable button until file is uploaded -->
+  <!-- FIXME: disable button until file is uploaded -->
   <button
     type="button"
     class="w-fit rounded-[2px] bg-blue-500 px-3 py-2 text-white"
