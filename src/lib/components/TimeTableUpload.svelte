@@ -1,22 +1,26 @@
 <script lang="ts">
-  import timetable from '$lib/state/timetable.svelte';
+  import { timetable, type Period } from '$lib/state/Timetable.svelte';
 
   let timetableName = $state<string>('');
-  let timetablePeriods = $state<number>(7);
+  let timetablePeriods = $state<Period>(7);
   let timetableFile = $state<File | null>(null);
 
   const loadWorkload = async () => {
     if (timetableFile) {
-      const response = await fetch('/api/lessons', {
+      fetch('/api/lessons', {
         method: 'POST',
         body: timetableFile
-      });
-
-      const lessons = await response.json();
-
-      timetable.setLessons(lessons);
-      timetable.setMaxPeriods(timetablePeriods);
+      })
+        .then((response) => response.json())
+        .then((weeklyLoad) => {
+          timetable.fromWeeklyLoad(weeklyLoad, timetablePeriods);
+        });
     }
+  };
+
+  const handleFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    timetableFile = target.files?.[0] || null;
   };
 </script>
 
@@ -30,13 +34,7 @@
   <!-- file -->
   <div class="flex flex-col">
     <label for="timetable-name">Archivo con carga horaria</label>
-    <input
-      id="timetable-name"
-      type="file"
-      onchange={(event) => {
-        timetableFile = event.target.files[0];
-      }}
-    />
+    <input id="timetable-name" type="file" onchange={handleFileChange} />
   </div>
 
   <!-- periods -->

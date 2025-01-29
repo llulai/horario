@@ -38,11 +38,11 @@ export type Lesson = {
 
 type LessonEvent =
   | {
-      event: 'setLessonTimeslot';
+      event: 'setLectureTimeslot';
       payload: { lessonId: string; timeslot: Timeslot };
     }
   | {
-      event: 'removeLessonTimeslot';
+      event: 'removeLectureTimeslot';
       payload: { lessonId: string };
     };
 
@@ -96,11 +96,11 @@ export const lessons: Lessons = {
   dispatch(dispatchedEvent: LessonEvent) {
     const { event, payload } = dispatchedEvent;
     switch (event) {
-      case 'setLessonTimeslot': {
+      case 'setLectureTimeslot': {
         Slessons[payload.lessonId].timeslot = payload.timeslot;
         break;
       }
-      case 'removeLessonTimeslot': {
+      case 'removeLectureTimeslot': {
         Slessons[payload.lessonId].timeslot = null;
         break;
       }

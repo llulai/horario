@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { v4 as uuidv4 } from 'uuid';
 
 import { read, utils } from 'xlsx';
 
@@ -12,11 +11,10 @@ type RawLesson = {
 };
 
 type ParsedLesson = {
-  id: string;
-  hours: number;
-  teacher: string;
-  classGroup: string;
-  subject: string;
+  weeklyLoad: number;
+  teacherName: string;
+  gradeName: string;
+  subjectName: string;
 };
 
 // FIXME: get suggested subject and classGroup names using openAI
@@ -33,13 +31,12 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const jsonData: RawLesson[] = utils.sheet_to_json(sheet);
 
-  return json(
-    jsonData.map((rawLesson) => ({
-      id: uuidv4(),
-      hours: rawLesson.HORAS,
-      teacher: rawLesson.PROFESOR,
-      classGroup: rawLesson.CURSO,
-      subject: rawLesson.ASIGNATURA
-    }))
-  );
+  const parsedLessons: ParsedLesson[] = jsonData.map((rawLesson) => ({
+    weeklyLoad: rawLesson.HORAS,
+    teacherName: rawLesson.PROFESOR,
+    gradeName: rawLesson.CURSO,
+    subjectName: rawLesson.ASIGNATURA
+  }));
+
+  return json(parsedLessons);
 };
