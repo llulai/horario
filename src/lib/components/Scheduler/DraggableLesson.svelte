@@ -26,5 +26,5 @@
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   class={`flex h-6 w-12 items-center justify-center rounded-[2px] ${bg} ${isDragging || lesson.timeslot ? 'opacity-20' : ''} text-white`}
-  >{lesson.subjectName}</button
+  >{lesson[attributeForColor]}</button
 >

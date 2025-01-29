@@ -11,11 +11,11 @@
       if (kind === 'teacher') {
         // group them by grade name
         return lessons.byTeacher[name].reduce((acc: Record<string, Lesson[]>, lesson) => {
-          if (!(lesson.gradeName in acc)) {
-            acc[lesson.gradeName] = [];
+          if (!(lesson.subjectName in acc)) {
+            acc[lesson.subjectName] = [];
           }
 
-          acc[lesson.gradeName].push(lesson);
+          acc[lesson.subjectName].push(lesson);
           return acc;
         }, {});
       }
@@ -72,7 +72,7 @@
   {#each Object.entries(availableLessons) as [name, lessons]}
     <div class="grid grid-cols-[max-content_1fr] gap-6">
       <p class="text-[16px]">{name}</p>
-      <div class="flex h-14 w-min flex-col flex-wrap gap-2">
+      <div class="flex h-min max-w-[328px] flex-row flex-wrap gap-2">
         {#each lessons as lesson}
           <DraggableLesson {lesson} />
         {/each}
