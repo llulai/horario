@@ -1,15 +1,22 @@
 const colorCycle = [
-  'bg-[#ea580c]',
-  'bg-[#DB2777]',
-  'bg-[#2563EB]',
-  'bg-[#059669]',
-  'bg-[#DC2626]',
-  'bg-[#FBBF24]',
-  'bg-[#5EEAD4]',
-  'bg-[#9333EA]',
-  'bg-[#22D3EE]',
+  'bg-[#EF4444]',
+  'bg-[#15803D]',
+  'bg-[#4C1D95]',
+  'bg-[#BE185D]',
+  'bg-[#1D4ED8]',
+  'bg-[#F97316]',
+  'bg-[#B45309]',
+  'bg-[#164E63]',
+  'bg-[#881337]',
+  'bg-[#60A5FA]',
+  'bg-[#C026D3]',
+  'bg-[#0D9488]',
+  'bg-[#0891B2]',
+  'bg-[#B91C1C]',
+  'bg-[#A78BFA]',
+  'bg-[#C2410C]',
   'bg-[#65A30D]',
-  'bg-[#E879F9]'
+  'bg-[#6D28D9]'
 ] as const;
 
 const createGetColor = () => {
