@@ -25,7 +25,7 @@
     if (isAvailable && isHover && currently.dragging) {
       const attributeForColor =
         currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName';
-      return `${getColor(currently.dragging[attributeForColor], attributeForColor)} opacity-30`;
+      return `${getColor(currently.dragging[attributeForColor], attributeForColor)} opacity-20`;
     }
     switch (isAvailable) {
       case true:

@@ -17,10 +17,10 @@
     isDragging = false;
   };
 
-  const attributeForColor = $derived(
+  const attributeToShow = $derived(
     currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
   );
-  const bg = $derived(getColor(lesson[attributeForColor], attributeForColor));
+  const bg = $derived(getColor(lesson[attributeToShow], attributeToShow));
 </script>
 
 <button

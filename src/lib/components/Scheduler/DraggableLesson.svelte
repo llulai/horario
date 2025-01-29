@@ -5,10 +5,10 @@
 
   const { lesson }: { lesson: Lesson } = $props();
 
-  const attributeForColor = $derived(
+  const attributeToShow = $derived(
     currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
   );
-  const bg = $derived(getColor(lesson[attributeForColor], attributeForColor));
+  const bg = $derived(getColor(lesson[attributeToShow], attributeToShow));
   let isDragging = $state(false);
 
   const handleDragStart = () => {
@@ -26,5 +26,5 @@
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   class={`flex h-6 w-12 items-center justify-center rounded-[2px] ${bg} ${isDragging || lesson.timeslot ? 'opacity-20' : ''} text-white`}
-  >{lesson[attributeForColor]}</button
+  >{lesson[attributeToShow]}</button
 >
