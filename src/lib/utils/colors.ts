@@ -22,8 +22,8 @@ const createGetColor = () => {
   const classColors: Record<string, string> = {};
 
   // Retrieve or assign a color for a given name
-  const getColor = (name: string, show: 'subject' | 'classGroup'): string => {
-    const isSubject = show === 'subject';
+  const getColor = (name: string, show: 'subjectName' | 'gradeName'): string => {
+    const isSubject = show === 'subjectName';
     const colorMap = isSubject ? subjectColors : classColors;
 
     // If a color already exists for the name, return it
@@ -47,19 +47,19 @@ const createGetColor = () => {
   };
 
   // Explicitly set a new color for a name, overriding any previous assignment
-  const setColor = (name: string, show: 'subject' | 'classGroup', newColor: string): void => {
-    const isSubject = show === 'subject';
+  const setColor = (name: string, show: 'subjectName' | 'gradeName', newColor: string): void => {
+    const isSubject = show === 'subjectName';
     const colorMap = isSubject ? subjectColors : classColors;
 
     // Assign the new color, overriding any existing value
     colorMap[name] = newColor;
   };
 
-  return [getColor, setColor];
+  return { getColor, setColor };
 };
 
 // Create instances of getColor and setColor
-const [getColor, setColor] = createGetColor();
+const { getColor, setColor } = createGetColor();
 
 // Export the functions
 export { getColor, setColor };

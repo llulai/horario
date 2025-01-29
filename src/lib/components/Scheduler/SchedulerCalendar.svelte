@@ -73,8 +73,6 @@
 
     return blockedTimeslotsByTimeslot;
   });
-
-  const show = $derived(currently.selected?.kind === 'teacher' ? 'gradeName' : 'subjectName');
 </script>
 
 <!-- calendar header -->
@@ -95,7 +93,7 @@
     {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
       {#each days as day}
         {#if assignedLessons[day][period]}
-          <LessonCard lesson={assignedLessons[day][period]} {show} />
+          <LessonCard lesson={assignedLessons[day][period]} />
         {:else if currently.blocking}
           <BlockingBlock {day} {period} blockedTimeslot={assignedBlockedTimeslots[day][period]} />
         {:else if assignedBlockedTimeslots[day][period]}
