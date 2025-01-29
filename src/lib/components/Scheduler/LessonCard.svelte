@@ -1,8 +1,9 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
   import type { Lesson } from '$lib/state/Timetable.svelte';
+  import { getColor } from '$lib/utils/colors';
 
-  const { lesson, show }: { lesson: Lesson; show: 'gradeName' | 'subjectName' } = $props();
+  const { lesson }: { lesson: Lesson } = $props();
 
   let isDragging = $state(false);
 
@@ -16,17 +17,21 @@
     isDragging = false;
   };
 
-  const bg = $derived(isDragging ? 'bg-[#6B7280]/60' : 'bg-[#6B7280]');
+  const attributeToShow = $derived(
+    currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
+  );
+  const bg = $derived(getColor(lesson[attributeToShow], attributeToShow));
 </script>
 
 <button
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
-  class={`flex flex-col items-center justify-center rounded-[2px] ${bg} text-white`}
+  class={`flex flex-col items-center justify-center rounded-[2px] ${bg} ${isDragging ? 'opacity-20' : ''} text-white`}
 >
   <div class="text-[14px]">
-    {lesson[show]}
+    {currently.selected && currently.selected.kind === 'teacher' ? lesson.gradeName : ''}
+    {lesson.subjectName}
   </div>
   <div class="text-[12px]">
     {lesson.teacherName}

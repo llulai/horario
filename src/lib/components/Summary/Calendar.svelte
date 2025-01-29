@@ -2,6 +2,7 @@
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
   import { timetable, type Lesson, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
+  import { getColor } from '$lib/utils/colors';
 
   const {
     name,
@@ -86,7 +87,7 @@
         {#each days as day}
           {#if assignedLessons[day][period]}
             <div
-              class="flex flex-col items-center justify-center rounded-[2px] bg-[#6B7280] text-[10px] text-white"
+              class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
             >
               {assignedLessons[day][period][show]}
             </div>

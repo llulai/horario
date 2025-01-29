@@ -2,6 +2,7 @@
   import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
   import { lessons, type Day, type Period } from '$lib/state/Timetable.svelte';
+  import { getColor } from '$lib/utils/colors';
   const {
     day,
     period
@@ -21,8 +22,10 @@
   });
 
   const bg = $derived.by(() => {
-    if (isAvailable && isHover) {
-      return 'bg-[#6B7280]/70';
+    if (isAvailable && isHover && currently.dragging) {
+      const attributeForColor =
+        currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName';
+      return `${getColor(currently.dragging[attributeForColor], attributeForColor)} opacity-20`;
     }
     switch (isAvailable) {
       case true:
