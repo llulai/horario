@@ -53,7 +53,7 @@
       if (currently.dragging && currently.dragging.timeslot) {
         const lessonId = currently.dragging.id;
         lessons.dispatch({
-          event: 'removeLectureTimeslot',
+          event: 'removeLessonTimeslot',
           payload: { lessonId }
         });
       }

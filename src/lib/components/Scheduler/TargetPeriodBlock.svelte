@@ -52,7 +52,7 @@
     if (currently.dragging && isAvailable) {
       const lessonId = currently.dragging.id;
       lessons.dispatch({
-        event: 'setLectureTimeslot',
+        event: 'setLessonTimeslot',
         payload: { lessonId, timeslot: [day, period] }
       });
     }

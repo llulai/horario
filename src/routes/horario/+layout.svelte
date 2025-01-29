@@ -22,44 +22,46 @@
   <div class="flex flex-row gap-20">
     <div class="text-[24px]">Super Horario</div>
 
-    <div class="flex flex-row gap-4">
-      <!-- Grades -->
-      <div>
-        <select
-          class="rounded-[2px]"
-          bind:value={selectedGrade}
-          onchange={() => {
-            currently.selectGrade(selectedGrade);
-            selectedTeacher = 'profesor';
-          }}
-        >
-          <option value="curso">Curso</option>
-          {#each Object.keys(lessons.byGrade) as grade}
-            <option value={grade}>{grade}</option>
-          {/each}
-        </select>
-      </div>
+    {#if lessons.list.length > 0}
+      <div class="flex flex-row gap-4">
+        <!-- Grades -->
+        <div>
+          <select
+            class="rounded-[2px]"
+            bind:value={selectedGrade}
+            onchange={() => {
+              currently.selectGrade(selectedGrade);
+              selectedTeacher = 'profesor';
+            }}
+          >
+            <option value="curso">Curso</option>
+            {#each Object.keys(lessons.byGrade) as grade}
+              <option value={grade}>{grade}</option>
+            {/each}
+          </select>
+        </div>
 
-      <!-- Teachers -->
-      <div>
-        <select
-          class="rounded-[2px]"
-          bind:value={selectedTeacher}
-          onchange={() => {
-            currently.selectTeacher(selectedTeacher);
-            selectedGrade = 'curso';
-          }}
-        >
-          <option value="profesor">Profesor</option>
-          {#each Object.keys(lessons.byTeacher) as teacher}
-            <option value={teacher}>{teacher}</option>
-          {/each}
-        </select>
-      </div>
+        <!-- Teachers -->
+        <div>
+          <select
+            class="rounded-[2px]"
+            bind:value={selectedTeacher}
+            onchange={() => {
+              currently.selectTeacher(selectedTeacher);
+              selectedGrade = 'curso';
+            }}
+          >
+            <option value="profesor">Profesor</option>
+            {#each Object.keys(lessons.byTeacher) as teacher}
+              <option value={teacher}>{teacher}</option>
+            {/each}
+          </select>
+        </div>
 
-      <!-- new timetable -->
-      <button class="w-fit rounded-[2px] bg-blue-500 px-3 py-2 text-white">Nuevo Horario</button>
-    </div>
+        <!-- new timetable -->
+        <button class="w-fit rounded-[2px] bg-blue-500 px-3 py-2 text-white">Nuevo Horario</button>
+      </div>
+    {/if}
   </div>
 
   <div class="flex flex-row items-center gap-4">

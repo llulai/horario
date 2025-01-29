@@ -89,7 +89,7 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
     availabilityByGrade[grade] = getByTimeslot(timetable.maxPeriods, true);
   });
 
-  // mark assigned lectures as unavailable timeslots for teachers and classes
+  // mark assigned lessons as unavailable timeslots for teachers and classes
   lessons.list.forEach((lesson: Lesson) => {
     const { teacherName, gradeName, timeslot } = lesson;
     if (timeslot) {
