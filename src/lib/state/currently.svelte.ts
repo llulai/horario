@@ -1,9 +1,14 @@
 import type { Lesson } from '$lib/state/Timetable.svelte';
 
-export type Selected = {
-  kind: 'teacher' | 'grade';
-  name: string;
-};
+export type Selected =
+  | {
+      kind: 'teacher' | 'grade';
+      name: string;
+    }
+  | {
+      kind: 'category';
+      name: 'grades' | 'teachers';
+    };
 
 let selected = $state<Selected | null>(null);
 let dragging = $state<Lesson | null>(null);
@@ -38,6 +43,20 @@ const currently = {
     selected = {
       kind: 'grade',
       name
+    };
+  },
+
+  selectCourses() {
+    selected = {
+      kind: 'category',
+      name: 'grades'
+    };
+  },
+
+  selectTeachers() {
+    selected = {
+      kind: 'category',
+      name: 'teachers'
     };
   },
 

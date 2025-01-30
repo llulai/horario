@@ -7,8 +7,14 @@
   const {
     name,
     lessons,
-    blockedTimeslots
-  }: { name: string; lessons: Lesson[]; blockedTimeslots: BlockedTimeslot[] } = $props();
+    blockedTimeslots,
+    small = false
+  }: {
+    name: string;
+    lessons: Lesson[];
+    blockedTimeslots: BlockedTimeslot[];
+    small: boolean;
+  } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
   const periods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
@@ -55,49 +61,87 @@
   });
 
   const show = $derived(currently.selected?.kind === 'teacher' ? 'subjectName' : 'gradeName');
+
+  const w = $derived(small ? 'w-6' : 'w-9');
+  const h = $derived(small ? 'h-3' : 'h-[18px]');
+  const grid = $derived(
+    small
+      ? 'grid grid-cols-[repeat(5,24px)] grid-rows-[repeat(8,12px)] gap-1'
+      : 'grid grid-cols-[repeat(5,36px)] grid-rows-[repeat(8,18px)] gap-1'
+  );
 </script>
 
-<div class="mx-auto flex flex-col justify-center gap-1">
-  <div class="truncate text-center">
-    {name}
+<div
+  class={`${small ? 'gap-1 py-[9px] pl-1 pr-[9px]' : 'gap-2 py-3 pl-[9px] pr-[22px]'} mx-auto flex flex-row justify-center rounded-[2px] bg-white`}
+>
+  <!-- periods -->
+  <div class="flex h-full flex-col items-center justify-end gap-1">
+    {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
+      <div
+        class={`${h} ${small ? 'text-[8px]' : 'text-[12px]'} flex flex-row items-center justify-center font-mono text-[#6B7280]`}
+      >
+        {period}
+      </div>
+    {/each}
   </div>
 
-  <!-- calendar header -->
-  <div class="flex w-full flex-col items-end">
-    <div class="grid grid-cols-5 gap-1 text-[8px]">
-      <p class="w-6 text-center">L</p>
-      <p class="w-6 text-center">M</p>
-      <p class="w-6 text-center">M</p>
-      <p class="w-6 text-center">J</p>
-      <p class="w-6 text-center">V</p>
+  <div class={`flex flex-col ${small ? 'gap-2' : 'gap-4'}`}>
+    <!-- summary -->
+    <div class={`flex flex-col ${small ? 'gap-1' : 'gap-2'}`}>
+      <!-- name -->
+      <div class={`truncate text-center ${small ? 'text-[10px]' : 'text-[16px]'}`}>
+        {name}
+      </div>
+
+      <div class="flex flex-row items-center gap-1">
+        <!-- tag -->
+        <div class={`${w} flex flex-row items-center justify-center`}>
+          <div
+            class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#E2E8F1] text-[8px] text-[#6B7280]`}
+          >
+            P
+          </div>
+        </div>
+
+        <div class="flex h-[2px] flex-grow bg-[#E2E8F1]"></div>
+
+        <!-- completion -->
+        <div class={`text-center text-[#6B7280] ${w} ${small ? 'text-[8px]' : 'text-[10px]'}`}>
+          10%
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- calendar body -->
-
-  <div class="grid grid-cols-[min-content_1fr] grid-rows-1 gap-1">
     <div class="flex flex-col gap-1">
-      {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
-        <div class="h-3 text-[8px]">{period}</div>
-      {/each}
-    </div>
+      <!-- calendar header -->
+      <div class="flex w-full flex-col items-end">
+        <div
+          class={`grid grid-cols-5 gap-1 font-mono text-[#6B7280] ${small ? 'text-[8px]' : 'text-[12px]'}`}
+        >
+          <p class={`text-center ${w}`}>L</p>
+          <p class={`text-center ${w}`}>M</p>
+          <p class={`text-center ${w}`}>M</p>
+          <p class={`text-center ${w}`}>J</p>
+          <p class={`text-center ${w}`}>V</p>
+        </div>
+      </div>
 
-    <div class="grid grid-cols-[repeat(5,24px)] grid-rows-[repeat(8,12px)] gap-1">
-      {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
-        {#each days as day}
-          {#if assignedLessons[day][period]}
-            <div
-              class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
-            >
-              {assignedLessons[day][period][show]}
-            </div>
-          {:else if assigneBlockedTimeslots[day][period]}
-            <div></div>
-          {:else}
-            <div class="rounded-[2px] bg-[#FAFAFA]"></div>
-          {/if}
+      <!-- calendar body -->
+
+      <div class={grid}>
+        {#each periods.filter((p) => p <= timetable.maxPeriods) as period}{#each days as day}{#if assignedLessons[day][period]}}
+              <div
+                class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
+              >
+                {assignedLessons[day][period][show]}}
+              </div>
+            {:else if assigneBlockedTimeslots[day][period]}}
+              <div></div>
+            {:else}<div class="rounded-[2px] bg-[#FAFAFA]"></div>
+            {/if}
+          {/each}
         {/each}
-      {/each}
+      </div>
     </div>
   </div>
 </div>
