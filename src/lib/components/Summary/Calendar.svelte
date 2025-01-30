@@ -5,11 +5,13 @@
   import { getColor } from '$lib/utils/colors';
 
   const {
+    kind,
     name,
     lessons,
     blockedTimeslots,
     small = false
   }: {
+    kind: 'teacher' | 'grade';
     name: string;
     lessons: Lesson[];
     blockedTimeslots: BlockedTimeslot[];
@@ -89,9 +91,18 @@
     <!-- summary -->
     <div class={`flex flex-col ${small ? 'gap-1' : 'gap-2'}`}>
       <!-- name -->
-      <div class={`truncate text-center ${small ? 'text-[10px]' : 'text-[16px]'}`}>
+      <button
+        class={`truncate text-center hover:underline ${small ? 'text-[10px]' : 'text-[16px]'}`}
+        onclick={() => {
+          if (kind === 'teacher') {
+            currently.selectTeacher(name);
+          } else {
+            currently.selectGrade(name);
+          }
+        }}
+      >
         {name}
-      </div>
+      </button>
 
       <div class="flex flex-row items-center gap-1">
         <!-- tag -->
@@ -129,13 +140,15 @@
       <!-- calendar body -->
 
       <div class={grid}>
-        {#each periods.filter((p) => p <= timetable.maxPeriods) as period}{#each days as day}{#if assignedLessons[day][period]}}
+        {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
+          {#each days as day}
+            {#if assignedLessons[day][period]}
               <div
                 class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
               >
-                {assignedLessons[day][period][show]}}
+                {assignedLessons[day][period][show]}
               </div>
-            {:else if assigneBlockedTimeslots[day][period]}}
+            {:else if assigneBlockedTimeslots[day][period]}
               <div></div>
             {:else}<div class="rounded-[2px] bg-[#FAFAFA]"></div>
             {/if}

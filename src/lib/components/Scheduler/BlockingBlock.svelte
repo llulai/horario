@@ -21,7 +21,7 @@
         event: 'removeBlockedTimeslot',
         payload: { id: blockedTimeslot.id }
       });
-    } else if (currently.selected) {
+    } else if (currently.selected && currently.selected.kind !== 'category') {
       blockedTimeslots.dispatch({
         event: 'addBlockedTimeslot',
         payload: { ...currently.selected, timeslot: [day, period] }

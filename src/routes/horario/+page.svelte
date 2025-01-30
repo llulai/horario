@@ -16,27 +16,33 @@
         <Summary />
       </div>
     {:else if currently.selected.name === 'grades'}
-      <CalendarGrid>
-        {#each Object.entries(lessons.byGrade) as [name, gradeLessons]}
-          <Calendar
-            {name}
-            lessons={gradeLessons}
-            blockedTimeslots={blockedTimeslots.byGrade[name]}
-            small={false}
-          />
-        {/each}
-      </CalendarGrid>
+      <div class="absolute inset-x-0 bottom-0 top-10 overflow-scroll bg-[#E2E8F1]">
+        <CalendarGrid small={false}>
+          {#each Object.entries(lessons.byGrade) as [name, gradeLessons]}
+            <Calendar
+              kind={'grade'}
+              {name}
+              lessons={gradeLessons}
+              blockedTimeslots={blockedTimeslots.byGrade[name]}
+              small={false}
+            />
+          {/each}
+        </CalendarGrid>
+      </div>
     {:else}
-      <CalendarGrid>
-        {#each Object.entries(lessons.byTeacher) as [name, teacherLessons]}
-          <Calendar
-            {name}
-            lessons={teacherLessons}
-            blockedTimeslots={blockedTimeslots.byTeacher[name]}
-            small={false}
-          />
-        {/each}
-      </CalendarGrid>
+      <div class="absolute inset-x-0 bottom-0 top-10 overflow-scroll bg-[#E2E8F1]">
+        <CalendarGrid small={false}>
+          {#each Object.entries(lessons.byTeacher) as [name, teacherLessons]}
+            <Calendar
+              kind={'teacher'}
+              {name}
+              lessons={teacherLessons}
+              blockedTimeslots={blockedTimeslots.byTeacher[name]}
+              small={false}
+            />
+          {/each}
+        </CalendarGrid>
+      </div>
     {/if}
   {/if}
 {:else}
