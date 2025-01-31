@@ -18,7 +18,7 @@
   });
 
   const hasTags = $derived(
-    kind === 'teacher' ? tags.byTeacher[name].length : tags.byGrade[name].length > 0
+    kind === 'teacher' ? tags.byTeacher[name].size : tags.byGrade[name].size > 0
   );
 
   const right = $derived(

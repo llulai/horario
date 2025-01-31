@@ -6,6 +6,9 @@
   import currently from '$lib/state/currently.svelte';
   import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import Calendar from '$lib/components/Summary/Calendar.svelte';
+  import { tags } from '$lib/state/Tags.svelte';
+
+  $inspect(tags);
 </script>
 
 {#if lessons.list.length > 0}
