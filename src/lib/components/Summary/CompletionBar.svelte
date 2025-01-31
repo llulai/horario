@@ -1,6 +1,6 @@
 <script lang="ts">
   import { completion } from '$lib/state/Completion.svelte';
-  import { formatCompletion } from '$lib/utils';
+  import { tags } from '$lib/state/Tags.svelte';
 
   const { kind, name, small }: { kind: 'teacher' | 'grade'; name: string; small: boolean } =
     $props();
@@ -16,9 +16,17 @@
 
     return 0;
   });
-  const w = $derived(small ? 'w-6' : 'w-9');
+
+  const hasTags = $derived(
+    kind === 'teacher' ? tags.byTeacher[name].length : tags.byGrade[name].length > 0
+  );
+
+  const right = $derived(
+    (1 - completionLevel) *
+      ((24 + 12 * (1 - Number(small))) * (4 - Number(hasTags)) + 4 * (3 - Number(hasTags)))
+  );
 </script>
 
-<div class={`text-center text-[#6B7280] ${w} ${small ? 'text-[8px]' : 'text-[10px]'}`}>
-  {formatCompletion(completionLevel)}
+<div class="relative flex h-[2px] flex-grow bg-[#E2E8F1]">
+  <div class="absolute inset-y-0 left-0 bg-[#6B7280]" style={`right: ${right}px;`}></div>
 </div>

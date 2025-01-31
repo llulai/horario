@@ -1,12 +1,10 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
-  import { completion } from '$lib/state/Completion.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { tags } from '$lib/state/Tags.svelte';
   import { timetable, type Lesson, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
-  import { formatCompletion } from '$lib/utils';
   import Completion from './Completion.svelte';
+  import CompletionBar from './CompletionBar.svelte';
   import Tags from './Tags.svelte';
 
   const {
@@ -115,16 +113,13 @@
 
       <div class="flex flex-row items-center gap-1">
         <!-- tag -->
-        {#if currently.selected?.kind === 'category'}
-          <Tags {small} kind={currently.selected.name} {name} />
-        {/if}
+        <Tags {small} {kind} {name} />
 
-        <div class="flex h-[2px] flex-grow bg-[#E2E8F1]"></div>
+        <!-- completion bar -->
+        <CompletionBar {small} {kind} {name} />
 
         <!-- completion -->
-        {#if currently.selected?.kind === 'category'}
-          <Completion {small} kind={currently.selected.name} {name} />
-        {/if}
+        <Completion {small} {kind} {name} />
       </div>
     </div>
 
