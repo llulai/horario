@@ -1,8 +1,12 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
+  import { completion } from '$lib/state/Completion.svelte';
   import currently from '$lib/state/currently.svelte';
+  import { tags } from '$lib/state/Tags.svelte';
   import { timetable, type Lesson, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
+  import { formatCompletion } from '$lib/utils';
+  import Completion from './Completion.svelte';
 
   const {
     kind,
@@ -62,7 +66,11 @@
     return blockedTimeslotsByTimeslot;
   });
 
-  const show = $derived(currently.selected?.kind === 'teacher' ? 'subjectName' : 'gradeName');
+  const show = $derived(
+    currently.selected?.kind === 'teacher' || currently.selected?.name === 'grades'
+      ? 'subjectName'
+      : 'gradeName'
+  );
 
   const w = $derived(small ? 'w-6' : 'w-9');
   const h = $derived(small ? 'h-3' : 'h-[18px]');
@@ -106,20 +114,22 @@
 
       <div class="flex flex-row items-center gap-1">
         <!-- tag -->
-        <div class={`${w} flex flex-row items-center justify-center`}>
-          <div
-            class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#E2E8F1] text-[8px] text-[#6B7280]`}
-          >
-            P
+        {#if currently.selected?.name === 'teachers' && tags.byTeacher[name].includes('priority')}
+          <div class={`${w} flex flex-row items-center justify-center`}>
+            <div
+              class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#DDD6FF] text-[8px] text-[#5D0EC1]`}
+            >
+              P
+            </div>
           </div>
-        </div>
+        {/if}
 
         <div class="flex h-[2px] flex-grow bg-[#E2E8F1]"></div>
 
         <!-- completion -->
-        <div class={`text-center text-[#6B7280] ${w} ${small ? 'text-[8px]' : 'text-[10px]'}`}>
-          10%
-        </div>
+        {#if currently.selected?.kind === 'category'}
+          <Completion {small} kind={currently.selected.name} {name} />
+        {/if}
       </div>
     </div>
 

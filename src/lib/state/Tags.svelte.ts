@@ -1,8 +1,12 @@
 import { lessons, type Lesson } from '$lib/state/Timetable.svelte';
 import type { ByTimeslot } from './Availability.svelte';
+import availability from './Availability.svelte';
 
 type Tag = 'priority' | 'conflict' | 'low-availability' | 'completed';
-type Tags = Record<string, Tag[]>;
+type Tags = {
+  byTeacher: Record<string, Tag[]>;
+  byGrade: Record<string, Tag[]>;
+};
 
 const reduceSum = (a: number, b: number): number => a + b;
 
@@ -14,30 +18,44 @@ export const isConflict = (availability: ByTimeslot<boolean>): boolean =>
     .map((dayAvailability) => Object.values(dayAvailability).map(Number).reduce(reduceSum))
     .reduce(reduceSum) === 0;
 
-const getTags = (kind: 'teachers' | 'grades'): Tags => {
-  const tags: Tags = {};
+const byTeacher = $derived.by(() => {
+  const tagsByTeacher: Record<string, Tag[]> = {};
 
-  if (kind === 'teachers') {
-    Object.keys(lessons.byTeacher).forEach((teacher) => {
-      tags[teacher] = [];
-    });
+  Object.keys(lessons.byTeacher).forEach((teacher) => {
+    tagsByTeacher[teacher] = [];
+  });
 
-    // set completed tags
-    for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
-      if (allLecturesAssigned(teacherLessons)) {
-        tags[teacherName].push('completed');
-      }
+  // set completed tags
+  for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
+    if (allLecturesAssigned(teacherLessons)) {
+      tagsByTeacher[teacherName].push('completed');
     }
-
-    // set conflict tags
   }
 
-  return tags;
-};
+  // set priority tags
 
-export const getTeachersTags = (): Tags => {
-  return getTags('teachers');
-};
-export const getClassesTags = (): Tags => {
-  return getTags('grades');
+  for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
+    const teacherLoad = teacherLessons.reduce((sum) => sum + 1, 0);
+    const teacherAvailability = Object.values(availability.byTeacher[teacherName]).reduce(
+      (sum, dailyAvailability) =>
+        sum +
+        Object.values(dailyAvailability).reduce(
+          (sum, periodAvailability) => sum + Number(periodAvailability),
+          0
+        ),
+      0
+    );
+
+    if (teacherLoad / teacherAvailability > 0.75) {
+      tagsByTeacher[teacherName].push('priority');
+    }
+  }
+
+  return tagsByTeacher;
+});
+
+export const tags = {
+  get byTeacher() {
+    return byTeacher;
+  }
 };

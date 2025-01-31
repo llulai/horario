@@ -18,8 +18,6 @@
 
   let selectedCourses = $derived(currently.selected?.name === 'grades');
   let selectedTeachers = $derived(currently.selected?.name === 'teachers');
-
-  $inspect(selectedCourses);
 </script>
 
 <div class="flex h-10 flex-row items-center justify-between bg-white pl-4 pr-3">
