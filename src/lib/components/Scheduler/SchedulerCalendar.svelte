@@ -97,7 +97,7 @@
         {:else if currently.blocking}
           <BlockingBlock {day} {period} blockedTimeslot={assignedBlockedTimeslots[day][period]} />
         {:else if assignedBlockedTimeslots[day][period]}
-          <div></div>
+          <div class="h-10"></div>
         {:else}
           <TargetPeriodBlock {day} {period} />
         {/if}
