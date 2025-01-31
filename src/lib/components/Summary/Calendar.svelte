@@ -7,6 +7,7 @@
   import { getColor } from '$lib/utils/colors';
   import { formatCompletion } from '$lib/utils';
   import Completion from './Completion.svelte';
+  import Tags from './Tags.svelte';
 
   const {
     kind,
@@ -114,14 +115,8 @@
 
       <div class="flex flex-row items-center gap-1">
         <!-- tag -->
-        {#if currently.selected?.name === 'teachers' && tags.byTeacher[name].includes('priority')}
-          <div class={`${w} flex flex-row items-center justify-center`}>
-            <div
-              class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#DDD6FF] text-[8px] text-[#5D0EC1]`}
-            >
-              P
-            </div>
-          </div>
+        {#if currently.selected?.kind === 'category'}
+          <Tags {small} kind={currently.selected.name} {name} />
         {/if}
 
         <div class="flex h-[2px] flex-grow bg-[#E2E8F1]"></div>
