@@ -54,8 +54,28 @@ const byTeacher = $derived.by(() => {
   return tagsByTeacher;
 });
 
-export const tags = {
+const byGrade = $derived.by(() => {
+  const tagsByGrade: Record<string, Tag[]> = {};
+
+  Object.keys(lessons.byGrade).forEach((grade) => {
+    tagsByGrade[grade] = [];
+  });
+
+  // set completed tags
+  for (const [gradeName, gradeLessons] of Object.entries(lessons.byGrade)) {
+    if (allLecturesAssigned(gradeLessons)) {
+      tagsByGrade[gradeName].push('completed');
+    }
+  }
+
+  return tagsByGrade;
+});
+
+export const tags: Tags = {
   get byTeacher() {
     return byTeacher;
+  },
+  get byGrade() {
+    return byGrade;
   }
 };

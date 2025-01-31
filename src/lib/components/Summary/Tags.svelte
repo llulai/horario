@@ -6,7 +6,7 @@
   const w = $derived(small ? 'w-6' : 'w-9');
 </script>
 
-{#if kind === 'teachers' && tags.byTeacher[name].includes('completed')}
+{#if (kind === 'teachers' && tags.byTeacher[name].includes('completed')) || (kind === 'grades' && tags.byGrade[name].includes('completed'))}
   <div class={`${w} flex flex-row items-center justify-center`}>
     <div
       class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#B9F8CF] text-[8px] text-[#016730]`}
