@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import currently from '$lib/state/currently.svelte.js';
+  import currently from '$lib/state/currently.svelte';
   import { lessons } from '$lib/state/Timetable.svelte';
   import type { SubmitFunction } from '@sveltejs/kit';
   let { children } = $props();
