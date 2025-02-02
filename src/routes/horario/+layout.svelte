@@ -59,7 +59,7 @@
       <button
         type="submit"
         class="w-fit rounded-[2px] bg-red-500 px-3 py-1 text-[12px] font-medium text-white"
-        >Salir</button
+        disabled={loading}>Salir</button
       >
     </form>
   </div>
