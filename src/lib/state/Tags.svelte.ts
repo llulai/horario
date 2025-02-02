@@ -1,6 +1,6 @@
-import { lessons, type Lesson } from '$lib/state/Timetable.svelte';
+import { blockedTimeslots, lessons, timetable, type Lesson } from '$lib/state/Timetable.svelte';
 import type { ByTimeslot } from './Availability.svelte';
-import availability from './Availability.svelte';
+import availability, { getByTimeslot } from './Availability.svelte';
 
 type Tag = 'priority' | 'conflict' | 'low-availability' | 'completed';
 type Tags = {
@@ -35,7 +35,24 @@ const byTeacher = $derived.by(() => {
   // set priority tags
   for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
     const teacherLoad = teacherLessons.reduce((sum) => sum + 1, 0);
-    const teacherAvailability = Object.values(availability.byTeacher[teacherName]).reduce(
+    const availabilityByTeacher = Object.fromEntries(
+      Object.keys(lessons.byTeacher).map((teacher) => [
+        teacher,
+        getByTimeslot(timetable.maxPeriods, true)
+      ])
+    );
+
+    Object.values(blockedTimeslots.byTeacher).forEach((blockedTimeslots) => {
+      blockedTimeslots.forEach((blockedTimeslot) => {
+        const {
+          name,
+          timeslot: [day, period]
+        } = blockedTimeslot;
+        availabilityByTeacher[name][day][period] = false;
+      });
+    });
+
+    const teacherAvailability = Object.values(availabilityByTeacher[teacherName]).reduce(
       (sum, dailyAvailability) =>
         sum +
         Object.values(dailyAvailability).reduce(
