@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CalendarGrid from '../CalendarGrid.svelte';
   import currently from '$lib/state/currently.svelte';
   import {
     type BlockedTimeslot,
@@ -49,14 +50,20 @@
   });
 </script>
 
-<div class="flex flex-col items-center gap-6 bg-[#E2E8F1] px-3 pt-6">
-  {#if currently.selected}
+<div class="flex flex-col items-center gap-6 overflow-scroll bg-[#E2E8F1] px-3 pt-6">
+  {#if currently.selected && currently.selected.kind !== 'category'}
     <h2 class="text-[24px]">{currently.selected?.kind === 'teacher' ? 'Cursos' : 'Profesores'}</h2>
 
-    <div class="grid w-full grid-cols-[repeat(auto-fit,minmax(164px,1fr))] gap-y-6">
+    <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}
-        <Calendar {name} {lessons} blockedTimeslots={summaryBlockedTimeslots[name]} />
+        <Calendar
+          kind={currently.selected.kind === 'teacher' ? 'grade' : 'teacher'}
+          {name}
+          {lessons}
+          blockedTimeslots={summaryBlockedTimeslots[name]}
+          small
+        />
       {/each}
-    </div>
+    </CalendarGrid>
   {/if}
 </div>

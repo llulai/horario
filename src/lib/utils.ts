@@ -13,3 +13,7 @@ export const formatComplexity = (complexity: bigint) => {
 
   return parsedComplexity;
 };
+
+export const formatCompletion = (completion: number) => {
+  return Math.round(completion * 100).toString() + '%';
+};

@@ -3,11 +3,9 @@
   import currently from '$lib/state/currently.svelte';
   import { lessons } from '$lib/state/Timetable.svelte';
   import type { SubmitFunction } from '@sveltejs/kit';
-  let { children, data } = $props();
+  let { children } = $props();
 
   let loading = $state(false);
-  let selectedGrade = $state<string>('curso');
-  let selectedTeacher = $state<string>('profesor');
 
   const handleSignOut: SubmitFunction = () => {
     loading = true;
@@ -16,60 +14,52 @@
       update();
     };
   };
+
+  let selectedCourses = $derived(currently.selected?.name === 'grades');
+  let selectedTeachers = $derived(currently.selected?.name === 'teachers');
 </script>
 
-<div class="flex h-20 flex-row items-center justify-between bg-[#F9FAFB] px-6">
+<div class="flex h-10 flex-row items-center justify-between bg-white pl-4 pr-3">
   <div class="flex flex-row gap-20">
-    <div class="text-[24px]">Super Horario</div>
+    <div class="flex items-center justify-center font-[Fredoka] text-[14px] uppercase">
+      La hora del horario
+    </div>
 
     {#if lessons.list.length > 0}
-      <div class="flex flex-row gap-4">
-        <!-- Grades -->
-        <div>
-          <select
-            class="rounded-[2px]"
-            bind:value={selectedGrade}
-            onchange={() => {
-              currently.selectGrade(selectedGrade);
-              selectedTeacher = 'profesor';
-            }}
-          >
-            <option value="curso">Curso</option>
-            {#each Object.keys(lessons.byGrade) as grade}
-              <option value={grade}>{grade}</option>
-            {/each}
-          </select>
-        </div>
-
+      <div class="flex flex-row gap-4 text-[12px] font-medium">
         <!-- Teachers -->
-        <div>
-          <select
-            class="rounded-[2px]"
-            bind:value={selectedTeacher}
-            onchange={() => {
-              currently.selectTeacher(selectedTeacher);
-              selectedGrade = 'curso';
-            }}
-          >
-            <option value="profesor">Profesor</option>
-            {#each Object.keys(lessons.byTeacher) as teacher}
-              <option value={teacher}>{teacher}</option>
-            {/each}
-          </select>
-        </div>
+        <button
+          disabled={selectedTeachers}
+          class={`flex h-10 flex-row items-center justify-center border-b px-3 ${selectedTeachers ? 'border-red-500}' : 'border-white'}`}
+          onclick={() => {
+            currently.selectTeachers();
+          }}>Profesores</button
+        >
 
-        <!-- new timetable -->
-        <button class="w-fit rounded-[2px] bg-blue-500 px-3 py-2 text-white">Nuevo Horario</button>
+        <!-- Grades -->
+        <button
+          disabled={selectedCourses}
+          class={`flex h-10 flex-row items-center justify-center border-b px-3 ${selectedCourses ? 'border-[#6B7280]}' : 'border-white'} text-[#6B7280]"}`}
+          onclick={() => {
+            currently.selectCourses();
+          }}>Cursos</button
+        >
       </div>
     {/if}
   </div>
+  <div class="flex flex-row gap-6">
+    <!-- new timetable -->
+    <button
+      class="w-fit rounded-[2px] bg-[#E2E8F1] px-3 py-1 text-[12px] font-medium text-[#6B7280]"
+      >Nuevo Horario</button
+    >
 
-  <div class="flex flex-row items-center gap-4">
-    <pre class="text-[14px]">{data.session?.user.email}</pre>
-    <a href="/account">Cuenta</a>
+    <!-- logout -->
     <form method="post" action="account?/signout" use:enhance={handleSignOut}>
-      <button class="w-fit rounded-[2px] bg-red-500 px-3 py-2 text-white" disabled={loading}
-        >Salir</button
+      <button
+        type="submit"
+        class="w-fit rounded-[2px] bg-red-500 px-3 py-1 text-[12px] font-medium text-white"
+        disabled={loading}>Salir</button
       >
     </form>
   </div>
