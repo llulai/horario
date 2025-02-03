@@ -1,6 +1,6 @@
 <script lang="ts">
   import { blockedTimeslots, lessons } from '$lib/state/Timetable.svelte';
-  import TimeTableUpload from '$lib/components/TimeTableUpload.svelte';
+  import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';
   import currently from '$lib/state/currently.svelte';

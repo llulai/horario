@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 //// TYPES ////
 //////////////
 
-type WeeklyLoad = {
+export type WeeklyLoad = {
   gradeName: string;
   teacherName: string;
   subjectName: string;
