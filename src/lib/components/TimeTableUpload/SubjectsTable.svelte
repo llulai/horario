@@ -19,11 +19,11 @@
             required={true}
             minlength="3"
             maxlength="3"
-            onchange={(event: InputEvent) => {
-              console.warn('event', event);
+            onchange={(event) => {
+              const target = event.target as HTMLInputElement;
               subjects.dispatch({
                 event: 'setCode',
-                payload: { name: subject.name, code: event.target.value }
+                payload: { name: subject.name, code: target.value }
               });
             }}
           />

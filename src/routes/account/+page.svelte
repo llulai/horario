@@ -25,9 +25,8 @@
     };
   };
 
-  $inspect("form", form);
-  $inspect("profile", profile);
-
+  $inspect('form', form);
+  $inspect('profile', profile);
 </script>
 
 <div class="flex flex-col items-center gap-10 p-10">

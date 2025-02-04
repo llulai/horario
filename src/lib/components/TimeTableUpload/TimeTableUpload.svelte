@@ -1,6 +1,5 @@
 <script lang="ts">
   import { timetable, type Period, type WeeklyLoad } from '$lib/state/Timetable.svelte';
-  import SubjectsTable from './SubjectsTable.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
