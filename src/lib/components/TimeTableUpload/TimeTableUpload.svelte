@@ -1,9 +1,15 @@
 <script lang="ts">
   import { timetable, type Period, type WeeklyLoad } from '$lib/state/Timetable.svelte';
+  import SubjectsTable from './SubjectsTable.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
-  type Step = 'uploadWeeklyLoad' | 'checkLoadBySubject' | 'checkLoadByTeacher';
+  type Step =
+    | 'uploadWeeklyLoad'
+    | 'checkLoadBySubject'
+    | 'checkLoadByTeacher'
+    | 'addSubjectCodes'
+    | 'addGradesPeriods';
   let step = $state<Step>('uploadWeeklyLoad');
 
   let timetableName = $state<string>('');
@@ -51,6 +57,7 @@
       type="button"
       class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
       onclick={() => {
+        step = 'addSubjectCodes';
         if (weeklyLoad) {
           timetable.fromWeeklyLoad(weeklyLoad, timetablePeriods);
         }

@@ -1,7 +1,12 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { timetable, type Lesson, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
+  import {
+    timetable,
+    type Lesson,
+    type BlockedTimeslot,
+    subjects
+  } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
   import Completion from './Completion.svelte';
   import CompletionBar from './CompletionBar.svelte';
@@ -146,7 +151,9 @@
               <div
                 class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
               >
-                {assignedLessons[day][period][show]}
+                {show === 'subjectName'
+                  ? subjects.byName[assignedLessons[day][period][show]].code
+                  : assignedLessons[day][period][show]}
               </div>
             {:else if assigneBlockedTimeslots[day][period]}
               <div></div>

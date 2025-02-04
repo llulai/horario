@@ -1,6 +1,6 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
-  import type { Lesson } from '$lib/state/Timetable.svelte';
+  import { type Lesson, subjects } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
 
   const { lesson }: { lesson: Lesson } = $props();
@@ -31,7 +31,7 @@
 >
   <div class="text-[14px]">
     {currently.selected && currently.selected.kind === 'teacher' ? lesson.gradeName : ''}
-    {lesson.subjectName}
+    {subjects.byName[lesson.subjectName].code}
   </div>
   <div class="text-[12px]">
     {lesson.teacherName}
