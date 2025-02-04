@@ -15,9 +15,9 @@ export const load: LayoutServerLoad = async ({ locals: { supabase, safeGetSessio
     .single();
 
   // if the profile is not complete redirect to the account page
-  if (!profile || !profile.full_name || !profile.school_name || !profile.job_title) {
-    redirect(303, '/account');
-  }
+  // if (!profile || !profile.full_name || !profile.school_name || !profile.job_title) {
+  //   redirect(303, '/account');
+  // }
 
   return { session, profile };
 };

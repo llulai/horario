@@ -1,29 +1,11 @@
 <script lang="ts">
-  import { timetable, type Period } from '$lib/state/Timetable.svelte';
-
-  let timetableName = $state<string>('');
-  let timetablePeriods = $state<Period>(7);
-  let timetableFile = $state<File | null>(null);
-
+  let {
+    timetableName = $bindable(),
+    timetablePeriods = $bindable(),
+    loadWorkload,
+    handleFileChange
+  } = $props();
   let fileInput: HTMLInputElement;
-
-  const loadWorkload = async () => {
-    if (timetableFile) {
-      fetch('/api/lessons', {
-        method: 'POST',
-        body: timetableFile
-      })
-        .then((response) => response.json())
-        .then((weeklyLoad) => {
-          timetable.fromWeeklyLoad(weeklyLoad, timetablePeriods);
-        });
-    }
-  };
-
-  const handleFileChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    timetableFile = target.files?.[0] || null;
-  };
 </script>
 
 <div class="absolute inset-x-0 bottom-0 top-10 flex flex-col items-center">

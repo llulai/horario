@@ -5,11 +5,10 @@
   const { data, form } = $props();
   let { profile, user } = data;
 
-  let profileForm: HTMLFormElement;
   let loading = $state(false);
-  let fullName: string = profile?.full_name ?? '';
-  let schoolName: string = profile?.school_name ?? '';
-  let jobTitle: string = profile?.job_title ?? '';
+  let fullName = profile?.full_name ?? '';
+  let schoolName = profile?.school_name ?? '';
+  let jobTitle = profile?.job_title ?? '';
 
   const handleSubmit: SubmitFunction = () => {
     loading = true;
@@ -25,6 +24,9 @@
       update();
     };
   };
+
+  $inspect('form', form);
+  $inspect('profile', profile);
 </script>
 
 <div class="flex flex-col items-center gap-10 p-10">
@@ -33,7 +35,6 @@
     method="post"
     action="?/update"
     use:enhance={handleSubmit}
-    bind:this={profileForm}
   >
     <h2 class="text-[20px]">Antes de seguir complete su información</h2>
 

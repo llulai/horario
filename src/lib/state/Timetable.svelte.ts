@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 //// TYPES ////
 //////////////
 
-type WeeklyLoad = {
+export type WeeklyLoad = {
   gradeName: string;
   teacherName: string;
   subjectName: string;
@@ -152,7 +152,14 @@ export const subjects: Subjects = {
     return Object.fromEntries(Object.values(Ssubjects).map((subject) => [subject.code, subject]));
   },
   dispatch(dispatchedEvent: SubjectEvent) {
-    console.warn('dispatchedEvent', dispatchedEvent);
+    if (dispatchedEvent.event === 'setColor') {
+      const { name, color } = dispatchedEvent.payload;
+      Ssubjects[name].color = color;
+    } else if (dispatchedEvent.event === 'setCode') {
+      const { name, code } = dispatchedEvent.payload;
+      console.warn(name, code);
+      Ssubjects[name].code = code;
+    }
   }
 };
 

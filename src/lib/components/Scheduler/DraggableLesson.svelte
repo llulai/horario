@@ -1,7 +1,7 @@
 <script lang="ts">
   import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import type { Lesson } from '$lib/state/Timetable.svelte';
+  import { subjects, type Lesson } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
 
   const { lesson }: { lesson: Lesson } = $props();
@@ -30,12 +30,17 @@
   );
 </script>
 
+<!-- FIXME: create var for label -->
 <button
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   class={`relative flex h-6 w-12 items-center justify-center rounded-[2px] ${bg} ${isDragging || lesson.timeslot ? 'opacity-20' : ''} text-white`}
-  ><p>{lesson[attributeToShow]}</p>
+  ><p>
+    {attributeToShow === 'subjectName'
+      ? subjects.byName[lesson[attributeToShow]].code
+      : lesson[attributeToShow]}
+  </p>
   {#if !lesson.timeslot}
     {#if availableOptions === 0}
       <div
