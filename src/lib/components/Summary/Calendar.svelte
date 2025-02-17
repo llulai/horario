@@ -80,65 +80,58 @@
   const h = $derived(small ? 'h-3' : 'h-[18px]');
   const grid = $derived(
     small
-      ? 'grid grid-cols-[repeat(5,24px)] grid-rows-[repeat(8,12px)] gap-1'
-      : 'grid grid-cols-[repeat(5,36px)] grid-rows-[repeat(8,18px)] gap-1'
+      ? 'grid grid-cols-[repeat(5,50px)] grid-rows-[repeat(7,20px)] gap-1'
+      : 'grid grid-cols-[repeat(5,50px)] grid-rows-[repeat(7,20px)] gap-1'
   );
 </script>
 
-<div
-  class={`${small ? 'gap-1 py-[9px] pl-1 pr-[9px]' : 'gap-2 py-3 pl-[9px] pr-[22px]'} mx-auto flex flex-row justify-center rounded-[2px] bg-white`}
->
-  <!-- periods -->
-  <div class="flex h-full flex-col items-center justify-end gap-1">
-    {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
-      <div
-        class={`${h} ${small ? 'text-[8px]' : 'text-[12px]'} flex flex-row items-center justify-center font-mono text-[#6B7280]`}
-      >
-        {period}
-      </div>
-    {/each}
+<div class="mx-auto flex flex-col justify-center gap-2 rounded-xl bg-white p-5">
+  <!-- summary -->
+  <div class="flex flex-row items-center justify-between gap-2">
+    <!-- name -->
+    <button
+      class="truncate text-left text-[20px] hover:underline"
+      onclick={() => {
+        if (kind === 'teacher') {
+          currently.selectTeacher(name);
+        } else {
+          currently.selectGrade(name);
+        }
+      }}
+    >
+      {name}
+    </button>
+    <!-- tag -->
+    <Tags {small} {kind} {name} />
   </div>
 
-  <div class={`flex flex-col ${small ? 'gap-2' : 'gap-4'}`}>
-    <!-- summary -->
-    <div class={`flex flex-col ${small ? 'gap-1' : 'gap-2'}`}>
-      <!-- name -->
-      <button
-        class={`truncate text-center hover:underline ${small ? 'text-[10px]' : 'text-[16px]'}`}
-        onclick={() => {
-          if (kind === 'teacher') {
-            currently.selectTeacher(name);
-          } else {
-            currently.selectGrade(name);
-          }
-        }}
-      >
-        {name}
-      </button>
+  <div class="flex flex-row items-center gap-1">
+    <!-- completion bar -->
+    <CompletionBar {small} {kind} {name} />
 
-      <div class="flex flex-row items-center gap-1">
-        <!-- tag -->
-        <Tags {small} {kind} {name} />
+    <!-- completion -->
+    <Completion {kind} {name} />
+  </div>
 
-        <!-- completion bar -->
-        <CompletionBar {small} {kind} {name} />
-
-        <!-- completion -->
-        <Completion {small} {kind} {name} />
-      </div>
+  <div class="flex flex-row gap-2">
+    <!-- periods -->
+    <div class="flex h-full flex-col items-center justify-end gap-1">
+      {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
+        <div class="flex h-5 flex-row items-center justify-center text-[12px] text-[#6B7280]">
+          {period}
+        </div>
+      {/each}
     </div>
 
     <div class="flex flex-col gap-1">
       <!-- calendar header -->
       <div class="flex w-full flex-col items-end">
-        <div
-          class={`grid grid-cols-5 gap-1 font-mono text-[#6B7280] ${small ? 'text-[8px]' : 'text-[12px]'}`}
-        >
-          <p class={`text-center ${w}`}>L</p>
-          <p class={`text-center ${w}`}>M</p>
-          <p class={`text-center ${w}`}>M</p>
-          <p class={`text-center ${w}`}>J</p>
-          <p class={`text-center ${w}`}>V</p>
+        <div class="font-mono grid grid-cols-5 gap-1 text-[12px] font-semibold text-[#737573]">
+          <p class={`w-[50px] text-center`}>L</p>
+          <p class={`w-[50px] text-center`}>M</p>
+          <p class={`w-[50px] text-center`}>M</p>
+          <p class={`w-[50px] text-center`}>J</p>
+          <p class={`w-[50px] text-center`}>V</p>
         </div>
       </div>
 
@@ -157,7 +150,7 @@
               </div>
             {:else if assigneBlockedTimeslots[day][period]}
               <div></div>
-            {:else}<div class="rounded-[2px] bg-[#FAFAFA]"></div>
+            {:else}<div class="rounded-[2px] bg-[#EDF0EF]"></div>
             {/if}
           {/each}
         {/each}

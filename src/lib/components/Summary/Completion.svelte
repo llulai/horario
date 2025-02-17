@@ -2,8 +2,7 @@
   import { completion } from '$lib/state/Completion.svelte';
   import { formatCompletion } from '$lib/utils';
 
-  const { kind, name, small }: { kind: 'teacher' | 'grade'; name: string; small: boolean } =
-    $props();
+  const { kind, name }: { kind: 'teacher' | 'grade'; name: string } = $props();
 
   const completionLevel: number = $derived.by(() => {
     if (kind === 'teacher') {
@@ -16,9 +15,8 @@
 
     return 0;
   });
-  const w = $derived(small ? 'w-6' : 'w-9');
 </script>
 
-<div class={`text-center text-[#6B7280] ${w} ${small ? 'text-[8px]' : 'text-[10px]'}`}>
+<div class="text-center text-[12px] text-[#6B7280]">
   {formatCompletion(completionLevel)}
 </div>

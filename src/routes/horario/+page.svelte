@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { blockedTimeslots, lessons, subjects } from '$lib/state/Timetable.svelte';
+  import { blockedTimeslots, lessons, subjects, timetable } from '$lib/state/Timetable.svelte';
   import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';
@@ -7,10 +7,15 @@
   import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import Calendar from '$lib/components/Summary/Calendar.svelte';
   import SubjectsTable from '$lib/components/TimeTableUpload/SubjectsTable.svelte';
+  import { onMount } from 'svelte';
 
   let addedCodes = $state(false);
 
-  $inspect(subjects);
+  onMount(async () => {
+    const data = await fetch('/api/lessons').then((response) => response.json());
+    timetable.fromWeeklyLoad(data, 7);
+    addedCodes = true;
+  });
 </script>
 
 {#if lessons.list.length > 0}
@@ -31,12 +36,13 @@
     </form>
   {:else if currently.selected}
     {#if currently.selected.kind === 'teacher' || currently.selected.kind === 'grade'}
-      <div class="absolute bottom-0 left-0 right-0 top-10 grid grid-cols-[1070px_1fr] grid-rows-1">
+      <div class="absolute bottom-0 left-0 right-0 top-16 grid grid-cols-[1070px_1fr] grid-rows-1">
         <Scheduler />
         <Summary />
       </div>
     {:else if currently.selected.name === 'grades'}
-      <div class="absolute inset-x-0 bottom-0 top-10 overflow-scroll bg-[#E2E8F1]">
+      <div class="absolute inset-x-0 bottom-0 top-16 space-y-8 overflow-scroll bg-[#E1E6E4] p-8">
+        <h1 class="text-[32px] font-bold text-[#1D1F1E]">Cursos</h1>
         <CalendarGrid small={false}>
           {#each Object.entries(lessons.byGrade) as [name, gradeLessons]}
             <Calendar
@@ -50,7 +56,8 @@
         </CalendarGrid>
       </div>
     {:else}
-      <div class="absolute inset-x-0 bottom-0 top-10 overflow-scroll bg-[#E2E8F1]">
+      <div class="absolute inset-x-0 bottom-0 top-16 space-y-8 overflow-scroll bg-[#E1E6E4] p-8">
+        <h1 class="text-[32px] font-bold text-[#1D1F1E]">Profesores</h1>
         <CalendarGrid small={false}>
           {#each Object.entries(lessons.byTeacher) as [name, teacherLessons]}
             <Calendar

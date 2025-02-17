@@ -13,7 +13,7 @@
 
 <!-- completed -->
 {#if (kind === 'teacher' && tags.byTeacher[name].has('completed')) || (kind === 'grade' && tags.byGrade[name].has('completed'))}
-  <div class={`${w} flex flex-row items-center justify-center`}>
+  <div class="flex size-5 flex-row items-center justify-center">
     <div
       class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#B9F8CF] text-[8px] text-[#016730]`}
     >
@@ -23,12 +23,10 @@
 
   <!-- priority -->
 {:else if kind === 'teacher' && tags.byTeacher[name].has('priority')}
-  <div class={`${w} flex flex-row items-center justify-center`}>
-    <div
-      class={`${small ? 'size-3' : 'size-4'} flex flex-row items-center justify-center rounded-full bg-[#DDD6FF] text-[8px] text-[#5D0EC1]`}
-    >
-      <ArrowUp h={12} w={12} />
-    </div>
+  <div
+    class=" flex size-5 flex-row items-center justify-center rounded-[4px] bg-[#DDD6FF] text-[10px] font-semibold text-[#5D0EC1]"
+  >
+    P
   </div>
 
   <!-- low-availability -->

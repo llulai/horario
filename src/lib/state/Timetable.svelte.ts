@@ -347,7 +347,7 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
 
     // update subjects
     if (!(load.subjectName in newSubjects)) {
-      newSubjects[load.subjectName] = { name: load.subjectName, code: '', color: '' };
+      newSubjects[load.subjectName] = { name: load.subjectName, code: load.subjectName, color: '' };
     }
   });
 

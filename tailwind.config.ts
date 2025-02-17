@@ -6,7 +6,7 @@ export default {
 
   theme: {
     fontFamily: {
-      mono: ['Andale Mono']
+      sans: ['Open Sauce']
     },
     extend: {}
   },

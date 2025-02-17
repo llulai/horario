@@ -44,13 +44,13 @@
   {#if !lesson.timeslot}
     {#if availableOptions === 0}
       <div
-        class="absolute right-0 top-0 flex size-3 -translate-y-1/2 translate-x-1/2 flex-row items-center justify-center rounded-full border border-white bg-[#FFCACA] font-mono text-[8px] text-[#9E0812]"
+        class="font-mono absolute right-0 top-0 flex size-3 -translate-y-1/2 translate-x-1/2 flex-row items-center justify-center rounded-full border border-white bg-[#FFCACA] text-[8px] text-[#9E0812]"
       >
         {availableOptions}
       </div>
     {:else if availableOptions <= 3}
       <div
-        class="absolute right-0 top-0 flex h-3 w-3 -translate-y-1/2 translate-x-1/2 flex-row items-center justify-center rounded-full border border-white bg-[#FEE685] font-mono text-[8px] text-[#973B00]"
+        class="font-mono absolute right-0 top-0 flex h-3 w-3 -translate-y-1/2 translate-x-1/2 flex-row items-center justify-center rounded-full border border-white bg-[#FEE685] text-[8px] text-[#973B00]"
       >
         {availableOptions}
       </div>

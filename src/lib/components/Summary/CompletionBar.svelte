@@ -27,6 +27,6 @@
   );
 </script>
 
-<div class="relative flex h-[2px] flex-grow overflow-hidden rounded-full bg-[#E2E8F1]">
+<div class="relative flex h-1 flex-grow overflow-hidden rounded-full bg-[#E2E8F1]">
   <div class="absolute inset-y-0 left-0 bg-[#6B7280]" style={`right: ${right}px;`}></div>
 </div>
