@@ -3,12 +3,12 @@
 
   let { onChange }: { onChange: (isSelected: boolean) => void } = $props();
 
-  const bg = $derived(selected ? 'bg-[#6B7280]' : 'bg-[#E5E7EB]');
+  const bg = $derived(selected ? 'bg-[#008744]' : 'bg-[#C8CCCB]');
 </script>
 
 <button
   aria-label="Toggle para bloquear períodos disponibles"
-  class={`h-6 w-10 rounded-full p-1 ${bg} flex flex-row ${selected ? 'justify-end' : 'justify-start'}`}
+  class={`h-5 w-10 rounded-full p-[2px] ${bg} flex flex-row ${selected ? 'justify-end' : 'justify-start'}`}
   type="button"
   onclick={() => {
     selected = !selected;

@@ -8,6 +8,10 @@
   import Calendar from '$lib/components/Summary/Calendar.svelte';
   import SubjectsTable from '$lib/components/TimeTableUpload/SubjectsTable.svelte';
   import { onMount } from 'svelte';
+  import Tag from '$lib/components/Scheduler/Tag.svelte';
+  import Toggle from '$lib/components/Toggle.svelte';
+  import CompletionBar from '$lib/components/Scheduler/CompletionBar.svelte';
+  import Completion from '$lib/components/Scheduler/Completion.svelte';
 
   let addedCodes = $state(false);
 
@@ -36,7 +40,31 @@
     </form>
   {:else if currently.selected}
     {#if currently.selected.kind === 'teacher' || currently.selected.kind === 'grade'}
-      <div class="absolute bottom-0 left-0 right-0 top-16 grid grid-cols-[1070px_1fr] grid-rows-1">
+      <div
+        class="absolute bottom-0 left-0 right-0 top-16 grid grid-cols-[1070px_1fr] grid-rows-[102px_1fr]"
+      >
+        <!-- status bar -->
+        <div
+          class="flew-row col-span-2 flex w-full items-center justify-between border-b border-[#E1E6E4] px-[61px]"
+        >
+          <div class="flex flex-row items-center gap-3">
+            <h2 class="text-[32px] font-bold text-[#1D1F1E]">{currently.selected.name}</h2>
+            <Tag kind={currently.selected.kind} name={currently.selected.name} />
+          </div>
+
+          <div class="flex w-[580px] flex-row items-center gap-2">
+            <CompletionBar kind={currently.selected.kind} name={currently.selected.name} />
+            <Completion kind={currently.selected.kind} name={currently.selected.name} />
+          </div>
+
+          <div class="flex flex-row gap-2 text-[14px] font-medium text-[#545755]">
+            <Toggle
+              onChange={() => {
+                currently.setBlocking(!currently.blocking);
+              }}
+            /> Bloquear Períodos
+          </div>
+        </div>
         <Scheduler />
         <Summary />
       </div>

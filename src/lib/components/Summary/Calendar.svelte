@@ -76,11 +76,9 @@
       : 'gradeName'
   );
 
-  const w = $derived(small ? 'w-6' : 'w-9');
-  const h = $derived(small ? 'h-3' : 'h-[18px]');
   const grid = $derived(
     small
-      ? 'grid grid-cols-[repeat(5,50px)] grid-rows-[repeat(7,20px)] gap-1'
+      ? 'grid grid-cols-[repeat(5,36px)] grid-rows-[repeat(7,18px)] gap-1'
       : 'grid grid-cols-[repeat(5,50px)] grid-rows-[repeat(7,20px)] gap-1'
   );
 </script>
@@ -90,7 +88,7 @@
   <div class="flex flex-row items-center justify-between gap-2">
     <!-- name -->
     <button
-      class="truncate text-left text-[20px] hover:underline"
+      class={`${small ? 'text-[14px]' : 'text-[20px]'} truncate text-left font-semibold text-[#1D1F1E] hover:underline`}
       onclick={() => {
         if (kind === 'teacher') {
           currently.selectTeacher(name);
@@ -107,17 +105,19 @@
 
   <div class="flex flex-row items-center gap-1">
     <!-- completion bar -->
-    <CompletionBar {small} {kind} {name} />
+    <CompletionBar {kind} {name} />
 
     <!-- completion -->
-    <Completion {kind} {name} />
+    <Completion {kind} {name} {small} />
   </div>
 
   <div class="flex flex-row gap-2">
     <!-- periods -->
     <div class="flex h-full flex-col items-center justify-end gap-1">
       {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
-        <div class="flex h-5 flex-row items-center justify-center text-[12px] text-[#6B7280]">
+        <div
+          class={`${small ? 'h-[18px]' : 'h-5'}flex flex-row items-center justify-center text-[12px] text-[#6B7280]`}
+        >
           {period}
         </div>
       {/each}
@@ -127,11 +127,11 @@
       <!-- calendar header -->
       <div class="flex w-full flex-col items-end">
         <div class="font-mono grid grid-cols-5 gap-1 text-[12px] font-semibold text-[#737573]">
-          <p class={`w-[50px] text-center`}>L</p>
-          <p class={`w-[50px] text-center`}>M</p>
-          <p class={`w-[50px] text-center`}>M</p>
-          <p class={`w-[50px] text-center`}>J</p>
-          <p class={`w-[50px] text-center`}>V</p>
+          <p class={`${small ? 'w-[36px]' : 'w-[50px]'} text-center`}>L</p>
+          <p class={`${small ? 'w-[36px]' : 'w-[50px]'} text-center`}>M</p>
+          <p class={`${small ? 'w-[36px]' : 'w-[50px]'} text-center`}>M</p>
+          <p class={`${small ? 'w-[36px]' : 'w-[50px]'} text-center`}>J</p>
+          <p class={`${small ? 'w-[36px]' : 'w-[50px]'} text-center`}>V</p>
         </div>
       </div>
 
@@ -142,7 +142,7 @@
           {#each days as day}
             {#if assignedLessons[day][period]}
               <div
-                class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] text-white ${getColor(assignedLessons[day][period][show], show)}`}
+                class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] font-semibold ${getColor(assignedLessons[day][period][show], show)}`}
               >
                 {show === 'subjectName'
                   ? subjects.byName[assignedLessons[day][period][show]].code

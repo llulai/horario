@@ -52,8 +52,6 @@
 
 <div class="flex flex-col items-center gap-6 overflow-scroll bg-[#E2E8F1] px-3 pt-6">
   {#if currently.selected && currently.selected.kind !== 'category'}
-    <h2 class="text-[24px]">{currently.selected?.kind === 'teacher' ? 'Cursos' : 'Profesores'}</h2>
-
     <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}
         <Calendar

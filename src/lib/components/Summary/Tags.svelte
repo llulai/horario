@@ -1,6 +1,5 @@
 <script lang="ts">
   import { tags } from '$lib/state/Tags.svelte';
-  import ArrowUp from '../Icons/ArrowUp.svelte';
   import Check from '../Icons/Check.svelte';
   import XMark from '../Icons/XMark.svelte';
 

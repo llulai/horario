@@ -35,7 +35,7 @@
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
-  class={`relative flex h-6 w-12 items-center justify-center rounded-[2px] ${bg} ${isDragging || lesson.timeslot ? 'opacity-20' : ''} text-white`}
+  class={`relative flex h-6 w-12 items-center justify-center rounded-[4px] text-[14px] font-semibold ${lesson.timeslot ? 'bg-[#EDF0EF] text-[#BABDBB]' : bg} ${isDragging ? 'opacity-60' : ''}`}
   ><p>
     {attributeToShow === 'subjectName'
       ? subjects.byName[lesson[attributeToShow]].code

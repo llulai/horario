@@ -1,28 +1,30 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
+  //import { enhance } from '$app/forms';
   import ArrowDownTray from '$lib/components/Icons/ArrowDownTray.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
   import Plus from '$lib/components/Icons/Plus.svelte';
   import currently from '$lib/state/currently.svelte';
   import { lessons } from '$lib/state/Timetable.svelte';
-  import type { SubmitFunction } from '@sveltejs/kit';
+  // import type { SubmitFunction } from '@sveltejs/kit';
   let { children } = $props();
 
-  let loading = $state(false);
-
-  const handleSignOut: SubmitFunction = () => {
-    loading = true;
-    return async ({ update }) => {
-      loading = false;
-      update();
-    };
-  };
+  // let loading = $state(false);
+  //
+  // const handleSignOut: SubmitFunction = () => {
+  //   loading = true;
+  //   return async ({ update }) => {
+  //     loading = false;
+  //     update();
+  //   };
+  // };
 
   let selectedCourses = $derived(currently.selected?.name === 'grades');
   let selectedTeachers = $derived(currently.selected?.name === 'teachers');
 </script>
 
-<div class="flex h-16 flex-row items-center justify-between bg-white px-8">
+<div
+  class="flex h-16 flex-row items-center justify-between border-b border-[#E1E6E4] bg-white px-8"
+>
   <div class="flex flex-row gap-[10px]">
     <Logo h={30} w={31} />
     <div class="flex items-center justify-center text-[18px] font-bold text-[#1D1F1E]">

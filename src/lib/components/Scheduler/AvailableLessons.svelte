@@ -67,11 +67,11 @@
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}
-  class="grid grid-cols-2 gap-y-6 overflow-scroll bg-[#F4F4F5] p-8"
+  class="grid grid-cols-2 gap-y-6 overflow-scroll p-8"
 >
   {#each Object.entries(availableLessons) as [name, lessons]}
     <div class="grid grid-cols-[max-content_1fr] gap-6">
-      <p class="text-[16px]">{name}</p>
+      <p class="text-[14px] font-semibold text-[#1D1F1E]">{name}</p>
       <div class="flex h-min max-w-[328px] flex-row flex-wrap gap-2">
         {#each lessons as lesson}
           <DraggableLesson {lesson} />
