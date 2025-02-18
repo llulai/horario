@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind utilities;
+
 @font-face {
   font-family: 'Open Sauce';
   font-style: normal;
@@ -46,6 +49,3 @@
   font-weight: 300;
   src: url('/fonts/open-sauce/light.ttf');
 }
-
-@tailwind base;
-@tailwind utilities;
