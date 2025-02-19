@@ -38,7 +38,7 @@ const byTeacher = $derived.by(() => {
     const availabilityByTeacher = Object.fromEntries(
       Object.keys(lessons.byTeacher).map((teacher) => [
         teacher,
-        getByTimeslot(timetable.maxPeriods, true)
+        getByTimeslot(timetable.maxBlocks, true)
       ])
     );
 
@@ -46,9 +46,9 @@ const byTeacher = $derived.by(() => {
       blockedTimeslots.forEach((blockedTimeslot) => {
         const {
           name,
-          timeslot: [day, period]
+          timeslot: [day, block]
         } = blockedTimeslot;
-        availabilityByTeacher[name][day][period] = false;
+        availabilityByTeacher[name][day][block] = false;
       });
     });
 
@@ -56,7 +56,7 @@ const byTeacher = $derived.by(() => {
       (sum, dailyAvailability) =>
         sum +
         Object.values(dailyAvailability).reduce(
-          (sum, periodAvailability) => sum + Number(periodAvailability),
+          (sum, blockAvailability) => sum + Number(blockAvailability),
           0
         ),
       0
@@ -71,7 +71,7 @@ const byTeacher = $derived.by(() => {
   lessons.list.forEach((lesson: Lesson) => {
     const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
       (sum, dailyAvailability) =>
-        sum + Object.values(dailyAvailability).reduce((sum, period) => sum + Number(period), 0),
+        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
       0
     );
 
@@ -103,7 +103,7 @@ const byGrade = $derived.by(() => {
   lessons.list.forEach((lesson: Lesson) => {
     const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
       (sum, dailyAvailability) =>
-        sum + Object.values(dailyAvailability).reduce((sum, period) => sum + Number(period), 0),
+        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
       0
     );
 

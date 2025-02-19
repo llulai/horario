@@ -6,8 +6,6 @@
   const { kind, name, small }: { kind: 'teacher' | 'grade'; name: string; small: boolean } =
     $props();
   const w = $derived(small ? 'w-6' : 'w-9');
-
-  $inspect(tags);
 </script>
 
 <!-- completed -->

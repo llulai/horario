@@ -1,5 +1,14 @@
 <script lang="ts">
-  import { blockedTimeslots, lessons, subjects, timetable } from '$lib/state/Timetable.svelte';
+  import {
+    blockedTimeslots,
+    grades,
+    lessons,
+    periods,
+    subjects,
+    timetable,
+    type Period
+  } from '$lib/state/Timetable.svelte';
+  import { v4 as uuidv4 } from 'uuid';
   import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';
@@ -14,10 +23,52 @@
   import Completion from '$lib/components/Scheduler/Completion.svelte';
 
   let addedCodes = $state(false);
+  const periodId = uuidv4();
 
   onMount(async () => {
     const data = await fetch('/api/lessons').then((response) => response.json());
-    timetable.fromWeeklyLoad(data, 7);
+    timetable.fromWeeklyLoad(data, 8);
+
+    const period: Period = {
+      1: [
+        [8, 0],
+        [8, 45]
+      ],
+      2: [
+        [8, 45],
+        [9, 30]
+      ],
+      3: [
+        [9, 45],
+        [10, 30]
+      ],
+      4: [
+        [10, 30],
+        [11, 15]
+      ],
+      5: [
+        [11, 30],
+        [12, 15]
+      ],
+      6: [
+        [12, 15],
+        [13, 0]
+      ],
+      7: [
+        [13, 0],
+        [13, 45]
+      ],
+      8: [
+        [13, 45],
+        [14, 30]
+      ]
+    };
+
+    periods.dispatch({ event: 'addPeriod', payload: { id: periodId, period } });
+
+    grades.list.forEach((grade) => {
+      grades.dispatch({ event: 'setPeriod', payload: { name: grade.name, periodId: periodId } });
+    });
     addedCodes = true;
   });
 </script>
@@ -41,7 +92,7 @@
   {:else if currently.selected}
     {#if currently.selected.kind === 'teacher' || currently.selected.kind === 'grade'}
       <div
-        class="absolute bottom-0 left-0 right-0 top-16 grid grid-cols-[1070px_1fr] grid-rows-[102px_1fr]"
+        class="absolute bottom-0 left-0 right-0 top-16 grid grid-cols-[max-content_1fr] grid-rows-[102px_1fr]"
       >
         <!-- status bar -->
         <div
@@ -65,7 +116,7 @@
             /> Bloquear Períodos
           </div>
         </div>
-        <Scheduler />
+        <Scheduler {periodId} />
         <Summary />
       </div>
     {:else if currently.selected.name === 'grades'}

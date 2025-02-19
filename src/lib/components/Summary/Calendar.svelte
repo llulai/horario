@@ -27,16 +27,16 @@
   } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
-  const periods = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
+  const blocks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
   const assignedLessons: ByTimeslot<Lesson | null> = $derived.by(() => {
     // put the assigned lessons into a `ByTimeslot` map for easier manipulation
-    const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(timetable.maxPeriods, null);
+    const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(timetable.maxBlocks, null);
 
     lessons.forEach((lesson) => {
       if (lesson.timeslot) {
-        const [day, period] = lesson.timeslot;
-        lessonsByTimeslot[day][period] = lesson;
+        const [day, block] = lesson.timeslot;
+        lessonsByTimeslot[day][block] = lesson;
       }
     });
 
@@ -46,7 +46,7 @@
   const assigneBlockedTimeslots: ByTimeslot<BlockedTimeslot | undefined> = $derived.by(() => {
     // put the assigned blocked timeslots into a `ByTimeslot` map for easier manipulation
     const blockedTimeslotsByTimeslot: ByTimeslot<BlockedTimeslot | undefined> = getByTimeslot(
-      timetable.maxPeriods,
+      timetable.maxBlocks,
       undefined
     );
 
@@ -54,15 +54,15 @@
       const { kind } = currently.selected;
       if (kind === 'teacher') {
         blockedTimeslots.forEach((blockedTimeslot) => {
-          const [day, period] = blockedTimeslot.timeslot;
-          blockedTimeslotsByTimeslot[day][period] = blockedTimeslot;
+          const [day, block] = blockedTimeslot.timeslot;
+          blockedTimeslotsByTimeslot[day][block] = blockedTimeslot;
         });
       }
 
       if (kind === 'grade') {
         blockedTimeslots.forEach((blockedTimeslot) => {
-          const [day, period] = blockedTimeslot.timeslot;
-          blockedTimeslotsByTimeslot[day][period] = blockedTimeslot;
+          const [day, block] = blockedTimeslot.timeslot;
+          blockedTimeslotsByTimeslot[day][block] = blockedTimeslot;
         });
       }
     }
@@ -112,13 +112,13 @@
   </div>
 
   <div class="flex flex-row gap-2">
-    <!-- periods -->
+    <!-- blocks -->
     <div class="flex h-full flex-col items-center justify-end gap-1">
-      {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
+      {#each blocks.filter((p) => p <= timetable.maxBlocks) as block}
         <div
           class={`${small ? 'h-[18px]' : 'h-5'}flex flex-row items-center justify-center text-[12px] text-[#6B7280]`}
         >
-          {period}
+          {block}
         </div>
       {/each}
     </div>
@@ -138,17 +138,17 @@
       <!-- calendar body -->
 
       <div class={grid}>
-        {#each periods.filter((p) => p <= timetable.maxPeriods) as period}
+        {#each blocks.filter((p) => p <= timetable.maxBlocks) as block}
           {#each days as day}
-            {#if assignedLessons[day][period]}
+            {#if assignedLessons[day][block]}
               <div
-                class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] font-semibold ${getColor(assignedLessons[day][period][show], show)}`}
+                class={`flex flex-col items-center justify-center rounded-[2px] text-[10px] font-semibold ${getColor(assignedLessons[day][block][show], show)}`}
               >
                 {show === 'subjectName'
-                  ? subjects.byName[assignedLessons[day][period][show]].code
-                  : assignedLessons[day][period][show]}
+                  ? subjects.byName[assignedLessons[day][block][show]].code
+                  : assignedLessons[day][block][show]}
               </div>
-            {:else if assigneBlockedTimeslots[day][period]}
+            {:else if assigneBlockedTimeslots[day][block]}
               <div></div>
             {:else}<div class="rounded-[2px] bg-[#EDF0EF]"></div>
             {/if}

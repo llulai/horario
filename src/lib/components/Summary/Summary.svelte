@@ -50,7 +50,7 @@
   });
 </script>
 
-<div class="flex flex-col items-center gap-6 overflow-scroll bg-[#E2E8F1] px-3 pt-6">
+<div class="flex flex-col items-center gap-6 overflow-scroll bg-[#F0F5F2] px-3 pt-6">
   {#if currently.selected && currently.selected.kind !== 'category'}
     <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}

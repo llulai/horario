@@ -1,41 +1,41 @@
 import {
   type Day,
   type Lesson,
-  type Period,
+  type Block,
   type BlockedTimeslot,
   lessons,
   timetable,
   blockedTimeslots
 } from '$lib/state/Timetable.svelte';
 
-export type ByTimeslot<T> = Record<Day, Partial<Record<Period, T>>>;
+export type ByTimeslot<T> = Record<Day, Partial<Record<Block, T>>>;
 
 ////////////////
 //// UTILS ////
 //////////////
 
-const getFullDayAvailability = <T>(maxPeriods: Period, fillWith: T): Partial<Record<Period, T>> => {
+const getFullDayAvailability = <T>(maxBlocks: Block, fillWith: T): Partial<Record<Block, T>> => {
   return Object.fromEntries(
-    Array(maxPeriods)
+    Array(maxBlocks)
       .fill(fillWith)
-      .map((t, idx) => [(idx + 1) as Period, t])
+      .map((t, idx) => [(idx + 1) as Block, t])
   );
 };
 
-export const getByTimeslot = <T>(maxPeriods: Period, fillWith: T): ByTimeslot<T> => {
+export const getByTimeslot = <T>(maxBlocks: Block, fillWith: T): ByTimeslot<T> => {
   return {
-    1: getFullDayAvailability(maxPeriods, fillWith),
-    2: getFullDayAvailability(maxPeriods, fillWith),
-    3: getFullDayAvailability(maxPeriods, fillWith),
-    4: getFullDayAvailability(maxPeriods, fillWith),
-    5: getFullDayAvailability(maxPeriods, fillWith)
+    1: getFullDayAvailability(maxBlocks, fillWith),
+    2: getFullDayAvailability(maxBlocks, fillWith),
+    3: getFullDayAvailability(maxBlocks, fillWith),
+    4: getFullDayAvailability(maxBlocks, fillWith),
+    5: getFullDayAvailability(maxBlocks, fillWith)
   };
 };
 
 const combineAvailability = (
   availabilityA: ByTimeslot<boolean>,
   availabilityB: ByTimeslot<boolean>,
-  maxPeriods: Period
+  maxBlocks: Block
 ): ByTimeslot<boolean> => {
   const combinedAvailability: ByTimeslot<boolean> = {
     1: {},
@@ -52,9 +52,9 @@ const combineAvailability = (
     const availabilityBDay = availabilityB[day];
 
     if (availabilityADay && availabilityBDay) {
-      for (let p = 1; p <= maxPeriods; p++) {
-        combinedAvailability[day][p as Period] =
-          availabilityADay[p as Period] && availabilityBDay[p as Period];
+      for (let p = 1; p <= maxBlocks; p++) {
+        combinedAvailability[day][p as Block] =
+          availabilityADay[p as Block] && availabilityBDay[p as Block];
       }
     }
   });
@@ -82,20 +82,20 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
   const availabilityByLesson: Availability['byLesson'] = {};
 
   teachers.forEach((teacher) => {
-    availabilityByTeacher[teacher] = getByTimeslot(timetable.maxPeriods, true);
+    availabilityByTeacher[teacher] = getByTimeslot(timetable.maxBlocks, true);
   });
 
   grades.forEach((grade) => {
-    availabilityByGrade[grade] = getByTimeslot(timetable.maxPeriods, true);
+    availabilityByGrade[grade] = getByTimeslot(timetable.maxBlocks, true);
   });
 
   // mark assigned lessons as unavailable timeslots for teachers and classes
   lessons.list.forEach((lesson: Lesson) => {
     const { teacherName, gradeName, timeslot } = lesson;
     if (timeslot) {
-      const [day, period] = timeslot;
-      availabilityByTeacher[teacherName][day][period] = false;
-      availabilityByGrade[gradeName][day][period] = false;
+      const [day, block] = timeslot;
+      availabilityByTeacher[teacherName][day][block] = false;
+      availabilityByGrade[gradeName][day][block] = false;
     }
   });
 
@@ -104,14 +104,14 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
     const {
       kind,
       name,
-      timeslot: [day, period]
+      timeslot: [day, block]
     } = blockedTimeslot;
 
     if (kind === 'teacher') {
-      availabilityByTeacher[name][day][period] = false;
+      availabilityByTeacher[name][day][block] = false;
     }
     if (kind === 'grade') {
-      availabilityByGrade[name][day][period] = false;
+      availabilityByGrade[name][day][block] = false;
     }
   });
 
@@ -120,7 +120,7 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
     availabilityByLesson[id] = combineAvailability(
       availabilityByTeacher[teacherName],
       availabilityByGrade[gradeName],
-      timetable.maxPeriods
+      timetable.maxBlocks
     );
   });
 

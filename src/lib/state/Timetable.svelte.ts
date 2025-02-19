@@ -20,9 +20,32 @@ export const DAY = {
 } as const;
 
 export type Day = (typeof DAY)[keyof typeof DAY];
-export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type Block = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type Time = readonly [hour: number, minute: number];
+export type Period = Partial<Record<Block, readonly [start: Time, end: Time]>>;
 
-type Timeslot = readonly [day: Day, period: Period];
+type Timeslot = readonly [day: Day, block: Block];
+
+const Speriods = $state<Record<string, Period>>({});
+
+type PeriodEvent = {
+  event: 'addPeriod';
+  payload: { period: Period; id: string };
+};
+
+export const periods = {
+  get byId() {
+    return Speriods;
+  },
+  dispatch(event: PeriodEvent) {
+    if (event.event === 'addPeriod') {
+      const { id, period } = event.payload;
+      Speriods[id] = period;
+
+      return { data: { id } };
+    }
+  }
+};
 
 //////////////////
 //// LESSONS ////
@@ -171,6 +194,7 @@ type Grade = {
   name: string;
   code: string;
   color: string;
+  periodId: string | null;
 };
 
 type GradeEvent =
@@ -181,6 +205,10 @@ type GradeEvent =
   | {
       event: 'setCode';
       payload: { name: string; code: string };
+    }
+  | {
+      event: 'setPeriod';
+      payload: { name: string; periodId: string };
     };
 
 type Grades = {
@@ -203,7 +231,15 @@ export const grades: Grades = {
     return Object.fromEntries(Object.values(Sgrades).map((grade) => [grade.code, grade]));
   },
   dispatch(dispatchedEvent: GradeEvent) {
-    console.warn('dispatchedEvent', dispatchedEvent);
+    const { event, payload } = dispatchedEvent;
+
+    switch (event) {
+      case 'setPeriod': {
+        const { name, periodId } = payload;
+        Sgrades[name].periodId = periodId;
+        break;
+      }
+    }
   }
 };
 
@@ -304,16 +340,16 @@ export const blockedTimeslots: BlockedTimeslots = {
 //////////////////
 
 export type TimeTable = {
-  maxPeriods: Period;
-  fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxPeriods: Period) => void;
+  maxBlocks: Block;
+  fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxBlocks: Block) => void;
   // loadFromJSON: (json: string) => void;
   // saveToJSON: () => string;
 };
 
-let SmaxPeriods = $state<Period>(7);
+let SmaxBlocks = $state<Block>(7);
 
 // this function loads the timetable from a list of weekly loads
-const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
+const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxBlocks: Block) => {
   // clear existing state
   //Slessons = {};
   //Ssubjects = {};
@@ -341,7 +377,8 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
       newGrades[load.gradeName] = {
         name: load.gradeName,
         code: '',
-        color: ''
+        color: '',
+        periodId: null
       };
     }
 
@@ -355,12 +392,12 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxPeriods: Period) => {
   Sgrades = newGrades;
   Ssubjects = newSubjects;
   SblockedTimeslots = {};
-  SmaxPeriods = newMaxPeriods;
+  SmaxBlocks = newMaxBlocks;
 };
 
 export const timetable: TimeTable = {
   fromWeeklyLoad,
-  get maxPeriods() {
-    return SmaxPeriods;
+  get maxBlocks() {
+    return SmaxBlocks;
   }
 };

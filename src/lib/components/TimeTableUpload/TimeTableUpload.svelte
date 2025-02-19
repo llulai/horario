@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { timetable, type Period, type WeeklyLoad } from '$lib/state/Timetable.svelte';
+  import { timetable, type Block, type WeeklyLoad } from '$lib/state/Timetable.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
@@ -8,11 +8,11 @@
     | 'checkLoadBySubject'
     | 'checkLoadByTeacher'
     | 'addSubjectCodes'
-    | 'addGradesPeriods';
+    | 'addGradesBlocks';
   let step = $state<Step>('uploadWeeklyLoad');
 
   let timetableName = $state<string>('');
-  let timetablePeriods = $state<Period>(7);
+  let timetableBlocks = $state<Block>(7);
   let timetableFile = $state<File | null>(null);
   let weeklyLoad = $state<WeeklyLoad[] | null>(null);
 
@@ -37,7 +37,7 @@
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
-  <WeeklyLoadUpload bind:timetableName bind:timetablePeriods {loadWorkload} {handleFileChange} />
+  <WeeklyLoadUpload bind:timetableName bind:timetableBlocks {loadWorkload} {handleFileChange} />
 {:else if step === 'checkLoadBySubject' && weeklyLoad}
   <div class="flex flex-col items-center gap-6">
     <Table {weeklyLoad} by="subject" />
@@ -58,7 +58,7 @@
       onclick={() => {
         step = 'addSubjectCodes';
         if (weeklyLoad) {
-          timetable.fromWeeklyLoad(weeklyLoad, timetablePeriods);
+          timetable.fromWeeklyLoad(weeklyLoad, timetableBlocks);
         }
       }}>Comenzar con el horario</button
     >

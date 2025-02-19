@@ -24,7 +24,7 @@
   const availableOptions = $derived(
     Object.values(availability.byLesson[lesson.id]).reduce(
       (sum, dailyAvailability) =>
-        sum + Object.values(dailyAvailability).reduce((sum, period) => sum + Number(period), 0),
+        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
       0
     )
   );

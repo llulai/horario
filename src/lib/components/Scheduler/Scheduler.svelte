@@ -1,17 +1,16 @@
 <script lang="ts">
-  import currently from '$lib/state/currently.svelte';
   import AvailableLessons from './AvailableLessons.svelte';
-  import SchedulerCalendar from './SchedulerCalendar.svelte';
+  import Calendar from './Calendar.svelte';
+  import TargetArea from './TargetArea.svelte';
+
+  const { periodId }: { periodId: string } = $props();
 </script>
 
-<div class="grid grid-rows-[min-content_1fr]">
-  {#if currently.selected}
-    <div class="flex flex-col items-center gap-10 pb-10">
-      <div class="flex w-full flex-col items-center gap-6">
-        <SchedulerCalendar />
-      </div>
-    </div>
+<div class="grid grid-cols-1 grid-rows-[min-content_1fr]">
+  <Calendar />
+  <TargetArea {periodId} />
 
+  <div class="row-start-2">
     <AvailableLessons />
-  {/if}
+  </div>
 </div>

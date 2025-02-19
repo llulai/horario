@@ -1,14 +1,14 @@
 <script lang="ts">
   import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { lessons, type Day, type Period } from '$lib/state/Timetable.svelte';
+  import { lessons, type Day, type Block } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
   const {
     day,
-    period
+    block
   }: {
     day: Day;
-    period: Period;
+    block: Block;
   } = $props();
 
   let isHover = $state(false);
@@ -16,7 +16,7 @@
   const isAvailable: undefined | boolean = $derived.by(() => {
     if (currently.dragging) {
       if (currently.dragging.id in availability.byLesson) {
-        return availability.byLesson[currently.dragging.id][day][period];
+        return availability.byLesson[currently.dragging.id][day][block];
       }
     }
   });
@@ -56,7 +56,7 @@
       const lessonId = currently.dragging.id;
       lessons.dispatch({
         event: 'setLessonTimeslot',
-        payload: { lessonId, timeslot: [day, period] }
+        payload: { lessonId, timeslot: [day, block] }
       });
     }
   };
