@@ -1,6 +1,6 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
-  import { periods, type Period, type Time } from '$lib/state/Timetable.svelte';
+  import { periods, type Period, Time } from '$lib/state/Timetable.svelte';
   import AvailableLessons from './AvailableLessons.svelte';
   import Calendar from './Calendar.svelte';
   import TargetArea from './TargetArea.svelte';
@@ -13,17 +13,13 @@
 
   const getMinTime = (...times: Time[]): Time => {
     return times.sort((a, b) => {
-      const diffHours = a[0] - b[0];
-      const diffMinutes = a[1] - b[1];
-      return diffHours * 60 + diffMinutes;
+      return a.valueOf() - b.valueOf();
     })[0];
   };
 
   const getMaxTime = (...times: Time[]): Time => {
     return times.sort((b, a) => {
-      const diffHours = a[0] - b[0];
-      const diffMinutes = a[1] - b[1];
-      return diffHours * 60 + diffMinutes;
+      return a.valueOf() - b.valueOf();
     })[0];
   };
 
@@ -37,23 +33,27 @@
         }
       } else if (kind === 'teacher') {
         const startTime = getMinTime(
-          ...periods.byTeacher[name].map(getFirstAndLastBlocks).map((block) => block[0])
+          ...Object.values(periods.byTeacher[name])
+            .map(getFirstAndLastBlocks)
+            .map((block) => block[0])
         );
         const endTime = getMaxTime(
-          ...periods.byTeacher[name].map(getFirstAndLastBlocks).map((block) => block[1])
+          ...Object.values(periods.byTeacher[name])
+            .map(getFirstAndLastBlocks)
+            .map((block) => block[1])
         );
         return [startTime, endTime];
       }
     }
   });
 
-  const start = $derived(time ? ([time[0][0], 0] as Time) : ([8, 0] as Time));
+  const start = $derived(time ? new Time(time[0].hour, 0) : new Time(8, 0));
   const end = $derived.by(() => {
     if (time) {
-      if (time[1][1] === 0) return time[1];
-      else return [time[1][0] + 1, 0] as Time;
+      if (time[1].minute === 0) return time[1];
+      else return new Time(time[1].hour + 1, 0);
     }
-    return [11, 0] as Time;
+    return new Time(11, 0);
   });
 </script>
 

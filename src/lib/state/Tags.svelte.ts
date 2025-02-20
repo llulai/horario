@@ -33,54 +33,54 @@ const byTeacher = $derived.by(() => {
   }
 
   // set priority tags
-  for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
-    const teacherLoad = teacherLessons.reduce((sum) => sum + 1, 0);
-    const availabilityByTeacher = Object.fromEntries(
-      Object.keys(lessons.byTeacher).map((teacher) => [
-        teacher,
-        getByTimeslot(timetable.maxBlocks, true)
-      ])
-    );
-
-    Object.values(blockedTimeslots.byTeacher).forEach((blockedTimeslots) => {
-      blockedTimeslots.forEach((blockedTimeslot) => {
-        const {
-          name,
-          timeslot: [day, block]
-        } = blockedTimeslot;
-        availabilityByTeacher[name][day][block] = false;
-      });
-    });
-
-    const teacherAvailability = Object.values(availabilityByTeacher[teacherName]).reduce(
-      (sum, dailyAvailability) =>
-        sum +
-        Object.values(dailyAvailability).reduce(
-          (sum, blockAvailability) => sum + Number(blockAvailability),
-          0
-        ),
-      0
-    );
-
-    if (teacherLoad / teacherAvailability > 0.75) {
-      tagsByTeacher[teacherName].add('priority');
-    }
-  }
+  // for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
+  //   const teacherLoad = teacherLessons.reduce((sum) => sum + 1, 0);
+  //   const availabilityByTeacher = Object.fromEntries(
+  //     Object.keys(lessons.byTeacher).map((teacher) => [
+  //       teacher,
+  //       getByTimeslot(timetable.maxBlocks, true)
+  //     ])
+  //   );
+  //
+  //   Object.values(blockedTimeslots.byTeacher).forEach((blockedTimeslots) => {
+  //     blockedTimeslots.forEach((blockedTimeslot) => {
+  //       const {
+  //         name,
+  //         timeslot: [day, block]
+  //       } = blockedTimeslot;
+  //       availabilityByTeacher[name][day][block] = false;
+  //     });
+  //   });
+  //
+  //   const teacherAvailability = Object.values(availabilityByTeacher[teacherName]).reduce(
+  //     (sum, dailyAvailability) =>
+  //       sum +
+  //       Object.values(dailyAvailability).reduce(
+  //         (sum, blockAvailability) => sum + Number(blockAvailability),
+  //         0
+  //       ),
+  //     0
+  //   );
+  //
+  //   if (teacherLoad / teacherAvailability > 0.75) {
+  //     tagsByTeacher[teacherName].add('priority');
+  //   }
+  // }
 
   // set low-availability tags
-  lessons.list.forEach((lesson: Lesson) => {
-    const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
-      (sum, dailyAvailability) =>
-        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
-      0
-    );
-
-    if (availableTimeslots === 0 && !lesson.timeslot) {
-      tagsByTeacher[lesson.teacherName].add('conflict');
-    } else if (availableTimeslots <= 3 && !lesson.timeslot) {
-      tagsByTeacher[lesson.teacherName].add('low-availability');
-    }
-  });
+  // lessons.list.forEach((lesson: Lesson) => {
+  //   const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
+  //     (sum, dailyAvailability) =>
+  //       sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
+  //     0
+  //   );
+  //
+  //   if (availableTimeslots === 0 && !lesson.timeslot) {
+  //     tagsByTeacher[lesson.teacherName].add('conflict');
+  //   } else if (availableTimeslots <= 3 && !lesson.timeslot) {
+  //     tagsByTeacher[lesson.teacherName].add('low-availability');
+  //   }
+  // });
 
   return tagsByTeacher;
 });
@@ -100,19 +100,19 @@ const byGrade = $derived.by(() => {
   }
 
   // set low-availability tags
-  lessons.list.forEach((lesson: Lesson) => {
-    const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
-      (sum, dailyAvailability) =>
-        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
-      0
-    );
-
-    if (availableTimeslots === 0 && !lesson.timeslot) {
-      tagsByGrade[lesson.gradeName].add('conflict');
-    } else if (availableTimeslots <= 3 && !lesson.timeslot) {
-      tagsByGrade[lesson.gradeName].add('low-availability');
-    }
-  });
+  // lessons.list.forEach((lesson: Lesson) => {
+  //   const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
+  //     (sum, dailyAvailability) =>
+  //       sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
+  //     0
+  //   );
+  //
+  //   if (availableTimeslots === 0 && !lesson.timeslot) {
+  //     tagsByGrade[lesson.gradeName].add('conflict');
+  //   } else if (availableTimeslots <= 3 && !lesson.timeslot) {
+  //     tagsByGrade[lesson.gradeName].add('low-availability');
+  //   }
+  // });
 
   return tagsByGrade;
 });

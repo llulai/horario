@@ -2,10 +2,12 @@
   import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import currently from '$lib/state/currently.svelte';
   import {
+    type Block,
     type BlockedTimeslot,
     blockedTimeslots,
     type Lesson,
-    lessons
+    lessons,
+    periods
   } from '$lib/state/Timetable.svelte';
   import Calendar from './Calendar.svelte';
 
@@ -54,13 +56,27 @@
   {#if currently.selected && currently.selected.kind !== 'category'}
     <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}
-        <Calendar
-          kind={currently.selected.kind === 'teacher' ? 'grade' : 'teacher'}
-          {name}
-          {lessons}
-          blockedTimeslots={summaryBlockedTimeslots[name]}
-          small
-        />
+        {#if currently.selected.kind === 'grade'}
+          <Calendar
+            kind={'teacher'}
+            {name}
+            {lessons}
+            blockedTimeslots={summaryBlockedTimeslots[name]}
+            maxBlocks={Object.keys(Object.values(periods.byTeacher[name])[0]).length as Block}
+            nPeriods={Object.keys(periods.byTeacher[name]).length}
+            small
+          />
+        {:else if currently.selected.kind === 'teacher'}
+          <Calendar
+            kind={'grade'}
+            {name}
+            {lessons}
+            blockedTimeslots={summaryBlockedTimeslots[name]}
+            maxBlocks={Object.keys(periods.byGrade[name] ?? { 1: 1 }).length as Block}
+            nPeriods={1}
+            small
+          />
+        {/if}
       {/each}
     </CalendarGrid>
   {/if}

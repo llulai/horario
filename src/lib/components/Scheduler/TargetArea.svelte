@@ -6,11 +6,11 @@
     type Time,
     type Lesson,
     lessons,
-    timetable,
-    type BlockedTimeslot
+    type BlockedTimeslot,
+    type Block,
+    grades
   } from '$lib/state/Timetable.svelte';
   import currently from '$lib/state/currently.svelte';
-  import BlockingBlock from './BlockingBlock.svelte';
   import LessonCard from './LessonCard.svelte';
   import TargetPeriodBlock from './TargetPeriodBlock.svelte';
 
@@ -36,14 +36,32 @@
 
   const assignedLessons: Lesson[] = $derived(selectedLessons.filter((lesson) => lesson.timeslot));
 
+  const periodId = $derived.by(() => {
+    if (currently.dragging) {
+      const { gradeName } = currently.dragging;
+      return grades.byName[gradeName].periodId;
+    }
+  });
+
+  const period = $derived.by(() => {
+    if (currently.dragging) {
+      const { gradeName } = currently.dragging;
+      return periods.byGrade[gradeName];
+    }
+  });
+
+  const maxBlocks = $derived(Object.keys(period ?? { 1: 1 }).length as Block);
+
   const assignedLessonsByTimeslot: ByTimeslot<Lesson | null> = $derived.by(() => {
     // put the assigned lessons into a `ByTimeslot` map for easier manipulation
 
-    const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(timetable.maxBlocks, null);
+    const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(maxBlocks, null);
 
     selectedLessons.forEach((lesson) => {
-      if (lesson.timeslot) {
-        const [day, block] = lesson.timeslot;
+      const { gradeName, timeslot } = lesson;
+      const currentLessonPeriodId = grades.byName[gradeName].periodId;
+      if (periodId && periodId === currentLessonPeriodId && timeslot) {
+        const [day, block] = timeslot;
         lessonsByTimeslot[day][block] = lesson;
       }
     });
@@ -55,7 +73,7 @@
     // put the assigned blocked timeslots into a `ByTimeslot` map for easier manipulation
 
     const blockedTimeslotsByTimeslot: ByTimeslot<BlockedTimeslot | undefined> = getByTimeslot(
-      timetable.maxBlocks,
+      maxBlocks,
       undefined
     );
 
@@ -79,20 +97,13 @@
     return blockedTimeslotsByTimeslot;
   });
 
-  const period = $derived.by(() => {
-    if (currently.dragging) {
-      const { gradeName } = currently.dragging;
-      return periods.byGrade[gradeName];
-    }
-  });
-
   let containerWidth = $state(0);
   const bWidth = $derived(containerWidth / 5);
 
   const getPercentage = (time: Time) => {
-    const [hour, minute] = time;
-    const [startHour, startMinute] = start;
-    const [endHour, endMinute] = end;
+    const { hour, minute } = time;
+    const { hour: startHour, minute: startMinute } = start;
+    const { hour: endHour, minute: endMinute } = end;
     const timestamp = hour * 60 + minute;
     return (
       ((timestamp - (startHour * 60 + startMinute)) /
@@ -113,19 +124,7 @@
           class="absolute p-1"
           style={`width: ${bWidth}px; left: ${bWidth * (day - 1)}px; top: ${getPercentage(blockStart)}%; bottom: ${100 - getPercentage(blockEnd)}%;`}
         >
-          {#if assignedLessonsByTimeslot[day][block]}
-            <LessonCard lesson={assignedLessonsByTimeslot[day][block]} />
-          {:else if currently.blocking}
-            <BlockingBlock
-              {day}
-              {block}
-              {blockStart}
-              {blockEnd}
-              blockedTimeslot={assignedBlockedTimeslots[day][block]}
-            />
-          {:else if assignedBlockedTimeslots[day][block]}
-            <div class="h-10"></div>
-          {:else}
+          {#if assignedLessonsByTimeslot[day][block] === null && currently.blocking === false && assignedBlockedTimeslots[day][block] === undefined}
             <TargetPeriodBlock {day} {block} {blockStart} {blockEnd} />
           {/if}
         </div>

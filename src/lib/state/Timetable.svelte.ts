@@ -21,7 +21,19 @@ export const DAY = {
 
 export type Day = (typeof DAY)[keyof typeof DAY];
 export type Block = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-export type Time = readonly [hour: number, minute: number];
+export class Time {
+  hour: number;
+  minute: number;
+
+  constructor(hour: number, minute: number) {
+    this.hour = hour;
+    this.minute = minute;
+  }
+
+  valueOf(): number {
+    return this.hour * 60 + this.minute;
+  }
+}
 export type Period = Partial<Record<Block, readonly [block: Block, start: Time, end: Time]>>;
 type Timeslot = readonly [day: Day, block: Block, start: Time, end: Time];
 
@@ -36,7 +48,7 @@ type PeriodEvent = {
 
 type Periods = {
   byId: () => Record<string, Period>;
-  byTeacher: Record<string, Period[]>;
+  byTeacher: Record<string, Record<string, Period>>;
   byGrade: Record<string, Period | null>;
   dispatch: (event: PeriodEvent) => void;
 };
@@ -77,7 +89,7 @@ export const periods: Periods = {
     return Object.fromEntries(
       Object.entries(periodIdsByTeacher).map(([teacherName, periodIds]) => [
         teacherName,
-        Array.from(periodIds, (periodId) => Speriods[periodId])
+        Object.fromEntries(Array.from(periodIds).map((periodId) => [periodId, Speriods[periodId]]))
       ])
     );
   },
@@ -384,16 +396,13 @@ export const blockedTimeslots: BlockedTimeslots = {
 //////////////////
 
 export type TimeTable = {
-  maxBlocks: Block;
   fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxBlocks: Block) => void;
   // loadFromJSON: (json: string) => void;
   // saveToJSON: () => string;
 };
 
-let SmaxBlocks = $state<Block>(7);
-
 // this function loads the timetable from a list of weekly loads
-const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxBlocks: Block) => {
+const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[]) => {
   // clear existing state
   //Slessons = {};
   //Ssubjects = {};
@@ -436,12 +445,8 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[], newMaxBlocks: Block) => {
   Sgrades = newGrades;
   Ssubjects = newSubjects;
   SblockedTimeslots = {};
-  SmaxBlocks = newMaxBlocks;
 };
 
 export const timetable: TimeTable = {
-  fromWeeklyLoad,
-  get maxBlocks() {
-    return SmaxBlocks;
-  }
+  fromWeeklyLoad
 };

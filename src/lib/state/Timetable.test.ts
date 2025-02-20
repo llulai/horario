@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { blockedTimeslots, lessons, timetable, subjects } from '$lib/state/Timetable.svelte';
+import { blockedTimeslots, lessons, timetable, subjects, Time } from '$lib/state/Timetable.svelte';
 
 test('fromWeeklyLoad function creates lessons and maps them correctly', () => {
   const weeklyLoads = [
@@ -33,7 +33,7 @@ test('timetable implements setLessonTimeslot correctly', () => {
 
   lessons.dispatch({
     event: 'setLessonTimeslot',
-    payload: { lessonId, timeslot: [1, 1, [8, 0], [8, 45]] }
+    payload: { lessonId, timeslot: [1, 1, new Time(8, 0), new Time(8, 45)] }
   });
 
   expect(lessons.byId[lessonId].timeslot).toEqual([1, 1, [8, 0], [8, 45]]);
@@ -53,11 +53,11 @@ test('timetable implements removeLessonTimeslot correctly', () => {
   const lessonId = lessons.list[0].id;
   lessons.dispatch({
     event: 'setLessonTimeslot',
-    payload: { lessonId, timeslot: [1, 1, [8, 0], [8, 45]] }
+    payload: { lessonId, timeslot: [1, 1, new Time(8, 0), new Time(8, 45)] }
   });
 
   // assert
-  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1, [8, 0], [8, 45]]);
+  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1, new Time(8, 0), new Time(8, 45)]);
 
   lessons.dispatch({ event: 'removeLessonTimeslot', payload: { lessonId } });
   expect(lessons.byId[lessonId].timeslot).toBeNull();

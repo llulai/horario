@@ -2,7 +2,7 @@
   import type { Time } from '$lib/state/Timetable.svelte';
 
   const { start, end }: { start: Time; end: Time } = $props();
-  const hours = $derived(end[0] - start[0]);
+  const hours = $derived(end.hour - start.hour);
 </script>
 
 <div
@@ -13,7 +13,7 @@
     class="row-span-full flex flex-col items-end justify-between pr-3 pt-[29px] text-[14px] font-semibold leading-[14px] text-[#737573]"
   >
     {#each { length: hours + 1 } as _, i}
-      <p>{start[0] + i}:00</p>
+      <p>{start.hour + i}:00</p>
     {/each}
   </div>
   <div></div>
