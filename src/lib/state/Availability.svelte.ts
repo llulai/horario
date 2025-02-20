@@ -34,11 +34,20 @@ export const getByTimeslot = <T>(maxBlocks: Block, fillWith: T): ByTimeslot<T> =
   };
 };
 
+const blocksOverlap = (startA: Time, endA: Time, startB: Time, endB: Time): boolean => {
+  // return true if the blocks overlap
+  if (startA >= startB && startA < endB) return true;
+  if (endA > startB && endA <= endB) return true;
+  if (startB >= startA && startB < endA) return true;
+  if (endB > startA && endB <= endA) return true;
+  return false;
+};
+
 const getOverlappingBlocks = (period: Period, start: Time, end: Time): Block[] => {
   return Object.values(period)
     .filter((block) => {
       const [blockStart, blockEnd] = [block[1], block[2]];
-      return (start >= blockStart && start <= blockEnd) || (end >= blockStart && end <= blockEnd);
+      return blocksOverlap(start, end, blockStart, blockEnd);
     })
     .map((block) => block[0] as Block);
 };
@@ -49,8 +58,29 @@ const getLessonAvailability = (
   teacherAvailability: Record<string, ByTimeslot<boolean>>,
   teacherPeriods: Record<string, Period>
 ): ByTimeslot<boolean> => {
-  const maxBlock = Object.keys(gradePeriod).length as Block;
-  const lessonAvailability = getByTimeslot(maxBlock, true);
+  const lessonAvailability = { ...gradeAvailability };
+
+  Object.entries(teacherAvailability).forEach(([periodId, availabilityByTimeslot]) => {
+    Object.entries(availabilityByTimeslot).forEach(([day, dailyAvailability]) => {
+      Object.entries(dailyAvailability).forEach(([block, isAvailable]) => {
+        if (isAvailable === false) {
+          const currentPeriodBlock = teacherPeriods[periodId][block as unknown as Block];
+          if (currentPeriodBlock) {
+            const [start, end] = [currentPeriodBlock[1], currentPeriodBlock[2]];
+            const overlappingBlocks = getOverlappingBlocks(gradePeriod, start, end);
+
+            overlappingBlocks.forEach((overlappingBlock) => {
+              lessonAvailability[day as unknown as Day][overlappingBlock] = false;
+            });
+          }
+        }
+      });
+    });
+  });
+
+  Object.keys(lessonAvailability).forEach((day) => {
+    Object.keys(teacherAvailability).forEach((periodId) => {});
+  });
 
   return lessonAvailability;
 };
