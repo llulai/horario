@@ -5,6 +5,7 @@
     type Block,
     type BlockedTimeslot,
     blockedTimeslots,
+    grades,
     type Lesson,
     lessons,
     periods
@@ -57,15 +58,18 @@
     <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}
         {#if currently.selected.kind === 'grade'}
-          <Calendar
-            kind={'teacher'}
-            {name}
-            {lessons}
-            blockedTimeslots={summaryBlockedTimeslots[name]}
-            maxBlocks={Object.keys(Object.values(periods.byTeacher[name])[0]).length as Block}
-            nPeriods={Object.keys(periods.byTeacher[name]).length}
-            small
-          />
+          {#each Object.entries(periods.byTeacher[name]) as [periodId, period]}
+            <Calendar
+              kind={'teacher'}
+              {name}
+              lessons={lessons.filter(
+                (lesson) => grades.byName[lesson.gradeName].periodId == periodId
+              )}
+              blockedTimeslots={summaryBlockedTimeslots[name]}
+              maxBlocks={Object.keys(period).length as Block}
+              small
+            />
+          {/each}
         {:else if currently.selected.kind === 'teacher'}
           <Calendar
             kind={'grade'}
@@ -73,7 +77,6 @@
             {lessons}
             blockedTimeslots={summaryBlockedTimeslots[name]}
             maxBlocks={Object.keys(periods.byGrade[name] ?? { 1: 1 }).length as Block}
-            nPeriods={1}
             small
           />
         {/if}

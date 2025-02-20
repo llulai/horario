@@ -69,13 +69,15 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class={`flex h-full w-full flex-row items-center justify-center rounded-[4px] ${bg}`}
+  class={`group flex h-full w-full flex-row items-center justify-center rounded-[4px] ${bg}`}
   ondrop={handleOnDrop}
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}
 >
   {#if isHover}
-    <PlusCircle h={24} w={24} />
+    <div class="pointer-events-none">
+      <PlusCircle h={24} w={24} />
+    </div>
   {/if}
 </div>

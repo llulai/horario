@@ -23,7 +23,6 @@
   import Toggle from '$lib/components/Toggle.svelte';
   import CompletionBar from '$lib/components/Scheduler/CompletionBar.svelte';
   import Completion from '$lib/components/Scheduler/Completion.svelte';
-  import availability from '$lib/state/Availability.svelte';
 
   let addedCodes = $state(false);
   const morningPeriodId = uuidv4();
@@ -137,7 +136,6 @@
               blockedTimeslots={blockedTimeslots.byGrade[name]}
               small={false}
               maxBlocks={Object.keys(periods.byGrade[name] ?? { 1: 1 }).length as Block}
-              nPeriods={1}
             />
           {/each}
         </CalendarGrid>
@@ -147,15 +145,18 @@
         <h1 class="text-[32px] font-bold text-[#1D1F1E]">Profesores</h1>
         <CalendarGrid small={false}>
           {#each Object.entries(lessons.byTeacher) as [name, teacherLessons]}
-            <Calendar
-              kind={'teacher'}
-              {name}
-              lessons={teacherLessons}
-              blockedTimeslots={blockedTimeslots.byTeacher[name]}
-              small={false}
-              maxBlocks={Object.keys(Object.values(periods.byTeacher[name])[0]).length as Block}
-              nPeriods={Object.keys(periods.byTeacher[name]).length}
-            />
+            {#each Object.entries(periods.byTeacher[name]) as [periodId, period]}
+              <Calendar
+                kind={'teacher'}
+                {name}
+                lessons={teacherLessons.filter(
+                  (lesson) => grades.byName[lesson.gradeName].periodId === periodId
+                )}
+                blockedTimeslots={blockedTimeslots.byTeacher[name]}
+                small={false}
+                maxBlocks={Object.keys(period).length as Block}
+              />
+            {/each}
           {/each}
         </CalendarGrid>
       </div>
