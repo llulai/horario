@@ -62,6 +62,7 @@
             <Calendar
               kind={'teacher'}
               {name}
+              periodName={Object.keys(periods.byTeacher[name]).length > 1 ? periodId : ''}
               lessons={lessons.filter(
                 (lesson) => grades.byName[lesson.gradeName].periodId == periodId
               )}

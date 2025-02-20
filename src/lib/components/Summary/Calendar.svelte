@@ -18,7 +18,8 @@
     lessons,
     blockedTimeslots,
     maxBlocks,
-    small = false
+    small = false,
+    periodName = ''
   }: {
     kind: 'teacher' | 'grade';
     name: string;
@@ -26,6 +27,7 @@
     blockedTimeslots: BlockedTimeslot[];
     maxBlocks: Block;
     small: boolean;
+    periodName?: string;
   } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
@@ -97,7 +99,14 @@
         }
       }}
     >
-      {name}
+      <div class="flex flex-row items-start gap-2">
+        {name}
+        {#if periodName}
+          <div class={`${small ? 'text-[10px]' : 'text-[12px]'} text-[#545755]`}>
+            ({periodName})
+          </div>
+        {/if}
+      </div>
     </button>
     <!-- tag -->
     <Tags {small} {kind} {name} />

@@ -10,7 +10,6 @@
     type Period,
     type Block
   } from '$lib/state/Timetable.svelte';
-  import { v4 as uuidv4 } from 'uuid';
   import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';
@@ -25,8 +24,8 @@
   import Completion from '$lib/components/Scheduler/Completion.svelte';
 
   let addedCodes = $state(false);
-  const morningPeriodId = uuidv4();
-  const afternoonPeriodId = uuidv4();
+  const morningPeriodId = 'mañana';
+  const afternoonPeriodId = 'tarde';
 
   onMount(async () => {
     const data = await fetch('/api/lessons').then((response) => response.json());
@@ -149,6 +148,7 @@
               <Calendar
                 kind={'teacher'}
                 {name}
+                periodName={Object.keys(periods.byTeacher[name]).length > 1 ? periodId : ''}
                 lessons={teacherLessons.filter(
                   (lesson) => grades.byName[lesson.gradeName].periodId === periodId
                 )}

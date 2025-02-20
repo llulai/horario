@@ -75,7 +75,7 @@
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}
 >
-  {#if isHover}
+  {#if isHover && isAvailable}
     <div class="pointer-events-none">
       <PlusCircle h={24} w={24} />
     </div>
