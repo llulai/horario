@@ -4,14 +4,18 @@
     blockedTimeslots,
     type BlockedTimeslot,
     type Day,
-    type Block
+    type Block,
+    type Time
   } from '$lib/state/Timetable.svelte';
 
   let {
     blockedTimeslot,
     day,
-    block
-  }: { blockedTimeslot?: BlockedTimeslot; day: Day; block: Block } = $props();
+    block,
+    start,
+    end
+  }: { blockedTimeslot?: BlockedTimeslot; day: Day; block: Block; start: Time; end: Time } =
+    $props();
 
   const bg = $derived(blockedTimeslot ? 'bg-white border-2 border-[#6B7280]' : 'bg-[#F3F4F6]');
 
@@ -24,7 +28,7 @@
     } else if (currently.selected && currently.selected.kind !== 'category') {
       blockedTimeslots.dispatch({
         event: 'addBlockedTimeslot',
-        payload: { ...currently.selected, timeslot: [day, block] }
+        payload: { ...currently.selected, timeslot: [day, block, start, end] }
       });
     }
   };

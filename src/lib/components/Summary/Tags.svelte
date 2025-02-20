@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tags } from '$lib/state/Tags.svelte';
-  import Check from '../Icons/Check.svelte';
-  import XMark from '../Icons/XMark.svelte';
+  import Check from '$lib/components/Icons/Check.svelte';
+  import XMark from '$lib/components/Icons/XMark.svelte';
 
   const { kind, name, small }: { kind: 'teacher' | 'grade'; name: string; small: boolean } =
     $props();

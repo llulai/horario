@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CalendarGrid from '../CalendarGrid.svelte';
+  import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import currently from '$lib/state/currently.svelte';
   import {
     type BlockedTimeslot,

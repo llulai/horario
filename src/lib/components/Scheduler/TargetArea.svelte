@@ -36,7 +36,9 @@
     return [];
   });
 
-  const assignedLessons: ByTimeslot<Lesson | null> = $derived.by(() => {
+  const assignedLessons: Lesson[] = $derived(selectedLessons.filter((lesson) => lesson.timeslot));
+
+  const assignedLessonsByTimeslot: ByTimeslot<Lesson | null> = $derived.by(() => {
     // put the assigned lessons into a `ByTimeslot` map for easier manipulation
 
     const lessonsByTimeslot: ByTimeslot<Lesson | null> = getByTimeslot(timetable.maxBlocks, null);
@@ -105,21 +107,27 @@
   };
 </script>
 
-{#if periodId}
-  <div
-    class="relative col-start-1 col-end-2 row-start-1 row-end-2 mb-[39px] ml-[112px] mr-8 mt-[68px]"
-    bind:clientWidth={containerWidth}
-  >
+<div
+  class="relative col-start-1 col-end-2 row-start-1 row-end-2 mb-[39px] ml-[112px] mr-8 mt-[68px]"
+  bind:clientWidth={containerWidth}
+>
+  {#if periodId}
     {#each Object.values(period) as [block, start, end]}
       {#each days as day}
         <div
           class="absolute p-1"
           style={`width: ${bWidth}px; left: ${bWidth * (day - 1)}px; top: ${getPercentage(start)}%; bottom: ${100 - getPercentage(end)}%;`}
         >
-          {#if assignedLessons[day][block]}
-            <LessonCard lesson={assignedLessons[day][block]} />
+          {#if assignedLessonsByTimeslot[day][block]}
+            <LessonCard lesson={assignedLessonsByTimeslot[day][block]} />
           {:else if currently.blocking}
-            <BlockingBlock {day} {block} blockedTimeslot={assignedBlockedTimeslots[day][block]} />
+            <BlockingBlock
+              {day}
+              {block}
+              {start}
+              {end}
+              blockedTimeslot={assignedBlockedTimeslots[day][block]}
+            />
           {:else if assignedBlockedTimeslots[day][block]}
             <div class="h-10"></div>
           {:else}
@@ -128,5 +136,16 @@
         </div>
       {/each}
     {/each}
-  </div>
-{/if}
+  {/if}
+
+  {#each assignedLessons as lesson}
+    {#if lesson.timeslot}
+      <div
+        class="absolute p-1"
+        style={`width: ${bWidth}px; left: ${bWidth * (lesson.timeslot[0] - 1)}px; top: ${getPercentage(lesson.timeslot[2])}%; bottom: ${100 - getPercentage(lesson.timeslot[3])}%;`}
+      >
+        <LessonCard {lesson} />
+      </div>
+    {/if}
+  {/each}
+</div>

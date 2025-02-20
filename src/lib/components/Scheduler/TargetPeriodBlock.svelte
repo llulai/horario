@@ -3,7 +3,7 @@
   import currently from '$lib/state/currently.svelte';
   import { lessons, type Day, type Block, type Time } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
-  import PlusCircle from '../Icons/PlusCircle.svelte';
+  import PlusCircle from '$lib/components/Icons/PlusCircle.svelte';
   const {
     day,
     block,

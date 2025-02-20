@@ -33,7 +33,7 @@ test('timetable implements setLessonTimeslot correctly', () => {
 
   lessons.dispatch({
     event: 'setLessonTimeslot',
-    payload: { lessonId, timeslot: [1, 1] }
+    payload: { lessonId, timeslot: [1, 1, [8, 0], [8, 45]] }
   });
 
   expect(lessons.byId[lessonId].timeslot).toEqual([1, 1]);
@@ -53,7 +53,7 @@ test('timetable implements removeLessonTimeslot correctly', () => {
   const lessonId = lessons.list[0].id;
   lessons.dispatch({
     event: 'setLessonTimeslot',
-    payload: { lessonId, timeslot: [1, 1] }
+    payload: { lessonId, timeslot: [1, 1, [8, 0], [8, 45]] }
   });
 
   // assert
