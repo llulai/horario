@@ -36,7 +36,7 @@ test('timetable implements setLessonTimeslot correctly', () => {
     payload: { lessonId, timeslot: [1, 1, [8, 0], [8, 45]] }
   });
 
-  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1]);
+  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1, [8, 0], [8, 45]]);
 });
 
 test('timetable implements removeLessonTimeslot correctly', () => {
@@ -57,7 +57,7 @@ test('timetable implements removeLessonTimeslot correctly', () => {
   });
 
   // assert
-  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1]);
+  expect(lessons.byId[lessonId].timeslot).toEqual([1, 1, [8, 0], [8, 45]]);
 
   lessons.dispatch({ event: 'removeLessonTimeslot', payload: { lessonId } });
   expect(lessons.byId[lessonId].timeslot).toBeNull();
