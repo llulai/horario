@@ -23,19 +23,63 @@ export type Day = (typeof DAY)[keyof typeof DAY];
 export type Block = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type Time = readonly [hour: number, minute: number];
 export type Period = Partial<Record<Block, readonly [block: Block, start: Time, end: Time]>>;
-
 type Timeslot = readonly [day: Day, block: Block, start: Time, end: Time];
 
-const Speriods = $state<Record<string, Period>>({});
+//////////////////
+//// PERIODS ////
+////////////////
 
 type PeriodEvent = {
   event: 'addPeriod';
   payload: { period: Period; id: string };
 };
 
-export const periods = {
+type Periods = {
+  byId: () => Record<string, Period>;
+  byTeacher: Record<string, Period[]>;
+  byGrade: Record<string, Period | null>;
+  dispatch: (event: PeriodEvent) => void;
+};
+
+const Speriods = $state<Record<string, Period>>({});
+
+export const periods: Periods = {
+  // @ts-expect-error: no idea what's the problem
   get byId() {
     return Speriods;
+  },
+  get byGrade() {
+    return Object.fromEntries(
+      Object.values(Sgrades).map((grade) => [
+        grade.name,
+        grade.periodId ? Speriods[grade.periodId] : null
+      ])
+    );
+  },
+  get byTeacher() {
+    const periodIdsByTeacher: Record<string, Set<string>> = {};
+    Object.values(Slessons).forEach((lesson) => {
+      const { teacherName, gradeName } = lesson;
+
+      if (!(teacherName in periodIdsByTeacher)) {
+        periodIdsByTeacher[teacherName] = new Set();
+      }
+
+      if (gradeName in Sgrades) {
+        const periodId = Sgrades[gradeName].periodId;
+
+        if (periodId) {
+          periodIdsByTeacher[teacherName].add(periodId);
+        }
+      }
+    });
+
+    return Object.fromEntries(
+      Object.entries(periodIdsByTeacher).map(([teacherName, periodIds]) => [
+        teacherName,
+        Array.from(periodIds, (periodId) => Speriods[periodId])
+      ])
+    );
   },
   dispatch(event: PeriodEvent) {
     if (event.event === 'addPeriod') {
@@ -85,7 +129,7 @@ export const lessons: Lessons = {
   },
 
   get byId() {
-    return Object.fromEntries(Object.values(Slessons).map((lesson) => [lesson.id, lesson]));
+    return Slessons;
   },
 
   get byTeacher() {

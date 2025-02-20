@@ -12,10 +12,15 @@
     blockedTimeslot,
     day,
     block,
-    start,
-    end
-  }: { blockedTimeslot?: BlockedTimeslot; day: Day; block: Block; start: Time; end: Time } =
-    $props();
+    blockStart: start,
+    blockEnd: end
+  }: {
+    blockedTimeslot?: BlockedTimeslot;
+    day: Day;
+    block: Block;
+    blockStart: Time;
+    blockEnd: Time;
+  } = $props();
 
   const bg = $derived(blockedTimeslot ? 'bg-white border-2 border-[#6B7280]' : 'bg-[#F3F4F6]');
 

@@ -7,13 +7,13 @@
   const {
     day,
     block,
-    start,
-    end
+    blockStart: start,
+    blockEnd: end
   }: {
     day: Day;
     block: Block;
-    start: Time;
-    end: Time;
+    blockStart: Time;
+    blockEnd: Time;
   } = $props();
 
   let isHover = $state(false);

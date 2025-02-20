@@ -3,7 +3,6 @@
   import {
     periods,
     blockedTimeslots,
-    grades,
     type Time,
     type Lesson,
     lessons,
@@ -15,8 +14,7 @@
   import LessonCard from './LessonCard.svelte';
   import TargetPeriodBlock from './TargetPeriodBlock.svelte';
 
-  const startTime = [8, 0];
-  const endTime = [15, 0];
+  const { start, end }: { start: Time; end: Time } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
 
@@ -81,23 +79,20 @@
     return blockedTimeslotsByTimeslot;
   });
 
-  const periodId = $derived.by(() => {
+  const period = $derived.by(() => {
     if (currently.dragging) {
-      const grade = grades.byName[currently.dragging.gradeName];
-      return grade ? grade.periodId : null;
+      const { gradeName } = currently.dragging;
+      return periods.byGrade[gradeName];
     }
-    return null;
   });
-
-  const period = $derived(periodId !== null ? periods.byId[periodId] : {});
 
   let containerWidth = $state(0);
   const bWidth = $derived(containerWidth / 5);
 
   const getPercentage = (time: Time) => {
     const [hour, minute] = time;
-    const [startHour, startMinute] = startTime;
-    const [endHour, endMinute] = endTime;
+    const [startHour, startMinute] = start;
+    const [endHour, endMinute] = end;
     const timestamp = hour * 60 + minute;
     return (
       ((timestamp - (startHour * 60 + startMinute)) /
@@ -111,12 +106,12 @@
   class="relative col-start-1 col-end-2 row-start-1 row-end-2 mb-[39px] ml-[112px] mr-8 mt-[68px]"
   bind:clientWidth={containerWidth}
 >
-  {#if periodId}
-    {#each Object.values(period) as [block, start, end]}
+  {#if period}
+    {#each Object.values(period) as [block, blockStart, blockEnd]}
       {#each days as day}
         <div
           class="absolute p-1"
-          style={`width: ${bWidth}px; left: ${bWidth * (day - 1)}px; top: ${getPercentage(start)}%; bottom: ${100 - getPercentage(end)}%;`}
+          style={`width: ${bWidth}px; left: ${bWidth * (day - 1)}px; top: ${getPercentage(blockStart)}%; bottom: ${100 - getPercentage(blockEnd)}%;`}
         >
           {#if assignedLessonsByTimeslot[day][block]}
             <LessonCard lesson={assignedLessonsByTimeslot[day][block]} />
@@ -124,14 +119,14 @@
             <BlockingBlock
               {day}
               {block}
-              {start}
-              {end}
+              {blockStart}
+              {blockEnd}
               blockedTimeslot={assignedBlockedTimeslots[day][block]}
             />
           {:else if assignedBlockedTimeslots[day][block]}
             <div class="h-10"></div>
           {:else}
-            <TargetPeriodBlock {day} {block} {start} {end} />
+            <TargetPeriodBlock {day} {block} {blockStart} {blockEnd} />
           {/if}
         </div>
       {/each}
