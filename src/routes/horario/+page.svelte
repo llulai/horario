@@ -77,8 +77,6 @@
 
     addedCodes = true;
   });
-
-  $inspect(availability);
 </script>
 
 {#if lessons.list.length > 0}

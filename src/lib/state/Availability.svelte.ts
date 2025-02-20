@@ -58,7 +58,13 @@ const getLessonAvailability = (
   teacherAvailability: Record<string, ByTimeslot<boolean>>,
   teacherPeriods: Record<string, Period>
 ): ByTimeslot<boolean> => {
-  const lessonAvailability = { ...gradeAvailability };
+  const lessonAvailability = {
+    1: { ...gradeAvailability[1] },
+    2: { ...gradeAvailability[2] },
+    3: { ...gradeAvailability[3] },
+    4: { ...gradeAvailability[4] },
+    5: { ...gradeAvailability[5] }
+  };
 
   Object.entries(teacherAvailability).forEach(([periodId, availabilityByTimeslot]) => {
     Object.entries(availabilityByTimeslot).forEach(([day, dailyAvailability]) => {
@@ -76,10 +82,6 @@ const getLessonAvailability = (
         }
       });
     });
-  });
-
-  Object.keys(lessonAvailability).forEach((day) => {
-    Object.keys(teacherAvailability).forEach((periodId) => {});
   });
 
   return lessonAvailability;
