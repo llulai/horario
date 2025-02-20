@@ -22,9 +22,9 @@ export const DAY = {
 export type Day = (typeof DAY)[keyof typeof DAY];
 export type Block = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type Time = readonly [hour: number, minute: number];
-export type Period = Partial<Record<Block, readonly [start: Time, end: Time]>>;
+export type Period = Partial<Record<Block, readonly [block: Block, start: Time, end: Time]>>;
 
-type Timeslot = readonly [day: Day, block: Block];
+type Timeslot = readonly [day: Day, block: Block, start: Time, end: Time];
 
 const Speriods = $state<Record<string, Period>>({});
 
