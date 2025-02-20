@@ -29,9 +29,9 @@ done
 if [ ${#unused_components[@]} -eq 0 ]; then
     echo "✅ All components are used."
 else
-    echo "⚠️ Unused components detected:"
+    echo "❌ Unused components detected:"
     for comp in "${unused_components[@]}"; do
         echo "  - $comp.svelte"
     done
+    exit 1  # Exit with error status
 fi
-
