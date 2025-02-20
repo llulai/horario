@@ -33,6 +33,10 @@ jobs:
         run: |
           nohup npm run dev &
 
+      - name: Find unused components
+        run: |
+          bash ./.github/workflows/find-unused-components.sh
+
       - name: Run Tests
         run: |
           bash ./.github/workflows/pre_merge_tests.sh
