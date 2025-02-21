@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
-import { blockedTimeslots, lessons, timetable, subjects, Time } from '$lib/state/Timetable.svelte';
+import { blockedTimeslots, lessons, timetable, subjects } from '$lib/state/Timetable.svelte';
+import { Time } from './Periods.svelte';
 
 test('fromWeeklyLoad function creates lessons and maps them correctly', () => {
   const weeklyLoads = [

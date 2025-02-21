@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Time } from '$lib/state/Timetable.svelte';
+  import type { Time } from '$lib/state/Periods.svelte';
 
   const { start, end }: { start: Time; end: Time } = $props();
   const hours = $derived(end.hour - start.hour);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type Block } from '$lib/state/Timetable.svelte';
+  import { type Block } from '$lib/state/Periods.svelte';
   import type { RawWeeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';

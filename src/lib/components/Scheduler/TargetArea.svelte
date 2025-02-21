@@ -1,13 +1,11 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
+  import { type Block, type Time, periods } from '$lib/state/Periods.svelte';
   import {
-    periods,
     blockedTimeslots,
-    type Time,
     type Lesson,
     lessons,
     type BlockedTimeslot,
-    type Block,
     grades
   } from '$lib/state/Timetable.svelte';
   import currently from '$lib/state/currently.svelte';

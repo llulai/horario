@@ -1,9 +1,10 @@
 <script lang="ts">
   import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { lessons, type Day, type Block, type Time } from '$lib/state/Timetable.svelte';
+  import { lessons } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
   import PlusCircle from '$lib/components/Icons/PlusCircle.svelte';
+  import type { Day, Block, Time } from '$lib/state/Periods.svelte';
   const {
     day,
     block,

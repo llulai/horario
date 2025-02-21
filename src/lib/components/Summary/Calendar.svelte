@@ -1,12 +1,8 @@
 <script lang="ts">
   import { getByTimeslot, type ByTimeslot } from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import {
-    type Lesson,
-    type BlockedTimeslot,
-    subjects,
-    type Block
-  } from '$lib/state/Timetable.svelte';
+  import { type Block } from '$lib/state/Periods.svelte';
+  import { type Lesson, type BlockedTimeslot, subjects } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
   import Completion from './Completion.svelte';
   import CompletionBar from './CompletionBar.svelte';

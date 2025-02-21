@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { periods, type Period, Time } from '$lib/state/Timetable.svelte';
+  import { type Period, Time, periods } from '$lib/state/Periods.svelte';
   import AvailableLessons from './AvailableLessons.svelte';
   import Calendar from './Calendar.svelte';
   import TargetArea from './TargetArea.svelte';

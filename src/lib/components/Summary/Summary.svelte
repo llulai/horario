@@ -1,14 +1,13 @@
 <script lang="ts">
   import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import currently from '$lib/state/currently.svelte';
+  import { periods, type Block } from '$lib/state/Periods.svelte';
   import {
-    type Block,
     type BlockedTimeslot,
     blockedTimeslots,
     grades,
     type Lesson,
-    lessons,
-    periods
+    lessons
   } from '$lib/state/Timetable.svelte';
   import Calendar from './Calendar.svelte';
 

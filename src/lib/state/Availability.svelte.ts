@@ -1,14 +1,10 @@
 import {
-  type Day,
   type Lesson,
-  type Block,
   type BlockedTimeslot,
   lessons,
-  blockedTimeslots,
-  periods,
-  type Period,
-  Time
+  blockedTimeslots
 } from '$lib/state/Timetable.svelte';
+import { periods, Time, type Block, type Day, type Period } from './Periods.svelte';
 
 export type ByTimeslot<T> = Record<Day, Partial<Record<Block, T>>>;
 

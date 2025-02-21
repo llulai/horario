@@ -1,12 +1,7 @@
 <script lang="ts">
   import currently from '$lib/state/currently.svelte';
-  import {
-    blockedTimeslots,
-    type BlockedTimeslot,
-    type Day,
-    type Block,
-    type Time
-  } from '$lib/state/Timetable.svelte';
+  import type { Day, Block, Time } from '$lib/state/Periods.svelte';
+  import { blockedTimeslots, type BlockedTimeslot } from '$lib/state/Timetable.svelte';
 
   let {
     blockedTimeslot,

@@ -3,11 +3,7 @@
     blockedTimeslots,
     grades,
     lessons,
-    periods,
     subjects,
-    Time,
-    type Period,
-    type Block,
     timetable
   } from '$lib/state/Timetable.svelte';
   import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
@@ -23,6 +19,8 @@
   import CompletionBar from '$lib/components/Scheduler/CompletionBar.svelte';
   import Completion from '$lib/components/Scheduler/Completion.svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
+  import { periods, Time } from '$lib/state/Periods.svelte';
+  import type { Block, Period } from '$lib/state/Periods.svelte';
 
   let addedCodes = $state(false);
   const morningPeriodId = 'mañana';
