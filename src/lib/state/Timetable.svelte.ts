@@ -288,12 +288,12 @@ const fromWeeklyLoad = (
     }
   });
 
-  Slessons = newLessons;
   // @ts-expect-error: all grades will have a code and periodId
   Sgrades = Object.fromEntries(grades.map((grade) => [grade.name, grade]));
   // @ts-expect-error: all subjects will have a code
   Ssubjects = Object.fromEntries(subjects.map((subject) => [subject.name, subject]));
   SblockedTimeslots = {};
+  Slessons = newLessons;
 };
 
 export const timetable: TimeTable = {
