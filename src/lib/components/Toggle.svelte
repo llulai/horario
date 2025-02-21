@@ -1,8 +1,9 @@
 <script lang="ts">
-  let selected = $state(false);
+  import currently from '$lib/state/currently.svelte';
 
-  let { onChange }: { onChange: (isSelected: boolean) => void } = $props();
+  let { onChange, id }: { onChange: (isSelected: boolean) => void; id: string } = $props();
 
+  let selected = $derived(currently.blocking === id);
   const bg = $derived(selected ? 'bg-[#008744]' : 'bg-[#C8CCCB]');
 </script>
 
@@ -11,7 +12,6 @@
   class={`h-5 w-10 rounded-full p-[2px] ${bg} flex flex-row ${selected ? 'justify-end' : 'justify-start'}`}
   type="button"
   onclick={() => {
-    selected = !selected;
     onChange(selected);
   }}
 >

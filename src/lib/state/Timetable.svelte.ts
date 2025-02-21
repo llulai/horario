@@ -236,7 +236,6 @@ export const subjects: Subjects = {
       Ssubjects[name].color = color;
     } else if (dispatchedEvent.event === 'setCode') {
       const { name, code } = dispatchedEvent.payload;
-      console.warn(name, code);
       Ssubjects[name].code = code;
     }
   }
@@ -305,15 +304,16 @@ export const grades: Grades = {
 
 export type BlockedTimeslot = {
   id: string;
-  kind: 'teacher' | 'grade';
+  kind: 'grade' | 'teacher';
   name: string;
   timeslot: Timeslot;
+  periodId: string;
 };
 
 type BlockedTimeslotEvent =
   | {
       event: 'addBlockedTimeslot';
-      payload: { kind: 'teacher' | 'grade'; name: string; timeslot: Timeslot };
+      payload: { kind: 'grade' | 'teacher'; name: string; timeslot: Timeslot; periodId: string };
     }
   | {
       event: 'removeBlockedTimeslot';
@@ -377,8 +377,8 @@ export const blockedTimeslots: BlockedTimeslots = {
     switch (event) {
       case 'addBlockedTimeslot': {
         const id = uuidv4();
-        const { name, kind, timeslot } = payload;
-        SblockedTimeslots[id] = { id, kind, name, timeslot };
+        const { name, kind, timeslot, periodId } = payload;
+        SblockedTimeslots[id] = { id, kind, name, timeslot, periodId };
         break;
       }
       case 'removeBlockedTimeslot': {

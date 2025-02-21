@@ -112,12 +112,34 @@
             <Completion kind={currently.selected.kind} name={currently.selected.name} />
           </div>
 
-          <div class="flex flex-row gap-2 text-[14px] font-medium text-[#545755]">
-            <Toggle
-              onChange={() => {
-                currently.setBlocking(!currently.blocking);
-              }}
-            /> Bloquear Períodos
+          <div class="flex flex-col gap-2">
+            {#if currently.selected.kind === 'teacher'}
+              {#each Object.keys(periods.byTeacher[currently.selected.name]) as periodId}
+                <div class="flex flex-row gap-2 text-[14px] font-medium text-[#545755]">
+                  <Toggle
+                    id={periodId}
+                    onChange={() => {
+                      currently.setBlocking(currently.blocking === periodId ? null : periodId);
+                    }}
+                  /> Bloquear períodos {periodId}
+                </div>
+              {/each}
+            {:else if currently.selected.kind === 'grade'}
+              <div class="flex flex-row gap-2 text-[14px] font-medium text-[#545755]">
+                <Toggle
+                  id={grades.byName[currently.selected.name].periodId ?? 'holi'}
+                  onChange={() => {
+                    if (currently.selected && currently.selected.kind === 'grade') {
+                      currently.setBlocking(
+                        currently.blocking === grades.byName[currently.selected.name].periodId
+                          ? null
+                          : grades.byName[currently.selected.name].periodId
+                      );
+                    }
+                  }}
+                /> Bloquear período
+              </div>
+            {/if}
           </div>
         </div>
         <Scheduler />

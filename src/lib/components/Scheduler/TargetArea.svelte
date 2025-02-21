@@ -11,6 +11,7 @@
     grades
   } from '$lib/state/Timetable.svelte';
   import currently from '$lib/state/currently.svelte';
+  import BlockingBlock from './BlockingBlock.svelte';
   import LessonCard from './LessonCard.svelte';
   import TargetPeriodBlock from './TargetPeriodBlock.svelte';
 
@@ -41,12 +42,20 @@
       const { gradeName } = currently.dragging;
       return grades.byName[gradeName].periodId;
     }
+
+    if (currently.blocking) {
+      return currently.blocking;
+    }
   });
 
   const period = $derived.by(() => {
     if (currently.dragging) {
       const { gradeName } = currently.dragging;
       return periods.byGrade[gradeName];
+    }
+
+    if (currently.blocking) {
+      return periods.byId[currently.blocking];
     }
   });
 
@@ -81,8 +90,11 @@
       const { kind, name } = currently.selected;
       if (kind === 'teacher') {
         blockedTimeslots.byTeacher[name]?.forEach((blockedTimeslot) => {
-          const [day, block] = blockedTimeslot.timeslot;
-          blockedTimeslotsByTimeslot[day][block] = blockedTimeslot;
+          const { periodId: blockedPeriodId, timeslot } = blockedTimeslot;
+          if (blockedPeriodId === periodId) {
+            const [day, block] = timeslot;
+            blockedTimeslotsByTimeslot[day][block] = blockedTimeslot;
+          }
         });
       }
 
@@ -124,7 +136,16 @@
           class="absolute p-1"
           style={`width: ${bWidth}px; left: ${bWidth * (day - 1)}px; top: ${getPercentage(blockStart)}%; bottom: ${100 - getPercentage(blockEnd)}%;`}
         >
-          {#if assignedLessonsByTimeslot[day][block] === null && currently.blocking === false && assignedBlockedTimeslots[day][block] === undefined}
+          {#if currently.blocking}
+            <BlockingBlock
+              {day}
+              {block}
+              {blockStart}
+              {blockEnd}
+              {periodId}
+              blockedTimeslot={assignedBlockedTimeslots[day][block]}
+            />
+          {:else if assignedLessonsByTimeslot[day][block] === null && assignedBlockedTimeslots[day][block] === undefined}
             <TargetPeriodBlock {day} {block} {blockStart} {blockEnd} />
           {/if}
         </div>

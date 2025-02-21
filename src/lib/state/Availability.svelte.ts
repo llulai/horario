@@ -145,7 +145,8 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
     } = blockedTimeslot;
 
     if (kind === 'teacher') {
-      //availabilityByTeacher[name][day][block] = false;
+      const { periodId } = blockedTimeslot;
+      availabilityByTeacher[name][periodId][day][block] = false;
     }
     if (kind === 'grade') {
       availabilityByGrade[name][day][block] = false;
