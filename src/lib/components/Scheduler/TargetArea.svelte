@@ -15,24 +15,21 @@
   import LessonCard from './LessonCard.svelte';
   import TargetPeriodBlock from './TargetPeriodBlock.svelte';
 
-  const { start, end }: { start: Time; end: Time } = $props();
+  const {
+    kind,
+    name,
+    start,
+    end
+  }: { kind: 'teacher' | 'grade'; name: string; start: Time; end: Time } = $props();
 
   const days = [1, 2, 3, 4, 5] as const;
 
   const selectedLessons: Lesson[] = $derived.by(() => {
     // get the lessons of the selected teacher or grade
-
-    if (currently.selected) {
-      const { kind, name } = currently.selected;
-      if (kind === 'teacher') {
-        return lessons.byTeacher[name];
-      }
-      if (kind === 'grade') {
-        return lessons.byGrade[name];
-      }
+    if (kind === 'teacher') {
+      return lessons.byTeacher[name];
     }
-
-    return [];
+    return lessons.byGrade[name];
   });
 
   const assignedLessons: Lesson[] = $derived(selectedLessons.filter((lesson) => lesson.timeslot));
@@ -123,13 +120,15 @@
       100
     );
   };
+
+  const attributeToShow = $derived(kind === 'teacher' ? 'gradeName' : 'subjectName');
 </script>
 
 <div
   class="relative col-start-1 col-end-2 row-start-1 row-end-2 mb-[39px] ml-[112px] mr-8 mt-[68px]"
   bind:clientWidth={containerWidth}
 >
-  {#if period}
+  {#if period && periodId}
     {#each Object.values(period) as [block, blockStart, blockEnd]}
       {#each days as day}
         <div
@@ -159,7 +158,7 @@
         class="absolute p-1"
         style={`width: ${bWidth}px; left: ${bWidth * (lesson.timeslot[0] - 1)}px; top: ${getPercentage(lesson.timeslot[2])}%; bottom: ${100 - getPercentage(lesson.timeslot[3])}%;`}
       >
-        <LessonCard {lesson} />
+        <LessonCard {lesson} {attributeToShow} />
       </div>
     {/if}
   {/each}

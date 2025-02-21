@@ -1,15 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
+import type { RawGrade, RawSubject, RawWeeklyLoad } from './WeeklyLoad.svelte';
 
 ////////////////
 //// TYPES ////
 //////////////
-
-export type WeeklyLoad = {
-  gradeName: string;
-  teacherName: string;
-  subjectName: string;
-  weeklyLoad: number;
-};
 
 export const DAY = {
   MONDAY: 1,
@@ -47,7 +41,7 @@ type PeriodEvent = {
 };
 
 type Periods = {
-  byId: () => Record<string, Period>;
+  byId: Record<string, Period>;
   byTeacher: Record<string, Record<string, Period>>;
   byGrade: Record<string, Period | null>;
   dispatch: (event: PeriodEvent) => void;
@@ -56,7 +50,6 @@ type Periods = {
 const Speriods = $state<Record<string, Period>>({});
 
 export const periods: Periods = {
-  // @ts-expect-error: no idea what's the problem
   get byId() {
     return Speriods;
   },
@@ -196,24 +189,12 @@ export const lessons: Lessons = {
 type Subject = {
   name: string;
   code: string;
-  color: string;
 };
-
-type SubjectEvent =
-  | {
-      event: 'setColor';
-      payload: { name: string; color: string };
-    }
-  | {
-      event: 'setCode';
-      payload: { name: string; code: string };
-    };
 
 type Subjects = {
   list: Subject[];
   byName: Record<string, Subject>;
   byCode: Record<string, Subject>;
-  dispatch: (event: SubjectEvent) => void;
 };
 
 let Ssubjects = $state<Record<string, Subject>>({});
@@ -229,15 +210,6 @@ export const subjects: Subjects = {
 
   get byCode() {
     return Object.fromEntries(Object.values(Ssubjects).map((subject) => [subject.code, subject]));
-  },
-  dispatch(dispatchedEvent: SubjectEvent) {
-    if (dispatchedEvent.event === 'setColor') {
-      const { name, color } = dispatchedEvent.payload;
-      Ssubjects[name].color = color;
-    } else if (dispatchedEvent.event === 'setCode') {
-      const { name, code } = dispatchedEvent.payload;
-      Ssubjects[name].code = code;
-    }
   }
 };
 
@@ -248,29 +220,13 @@ export const subjects: Subjects = {
 type Grade = {
   name: string;
   code: string;
-  color: string;
-  periodId: string | null;
+  periodId: string;
 };
-
-type GradeEvent =
-  | {
-      event: 'setColor';
-      payload: { name: string; color: string };
-    }
-  | {
-      event: 'setCode';
-      payload: { name: string; code: string };
-    }
-  | {
-      event: 'setPeriod';
-      payload: { name: string; periodId: string };
-    };
 
 type Grades = {
   list: Grade[];
   byName: Record<string, Grade>;
   byCode: Record<string, Grade>;
-  dispatch: (event: GradeEvent) => void;
 };
 
 let Sgrades = $state<Record<string, Grade>>({});
@@ -284,17 +240,6 @@ export const grades: Grades = {
   },
   get byCode() {
     return Object.fromEntries(Object.values(Sgrades).map((grade) => [grade.code, grade]));
-  },
-  dispatch(dispatchedEvent: GradeEvent) {
-    const { event, payload } = dispatchedEvent;
-
-    switch (event) {
-      case 'setPeriod': {
-        const { name, periodId } = payload;
-        Sgrades[name].periodId = periodId;
-        break;
-      }
-    }
   }
 };
 
@@ -396,21 +341,32 @@ export const blockedTimeslots: BlockedTimeslots = {
 //////////////////
 
 export type TimeTable = {
-  fromWeeklyLoad: (weeklyLoads: WeeklyLoad[], maxBlocks: Block) => void;
+  fromWeeklyLoad: (
+    weeklyLoads: RawWeeklyLoad[],
+    grades: RawGrade[],
+    subjects: RawSubject[]
+  ) => void;
   // loadFromJSON: (json: string) => void;
   // saveToJSON: () => string;
 };
 
 // this function loads the timetable from a list of weekly loads
-const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[]) => {
-  // clear existing state
-  //Slessons = {};
-  //Ssubjects = {};
-  //Sgrades = {};
-
+const fromWeeklyLoad = (
+  weeklyLoads: RawWeeklyLoad[],
+  grades: RawGrade[],
+  subjects: RawSubject[]
+) => {
   const newLessons: Record<string, Lesson> = {};
-  const newGrades: Record<string, Grade> = {};
-  const newSubjects: Record<string, Subject> = {};
+
+  if (
+    grades.filter((grade) => grade.code === undefined || grade.periodId === undefined).length > 0
+  ) {
+    throw new Error('All grades must have a code and periodId');
+  }
+
+  if (subjects.filter((subject) => subject.code === undefined).length > 0) {
+    throw new Error('All subjects must have a code');
+  }
 
   weeklyLoads.forEach((load) => {
     // create lessons
@@ -424,26 +380,13 @@ const fromWeeklyLoad = (weeklyLoads: WeeklyLoad[]) => {
         timeslot: null
       };
     }
-
-    // update grades
-    if (!(load.gradeName in newGrades)) {
-      newGrades[load.gradeName] = {
-        name: load.gradeName,
-        code: '',
-        color: '',
-        periodId: null
-      };
-    }
-
-    // update subjects
-    if (!(load.subjectName in newSubjects)) {
-      newSubjects[load.subjectName] = { name: load.subjectName, code: load.subjectName, color: '' };
-    }
   });
 
   Slessons = newLessons;
-  Sgrades = newGrades;
-  Ssubjects = newSubjects;
+  // @ts-expect-error: all grades will have a code and periodId
+  Sgrades = Object.fromEntries(grades.map((grade) => [grade.name, grade]));
+  // @ts-expect-error: all subjects will have a code
+  Ssubjects = Object.fromEntries(subjects.map((subject) => [subject.name, subject]));
   SblockedTimeslots = {};
 };
 

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { timetable, type Block, type WeeklyLoad } from '$lib/state/Timetable.svelte';
+  import { type Block } from '$lib/state/Timetable.svelte';
+  import type { RawWeeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
@@ -14,7 +15,7 @@
   let timetableName = $state<string>('');
   let timetableBlocks = $state<Block>(7);
   let timetableFile = $state<File | null>(null);
-  let weeklyLoad = $state<WeeklyLoad[] | null>(null);
+  let weeklyLoad = $state<RawWeeklyLoad[] | null>(null);
 
   const loadWorkload = async () => {
     if (timetableFile) {
@@ -57,9 +58,6 @@
       class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
       onclick={() => {
         step = 'addSubjectCodes';
-        if (weeklyLoad) {
-          timetable.fromWeeklyLoad(weeklyLoad, timetableBlocks);
-        }
       }}>Comenzar con el horario</button
     >
   </div>

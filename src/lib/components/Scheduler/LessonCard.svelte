@@ -3,7 +3,10 @@
   import { type Lesson, subjects } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
 
-  const { lesson }: { lesson: Lesson } = $props();
+  const {
+    lesson,
+    attributeToShow
+  }: { lesson: Lesson; attributeToShow: 'gradeName' | 'subjectName' } = $props();
 
   let isDragging = $state(false);
 
@@ -17,9 +20,9 @@
     isDragging = false;
   };
 
-  const attributeToShow = $derived(
-    currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
-  );
+  // const attributeToShow = $derived(
+  //   currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
+  // );
   const bg = $derived(getColor(lesson[attributeToShow], attributeToShow));
 </script>
 

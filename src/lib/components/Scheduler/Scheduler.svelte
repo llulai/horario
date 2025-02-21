@@ -1,9 +1,10 @@
 <script lang="ts">
-  import currently from '$lib/state/currently.svelte';
   import { periods, type Period, Time } from '$lib/state/Timetable.svelte';
   import AvailableLessons from './AvailableLessons.svelte';
   import Calendar from './Calendar.svelte';
   import TargetArea from './TargetArea.svelte';
+
+  const { kind, name }: { kind: 'teacher' | 'grade'; name: string } = $props();
 
   const getFirstAndLastBlocks = (period: Period): [Time, Time] => {
     const startTime = getMinTime(...Object.values(period).map((block) => block[1]));
@@ -24,26 +25,23 @@
   };
 
   const time: [Time, Time] | undefined = $derived.by(() => {
-    if (currently.selected) {
-      const { name, kind } = currently.selected;
-      if (kind === 'grade') {
-        const period = periods.byGrade[name];
-        if (period) {
-          return getFirstAndLastBlocks(period);
-        }
-      } else if (kind === 'teacher') {
-        const startTime = getMinTime(
-          ...Object.values(periods.byTeacher[name])
-            .map(getFirstAndLastBlocks)
-            .map((block) => block[0])
-        );
-        const endTime = getMaxTime(
-          ...Object.values(periods.byTeacher[name])
-            .map(getFirstAndLastBlocks)
-            .map((block) => block[1])
-        );
-        return [startTime, endTime];
+    if (kind === 'grade') {
+      const period = periods.byGrade[name];
+      if (period) {
+        return getFirstAndLastBlocks(period);
       }
+    } else if (kind === 'teacher') {
+      const startTime = getMinTime(
+        ...Object.values(periods.byTeacher[name])
+          .map(getFirstAndLastBlocks)
+          .map((block) => block[0])
+      );
+      const endTime = getMaxTime(
+        ...Object.values(periods.byTeacher[name])
+          .map(getFirstAndLastBlocks)
+          .map((block) => block[1])
+      );
+      return [startTime, endTime];
     }
   });
 
@@ -59,9 +57,9 @@
 
 <div class="grid grid-cols-1 grid-rows-[min-content_1fr]">
   <Calendar {start} {end} />
-  <TargetArea {start} {end} />
+  <TargetArea {kind} {name} {start} {end} />
 
   <div class="row-start-2">
-    <AvailableLessons />
+    <AvailableLessons {kind} {name} />
   </div>
 </div>

@@ -4,11 +4,11 @@
   import { subjects, type Lesson } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
 
-  const { lesson }: { lesson: Lesson } = $props();
+  const {
+    lesson,
+    attributeToShow
+  }: { lesson: Lesson; attributeToShow: 'gradeName' | 'subjectName' } = $props();
 
-  const attributeToShow = $derived(
-    currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName'
-  );
   const bg = $derived(getColor(lesson[attributeToShow], attributeToShow));
   let isDragging = $state(false);
 
@@ -28,19 +28,21 @@
       0
     )
   );
+
+  const lessonLabel = $derived(
+    attributeToShow === 'subjectName'
+      ? subjects.byName[lesson[attributeToShow]].code
+      : lesson[attributeToShow]
+  );
 </script>
 
-<!-- FIXME: create var for label -->
 <button
   draggable="true"
   ondragstart={handleDragStart}
   ondragend={handleDragEnd}
   class={`relative flex h-6 w-12 items-center justify-center rounded-[4px] text-[14px] font-semibold ${lesson.timeslot ? 'bg-[#EDF0EF] text-[#BABDBB]' : bg} ${isDragging ? 'opacity-60' : ''}`}
-  ><p>
-    {attributeToShow === 'subjectName'
-      ? subjects.byName[lesson[attributeToShow]].code
-      : lesson[attributeToShow]}
-  </p>
+>
+  <p>{lessonLabel}</p>
   {#if !lesson.timeslot}
     {#if availableOptions === 0}
       <div

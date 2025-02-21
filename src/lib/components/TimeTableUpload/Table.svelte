@@ -1,16 +1,16 @@
 <script lang="ts">
-  import type { WeeklyLoad } from '$lib/state/Timetable.svelte';
+  import type { RawWeeklyLoad } from '$lib/state/WeeklyLoad.svelte';
 
   const {
     weeklyLoad,
     by
   }: {
-    weeklyLoad: WeeklyLoad[];
+    weeklyLoad: RawWeeklyLoad[];
     by: 'subject' | 'teacher';
   } = $props();
 
   const getTableByTeacher = (
-    load: WeeklyLoad[]
+    load: RawWeeklyLoad[]
   ): Record<string, Record<string, number>> | never => {
     // assert each pair of teacher and grade is unique
     const teacherSubjectPairs = new Set<string>();
@@ -38,7 +38,7 @@
     return table;
   };
 
-  const getTableByGrade = (load: WeeklyLoad[]): Record<string, number> | never => {
+  const getTableByGrade = (load: RawWeeklyLoad[]): Record<string, number> | never => {
     const table: Record<string, number> = {};
 
     load.forEach((lesson) => {
@@ -54,7 +54,7 @@
   };
 
   const getTableBySubject = (
-    load: WeeklyLoad[]
+    load: RawWeeklyLoad[]
   ): Record<string, Record<string, number>> | never => {
     const table: Record<string, Record<string, number>> = {};
 
@@ -74,15 +74,15 @@
     return table;
   };
 
-  const getTeachers = (load: WeeklyLoad[]): Set<string> => {
+  const getTeachers = (load: RawWeeklyLoad[]): Set<string> => {
     return new Set(load.map((lesson) => lesson.teacherName));
   };
 
-  const getGrades = (load: WeeklyLoad[]): Set<string> => {
+  const getGrades = (load: RawWeeklyLoad[]): Set<string> => {
     return new Set(load.map((lesson) => lesson.gradeName));
   };
 
-  const getSubjects = (load: WeeklyLoad[]): Set<string> => {
+  const getSubjects = (load: RawWeeklyLoad[]): Set<string> => {
     return new Set(load.map((lesson) => lesson.subjectName));
   };
 
