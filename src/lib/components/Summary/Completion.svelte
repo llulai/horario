@@ -16,9 +16,8 @@
 
     return 0;
   });
-  const w = $derived(small ? 'w-6' : 'w-9');
 </script>
 
-<div class={`text-center text-[#6B7280] ${w} ${small ? 'text-[8px]' : 'text-[10px]'}`}>
+<div class={`${small ? 'text-[10px]' : 'text-[12px]'} text-center text-[#6B7280]`}>
   {formatCompletion(completionLevel)}
 </div>

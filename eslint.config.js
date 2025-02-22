@@ -6,6 +6,7 @@ import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
+import importPlugin from 'eslint-plugin-import';
 
 export default ts.config(
   includeIgnoreFile(gitignorePath),
@@ -15,6 +16,13 @@ export default ts.config(
   prettier,
   ...svelte.configs['flat/prettier'],
   {
+    plugins: {
+      import: importPlugin
+    },
+    rules: {
+      'import/no-relative-parent-imports': 'error', // Enforce absolute imports
+      'import/no-relative-packages': 'error'
+    },
     languageOptions: {
       globals: {
         ...globals.browser,

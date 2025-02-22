@@ -13,7 +13,7 @@ export type Selected =
 let selected = $state<Selected | null>(null);
 let dragging = $state<Lesson | null>(null);
 let hovering = $state<Lesson | null>(null);
-let blocking = $state<boolean>(false);
+let blocking = $state<string | null>(null);
 
 const currently = {
   get selected() {
@@ -68,8 +68,8 @@ const currently = {
     hovering = currentlyDragging;
   },
 
-  setBlocking(currentlyBlocking: boolean) {
-    blocking = currentlyBlocking;
+  setBlocking(periodId: string | null) {
+    blocking = periodId;
   }
 };
 

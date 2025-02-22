@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { subjects } from '$lib/state/Timetable.svelte';
+  import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
 </script>
 
 <table class="table-auto border-collapse border text-center">
@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each subjects.list as subject}
+    {#each weeklyLoad.subjects as subject}
       <tr>
         <th class="border px-6 text-left">{subject.name}</th>
         <td
@@ -21,8 +21,8 @@
             maxlength="3"
             onchange={(event) => {
               const target = event.target as HTMLInputElement;
-              subjects.dispatch({
-                event: 'setCode',
+              weeklyLoad.dispatch({
+                event: 'setSubjectCode',
                 payload: { name: subject.name, code: target.value }
               });
             }}

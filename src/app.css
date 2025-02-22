@@ -1,3 +1,51 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/fonts/open-sauce/black.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/fonts/open-sauce/extrabold.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/open-sauce/bold.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/fonts/open-sauce/semibold.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/open-sauce/medium.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/open-sauce/regular.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sauce';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/open-sauce/light.ttf');
+}

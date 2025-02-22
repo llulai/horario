@@ -15,9 +15,14 @@
     return 0;
   });
 
-  const right = $derived((1 - completionLevel) * 200);
+  let width = $state(0);
+
+  const right = $derived((1 - completionLevel) * width);
 </script>
 
-<div class="relative flex h-1 flex-grow overflow-hidden rounded-full bg-[#E2E8F1]">
-  <div class="absolute inset-y-0 left-0 bg-[#6B7280]" style={`right: ${right}px;`}></div>
+<div
+  class="relative flex h-2 flex-grow overflow-hidden rounded-full bg-[#D1F0DF]"
+  bind:clientWidth={width}
+>
+  <div class="absolute inset-y-0 left-0 bg-[#008744]" style={`right: ${right}px;`}></div>
 </div>

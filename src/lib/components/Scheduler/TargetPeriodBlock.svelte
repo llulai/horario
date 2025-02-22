@@ -1,14 +1,19 @@
 <script lang="ts">
   import availability from '$lib/state/Availability.svelte';
   import currently from '$lib/state/currently.svelte';
-  import { lessons, type Day, type Period } from '$lib/state/Timetable.svelte';
+  import { lessons, type Day, type Block, type Time } from '$lib/state/Timetable.svelte';
   import { getColor } from '$lib/utils/colors';
+  import PlusCircle from '$lib/components/Icons/PlusCircle.svelte';
   const {
     day,
-    period
+    block,
+    blockStart: start,
+    blockEnd: end
   }: {
     day: Day;
-    period: Period;
+    block: Block;
+    blockStart: Time;
+    blockEnd: Time;
   } = $props();
 
   let isHover = $state(false);
@@ -16,7 +21,7 @@
   const isAvailable: undefined | boolean = $derived.by(() => {
     if (currently.dragging) {
       if (currently.dragging.id in availability.byLesson) {
-        return availability.byLesson[currently.dragging.id][day][period];
+        return availability.byLesson[currently.dragging.id][day][block];
       }
     }
   });
@@ -25,7 +30,7 @@
     if (isAvailable && isHover && currently.dragging) {
       const attributeForColor =
         currently.selected && currently.selected.kind === 'teacher' ? 'gradeName' : 'subjectName';
-      return `${getColor(currently.dragging[attributeForColor], attributeForColor)} opacity-20`;
+      return `${getColor(currently.dragging[attributeForColor], attributeForColor)} border border-dashed`;
     }
     switch (isAvailable) {
       case true:
@@ -33,7 +38,7 @@
       case false:
         return 'bg-red-100';
       default:
-        return 'bg-[#F3F4F6]';
+        return 'bg-[#F5F5F5]';
     }
   });
 
@@ -56,7 +61,7 @@
       const lessonId = currently.dragging.id;
       lessons.dispatch({
         event: 'setLessonTimeslot',
-        payload: { lessonId, timeslot: [day, period] }
+        payload: { lessonId, timeslot: [day, block, start, end] }
       });
     }
   };
@@ -64,9 +69,15 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class={`h-10 rounded-[2px] ${bg}`}
+  class={`group flex h-full w-full flex-row items-center justify-center rounded-[4px] ${bg}`}
   ondrop={handleOnDrop}
   ondragenter={handleDragEnter}
   ondragleave={handleDragLeave}
   ondragover={handleDragOver}
-></div>
+>
+  {#if isHover && isAvailable}
+    <div class="pointer-events-none">
+      <PlusCircle h={24} w={24} />
+    </div>
+  {/if}
+</div>

@@ -11,5 +11,9 @@
   height={h}
   width={w}
 >
-  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+  <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+  />
 </svg>

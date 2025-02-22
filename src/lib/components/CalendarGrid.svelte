@@ -5,11 +5,11 @@
 
   const grid = $derived(
     small
-      ? 'grid grid-cols-[repeat(auto-fit,minmax(164px,1fr))]'
-      : 'grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))]'
+      ? 'grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))]'
+      : 'grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))]'
   );
 </script>
 
-<div class={`${grid} w-full gap-y-6 bg-[#E2E8F1] p-10`}>
+<div class={`${grid} w-full gap-8`}>
   {@render children()}
 </div>

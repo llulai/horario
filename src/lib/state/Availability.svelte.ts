@@ -1,65 +1,90 @@
 import {
   type Day,
   type Lesson,
-  type Period,
+  type Block,
   type BlockedTimeslot,
   lessons,
-  timetable,
-  blockedTimeslots
+  blockedTimeslots,
+  periods,
+  type Period,
+  Time
 } from '$lib/state/Timetable.svelte';
 
-export type ByTimeslot<T> = Record<Day, Partial<Record<Period, T>>>;
+export type ByTimeslot<T> = Record<Day, Partial<Record<Block, T>>>;
 
 ////////////////
 //// UTILS ////
 //////////////
 
-const getFullDayAvailability = <T>(maxPeriods: Period, fillWith: T): Partial<Record<Period, T>> => {
+const getFullDayAvailability = <T>(maxBlocks: Block, fillWith: T): Partial<Record<Block, T>> => {
   return Object.fromEntries(
-    Array(maxPeriods)
+    Array(maxBlocks)
       .fill(fillWith)
-      .map((t, idx) => [(idx + 1) as Period, t])
+      .map((t, idx) => [(idx + 1) as Block, t])
   );
 };
 
-export const getByTimeslot = <T>(maxPeriods: Period, fillWith: T): ByTimeslot<T> => {
+export const getByTimeslot = <T>(maxBlocks: Block, fillWith: T): ByTimeslot<T> => {
   return {
-    1: getFullDayAvailability(maxPeriods, fillWith),
-    2: getFullDayAvailability(maxPeriods, fillWith),
-    3: getFullDayAvailability(maxPeriods, fillWith),
-    4: getFullDayAvailability(maxPeriods, fillWith),
-    5: getFullDayAvailability(maxPeriods, fillWith)
+    1: getFullDayAvailability(maxBlocks, fillWith),
+    2: getFullDayAvailability(maxBlocks, fillWith),
+    3: getFullDayAvailability(maxBlocks, fillWith),
+    4: getFullDayAvailability(maxBlocks, fillWith),
+    5: getFullDayAvailability(maxBlocks, fillWith)
   };
 };
 
-const combineAvailability = (
-  availabilityA: ByTimeslot<boolean>,
-  availabilityB: ByTimeslot<boolean>,
-  maxPeriods: Period
+const blocksOverlap = (startA: Time, endA: Time, startB: Time, endB: Time): boolean => {
+  // return true if the blocks overlap
+  if (startA >= startB && startA < endB) return true;
+  if (endA > startB && endA <= endB) return true;
+  if (startB >= startA && startB < endA) return true;
+  if (endB > startA && endB <= endA) return true;
+  return false;
+};
+
+const getOverlappingBlocks = (period: Period, start: Time, end: Time): Block[] => {
+  return Object.values(period)
+    .filter((block) => {
+      const [blockStart, blockEnd] = [block[1], block[2]];
+      return blocksOverlap(start, end, blockStart, blockEnd);
+    })
+    .map((block) => block[0] as Block);
+};
+
+const getLessonAvailability = (
+  gradeAvailability: ByTimeslot<boolean>,
+  gradePeriod: Period,
+  teacherAvailability: Record<string, ByTimeslot<boolean>>,
+  teacherPeriods: Record<string, Period>
 ): ByTimeslot<boolean> => {
-  const combinedAvailability: ByTimeslot<boolean> = {
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
+  const lessonAvailability = {
+    1: { ...gradeAvailability[1] },
+    2: { ...gradeAvailability[2] },
+    3: { ...gradeAvailability[3] },
+    4: { ...gradeAvailability[4] },
+    5: { ...gradeAvailability[5] }
   };
 
-  const days = [1, 2, 3, 4, 5] as const;
+  Object.entries(teacherAvailability).forEach(([periodId, availabilityByTimeslot]) => {
+    Object.entries(availabilityByTimeslot).forEach(([day, dailyAvailability]) => {
+      Object.entries(dailyAvailability).forEach(([block, isAvailable]) => {
+        if (isAvailable === false) {
+          const currentPeriodBlock = teacherPeriods[periodId][block as unknown as Block];
+          if (currentPeriodBlock) {
+            const [start, end] = [currentPeriodBlock[1], currentPeriodBlock[2]];
+            const overlappingBlocks = getOverlappingBlocks(gradePeriod, start, end);
 
-  days.forEach((day) => {
-    const availabilityADay = availabilityA[day];
-    const availabilityBDay = availabilityB[day];
-
-    if (availabilityADay && availabilityBDay) {
-      for (let p = 1; p <= maxPeriods; p++) {
-        combinedAvailability[day][p as Period] =
-          availabilityADay[p as Period] && availabilityBDay[p as Period];
-      }
-    }
+            overlappingBlocks.forEach((overlappingBlock) => {
+              lessonAvailability[day as unknown as Day][overlappingBlock] = false;
+            });
+          }
+        }
+      });
+    });
   });
 
-  return combinedAvailability;
+  return lessonAvailability;
 };
 
 ///////////////////////
@@ -67,7 +92,7 @@ const combineAvailability = (
 /////////////////////
 
 type Availability = {
-  byTeacher: Record<string, ByTimeslot<boolean>>;
+  byTeacher: Record<string, Record<string, ByTimeslot<boolean>>>;
   byGrade: Record<string, ByTimeslot<boolean>>;
   byLesson: Record<string, ByTimeslot<boolean>>;
 };
@@ -77,25 +102,37 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
 >(() => {
   const availabilityByTeacher: Availability['byTeacher'] = {};
   const teachers = Object.keys(lessons.byTeacher);
-  const availabilityByGrade: Availability['byTeacher'] = {};
-  const grades = Object.keys(lessons.byGrade);
+  const availabilityByGrade: Availability['byGrade'] = {};
+  const gradeNames = Object.keys(lessons.byGrade);
   const availabilityByLesson: Availability['byLesson'] = {};
 
   teachers.forEach((teacher) => {
-    availabilityByTeacher[teacher] = getByTimeslot(timetable.maxPeriods, true);
+    availabilityByTeacher[teacher] = {};
+    Object.entries(periods.byTeacher[teacher]).forEach(([periodId, period]) => {
+      const maxBlock = Object.keys(period).length as Block;
+      availabilityByTeacher[teacher][periodId] = getByTimeslot(maxBlock, true);
+    });
   });
 
-  grades.forEach((grade) => {
-    availabilityByGrade[grade] = getByTimeslot(timetable.maxPeriods, true);
+  gradeNames.forEach((grade) => {
+    const maxBlock = Object.keys(periods.byGrade[grade] ?? {}).length as Block;
+    availabilityByGrade[grade] = getByTimeslot(maxBlock, true);
   });
 
   // mark assigned lessons as unavailable timeslots for teachers and classes
   lessons.list.forEach((lesson: Lesson) => {
     const { teacherName, gradeName, timeslot } = lesson;
     if (timeslot) {
-      const [day, period] = timeslot;
-      availabilityByTeacher[teacherName][day][period] = false;
-      availabilityByGrade[gradeName][day][period] = false;
+      const [day, block] = timeslot;
+      availabilityByGrade[gradeName][day][block] = false;
+
+      //block the availabiliy on each period of the teacher that overlaps with the timeslot
+      Object.entries(periods.byTeacher[teacherName]).forEach(([periodId, period]) => {
+        const overlappingBlocks = getOverlappingBlocks(period, timeslot[2], timeslot[3]);
+        overlappingBlocks.forEach((overlappingBlock) => {
+          availabilityByTeacher[teacherName][periodId][day][overlappingBlock] = false;
+        });
+      });
     }
   });
 
@@ -104,23 +141,26 @@ const [byTeacher, byGrade, byLesson] = $derived.by<
     const {
       kind,
       name,
-      timeslot: [day, period]
+      timeslot: [day, block]
     } = blockedTimeslot;
 
     if (kind === 'teacher') {
-      availabilityByTeacher[name][day][period] = false;
+      const { periodId } = blockedTimeslot;
+      availabilityByTeacher[name][periodId][day][block] = false;
     }
     if (kind === 'grade') {
-      availabilityByGrade[name][day][period] = false;
+      availabilityByGrade[name][day][block] = false;
     }
   });
 
   lessons.list.forEach((lesson: Lesson) => {
     const { id, teacherName, gradeName } = lesson;
-    availabilityByLesson[id] = combineAvailability(
-      availabilityByTeacher[teacherName],
+
+    availabilityByLesson[id] = getLessonAvailability(
       availabilityByGrade[gradeName],
-      timetable.maxPeriods
+      periods.byGrade[gradeName] ?? { 1: [1, new Time(8, 0), new Time(8, 45)] },
+      availabilityByTeacher[teacherName],
+      periods.byTeacher[teacherName]
     );
   });
 

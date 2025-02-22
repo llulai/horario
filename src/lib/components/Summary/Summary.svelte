@@ -1,11 +1,14 @@
 <script lang="ts">
-  import CalendarGrid from '../CalendarGrid.svelte';
+  import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import currently from '$lib/state/currently.svelte';
   import {
+    type Block,
     type BlockedTimeslot,
     blockedTimeslots,
+    grades,
     type Lesson,
-    lessons
+    lessons,
+    periods
   } from '$lib/state/Timetable.svelte';
   import Calendar from './Calendar.svelte';
 
@@ -50,19 +53,34 @@
   });
 </script>
 
-<div class="flex flex-col items-center gap-6 overflow-scroll bg-[#E2E8F1] px-3 pt-6">
+<div class="flex flex-col items-center gap-6 overflow-scroll bg-[#F0F5F2] px-3 pt-6">
   {#if currently.selected && currently.selected.kind !== 'category'}
-    <h2 class="text-[24px]">{currently.selected?.kind === 'teacher' ? 'Cursos' : 'Profesores'}</h2>
-
     <CalendarGrid small={true}>
       {#each Object.entries(summarySchedules) as [name, lessons]}
-        <Calendar
-          kind={currently.selected.kind === 'teacher' ? 'grade' : 'teacher'}
-          {name}
-          {lessons}
-          blockedTimeslots={summaryBlockedTimeslots[name]}
-          small
-        />
+        {#if currently.selected.kind === 'grade'}
+          {#each Object.entries(periods.byTeacher[name]) as [periodId, period]}
+            <Calendar
+              kind={'teacher'}
+              {name}
+              periodName={Object.keys(periods.byTeacher[name]).length > 1 ? periodId : ''}
+              lessons={lessons.filter(
+                (lesson) => grades.byName[lesson.gradeName].periodId == periodId
+              )}
+              blockedTimeslots={summaryBlockedTimeslots[name]}
+              maxBlocks={Object.keys(period).length as Block}
+              small
+            />
+          {/each}
+        {:else if currently.selected.kind === 'teacher'}
+          <Calendar
+            kind={'grade'}
+            {name}
+            {lessons}
+            blockedTimeslots={summaryBlockedTimeslots[name]}
+            maxBlocks={Object.keys(periods.byGrade[name] ?? { 1: 1 }).length as Block}
+            small
+          />
+        {/if}
       {/each}
     </CalendarGrid>
   {/if}

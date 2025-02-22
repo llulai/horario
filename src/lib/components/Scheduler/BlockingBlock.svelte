@@ -4,14 +4,25 @@
     blockedTimeslots,
     type BlockedTimeslot,
     type Day,
-    type Period
+    type Block,
+    type Time
   } from '$lib/state/Timetable.svelte';
 
   let {
     blockedTimeslot,
     day,
-    period
-  }: { blockedTimeslot?: BlockedTimeslot; day: Day; period: Period } = $props();
+    block,
+    blockStart: start,
+    blockEnd: end,
+    periodId
+  }: {
+    blockedTimeslot?: BlockedTimeslot;
+    day: Day;
+    block: Block;
+    blockStart: Time;
+    blockEnd: Time;
+    periodId: string;
+  } = $props();
 
   const bg = $derived(blockedTimeslot ? 'bg-white border-2 border-[#6B7280]' : 'bg-[#F3F4F6]');
 
@@ -24,12 +35,12 @@
     } else if (currently.selected && currently.selected.kind !== 'category') {
       blockedTimeslots.dispatch({
         event: 'addBlockedTimeslot',
-        payload: { ...currently.selected, timeslot: [day, period] }
+        payload: { ...currently.selected, timeslot: [day, block, start, end], periodId }
       });
     }
   };
 </script>
 
-<button class={`h-10 rounded-[2px] ${bg}`} onclick={handleOnClick}
+<button class={`h-full w-full rounded-[2px] ${bg}`} onclick={handleOnClick}
   >{blockedTimeslot ? 'bloqueado' : ''}</button
 >

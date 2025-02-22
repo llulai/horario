@@ -1,10 +1,5 @@
 <script lang="ts">
-  let {
-    timetableName = $bindable(),
-    timetablePeriods = $bindable(),
-    loadWorkload,
-    handleFileChange
-  } = $props();
+  let { timetableName = $bindable(), loadWorkload, handleFileChange } = $props();
   let fileInput: HTMLInputElement;
 </script>
 
@@ -37,20 +32,6 @@
           class="hidden"
           type="file"
           onchange={handleFileChange}
-        />
-      </div>
-
-      <!-- periods -->
-      <div class="flex flex-col gap-2">
-        <label for="timetable-periods" class="text-[12px] text-[#6B7280]">Número de períodos</label>
-        <input
-          class="w-16 rounded-[2px] border-[#6B7280] px-3 py-1 text-[12px] font-medium placeholder:text-[#6B7280]/50"
-          id="timetable-periods"
-          bind:value={timetablePeriods}
-          type="number"
-          min="1"
-          max="10"
-          step="1"
         />
       </div>
     </div>
