@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { timetable } from '$lib/state/Timetable.svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import GradesTable from './GradesTable.svelte';
+  import PeriodManager from './PeriodManager.svelte';
   import SubjectsTable from './SubjectsTable.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
   type Step =
+    | 'addPeriod'
     | 'uploadWeeklyLoad'
     | 'checkLoadBySubject'
     | 'checkLoadByTeacher'
@@ -37,8 +40,6 @@
     const target = event.target as HTMLInputElement;
     timetableFile = target.files?.[0] || null;
   };
-
-  $inspect(weeklyLoad.subjects);
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
@@ -84,14 +85,25 @@
   <form
     onsubmit={(event) => {
       event.preventDefault();
+      timetable.fromWeeklyLoad(weeklyLoad.weeklyLoads, weeklyLoad.grades, weeklyLoad.subjects);
     }}
     class="flex flex-col items-center gap-6"
   >
-    <GradesTable />
+    <GradesTable
+      openPeriodManager={() => {
+        step = 'addPeriod';
+      }}
+    />
     <button
       type="submit"
       class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
       >Comenzar con el horario</button
     >
   </form>
+{:else if step === 'addPeriod'}
+  <PeriodManager
+    closePeriodManager={() => {
+      step = 'addGradesBlocks';
+    }}
+  />
 {/if}
