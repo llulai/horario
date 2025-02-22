@@ -5,6 +5,8 @@ export type RawWeeklyLoad = {
   weeklyLoad: number;
 };
 
+let SrawWeeklyLoads = $state<RawWeeklyLoad[]>([]);
+
 ///////////////////
 //// SUBJECTS ////
 /////////////////
@@ -53,6 +55,7 @@ type WeeklyLoadEvent =
 export type WeeklyLoad = {
   subjects: RawSubject[];
   grades: RawGrade[];
+  weeklyLoads: RawWeeklyLoad[];
   subjectsReady: boolean;
   gradesReady: boolean;
   dispatch: (event: WeeklyLoadEvent) => void;
@@ -79,9 +82,13 @@ const fromWeeklyLoad = (weeklyLoads: RawWeeklyLoad[]) => {
 
   Sgrades = newGrades;
   Ssubjects = newSubjects;
+  SrawWeeklyLoads = weeklyLoads;
 };
 
 export const weeklyLoad: WeeklyLoad = {
+  get weeklyLoads() {
+    return SrawWeeklyLoads;
+  },
   get subjects() {
     return Object.values(Ssubjects);
   },

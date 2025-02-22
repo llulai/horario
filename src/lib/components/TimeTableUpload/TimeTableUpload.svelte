@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { type Block } from '$lib/state/Timetable.svelte';
-  import type { RawWeeklyLoad } from '$lib/state/WeeklyLoad.svelte';
+  import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
+  import GradesTable from './GradesTable.svelte';
+  import SubjectsTable from './SubjectsTable.svelte';
   import Table from './Table.svelte';
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
@@ -13,9 +14,7 @@
   let step = $state<Step>('uploadWeeklyLoad');
 
   let timetableName = $state<string>('');
-  let timetableBlocks = $state<Block>(7);
   let timetableFile = $state<File | null>(null);
-  let weeklyLoad = $state<RawWeeklyLoad[] | null>(null);
 
   const loadWorkload = async () => {
     if (timetableFile) {
@@ -24,9 +23,12 @@
         body: timetableFile
       })
         .then((response) => response.json())
-        .then((newWeeklyLoad) => {
+        .then((rawWeeklyLoad) => {
           step = 'checkLoadBySubject';
-          weeklyLoad = newWeeklyLoad;
+          weeklyLoad.dispatch({
+            event: 'loadWeeklyLoad',
+            payload: { weeeklyLoads: rawWeeklyLoad }
+          });
         });
     }
   };
@@ -35,13 +37,15 @@
     const target = event.target as HTMLInputElement;
     timetableFile = target.files?.[0] || null;
   };
+
+  $inspect(weeklyLoad.subjects);
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
-  <WeeklyLoadUpload bind:timetableName bind:timetableBlocks {loadWorkload} {handleFileChange} />
-{:else if step === 'checkLoadBySubject' && weeklyLoad}
+  <WeeklyLoadUpload bind:timetableName {loadWorkload} {handleFileChange} />
+{:else if step === 'checkLoadBySubject' && weeklyLoad.weeklyLoads}
   <div class="flex flex-col items-center gap-6">
-    <Table {weeklyLoad} by="subject" />
+    <Table weeklyLoad={weeklyLoad.weeklyLoads} by="subject" />
     <button
       type="button"
       class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
@@ -50,9 +54,9 @@
       }}>Comenzar con el horario</button
     >
   </div>
-{:else if step === 'checkLoadByTeacher' && weeklyLoad}
+{:else if step === 'checkLoadByTeacher' && weeklyLoad.weeklyLoads}
   <div class="flex flex-col items-center gap-6">
-    <Table {weeklyLoad} by="teacher" />
+    <Table weeklyLoad={weeklyLoad.weeklyLoads} by="teacher" />
     <button
       type="button"
       class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
@@ -61,4 +65,33 @@
       }}>Comenzar con el horario</button
     >
   </div>
+{:else if step === 'addSubjectCodes' && weeklyLoad.subjects}
+  <form
+    onsubmit={(event) => {
+      event.preventDefault();
+      step = 'addGradesBlocks';
+    }}
+    class="flex flex-col items-center gap-6"
+  >
+    <SubjectsTable />
+    <button
+      type="submit"
+      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
+      >Comenzar con el horario</button
+    >
+  </form>
+{:else if step === 'addGradesBlocks' && weeklyLoad.grades}
+  <form
+    onsubmit={(event) => {
+      event.preventDefault();
+    }}
+    class="flex flex-col items-center gap-6"
+  >
+    <GradesTable />
+    <button
+      type="submit"
+      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
+      >Comenzar con el horario</button
+    >
+  </form>
 {/if}
