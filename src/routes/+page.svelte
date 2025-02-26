@@ -15,7 +15,32 @@
   const handleScroll = (event) => {
     scrollTop = event.target.scrollTop;
   };
+
+  const title = 'La hora del horario';
+  const description =
+    'Haz el horario de tu colegio en tiempo récord. Descubre cómo funciona la plataforma y pruébalo gratis.';
+  const thumbnail = '/img/platform-preview.png';
+  const pageUrl = 'https://lahoradelhorario.cl';
 </script>
+
+<svelte:head>
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={thumbnail} />
+  <meta property="og:url" content={pageUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  {#if thumbnail}
+    <meta property="og:image" content={thumbnail} />
+  {/if}
+  <meta property="og:site_name" content="La hora del horario" />
+  <meta property="og:type" content="website" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={pageUrl} />
+  <meta name="thumbnail" content={thumbnail} />
+</svelte:head>
 
 <div
   class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden pt-8"
