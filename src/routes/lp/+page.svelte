@@ -1,8 +1,26 @@
 <script>
+  import AcademicCap from '$lib/components/Icons/AcademicCap.svelte';
+  import ArrowDownTray from '$lib/components/Icons/ArrowDownTray.svelte';
+  import ArrowRight from '$lib/components/Icons/ArrowRight.svelte';
+  import Calendar from '$lib/components/Icons/Calendar.svelte';
+  import CheckCircle from '$lib/components/Icons/CheckCircle.svelte';
+  import ListBullet from '$lib/components/Icons/ListBullet.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
+  import User from '$lib/components/Icons/User.svelte';
+  import { fly } from 'svelte/transition';
+
+  let scrollTop = $state(0);
+
+  // @ts-expect-error: type event
+  const handleScroll = (event) => {
+    scrollTop = event.target.scrollTop;
+  };
 </script>
 
-<div class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden pt-8">
+<div
+  class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden pt-8"
+  onscroll={handleScroll}
+>
   <!-- hero -->
 
   <div
@@ -10,15 +28,13 @@
   >
     <div class="flex w-full flex-row items-start justify-center gap-32">
       <h1 class="w-[725px] text-[72px] font-bold leading-[110%] text-[#1D1F1E]">
-        Haz el horario de tu colegio en menos de una tarde
+        Haz el horario de tu colegio en tiempo récord
       </h1>
       <div class="flex w-[320px] flex-col items-start gap-6 pt-24">
         <p class="text-[16px] font-normal text-[#737573]">
-          La hora del horario te ayuda a crear tu horario de clases en tiempo récord
+          La hora del horario te ayuda a crear tu horario de clases como nunca antes.
         </p>
-        <button class="rounded-[8px] bg-[#1D1F1E] px-16 py-4 text-[16px] text-white"
-          >Registrate</button
-        >
+        <button class="btn-primary btn-medium !px-16">Regístrate</button>
       </div>
     </div>
     <img src="/img/platform-preview.png" alt="preview de la plataforma" class="w-[1182px]" />
@@ -60,7 +76,7 @@
   </div>
 
   <!-- chilean case -->
-  <div class="flex flex-col items-center gap-14 py-32">
+  <div class="flex flex-col items-center gap-14 bg-[#ECE0FF] py-32">
     <div class="flex w-[646px] flex-col items-center gap-4">
       <h2 class="text-center text-[56px] font-bold leading-[120%] text-[#1D1F1E]">
         Adaptado a Colegios de Chile
@@ -111,7 +127,7 @@
   </div>
 
   <!-- pricing -->
-  <div class="flex flex-col gap-14 bg-[#ECE0FF] pb-60 pt-32">
+  <div class="flex flex-col gap-14 py-32">
     <div class="flex flex-col items-center gap-4">
       <h2 class="text-[56px] font-bold text-[#1D1F1E]">Tarifas y planes</h2>
       <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
@@ -119,39 +135,167 @@
       </p>
     </div>
 
-    <div class="mx-auto flex flex-row items-center gap-8">
-      <div class="flex h-[580px] w-[672px] flex-col gap-10 rounded-[12px] bg-white pl-16 pt-16">
-        <div class="flex flex-col gap-4">
-          <h3 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Plan $50.000</h3>
-          <h4 class="text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Haz tu propio horario</h4>
+    <div class="grid grid-cols-2 grid-rows-1 items-center gap-8">
+      <div
+        class="ml-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-16"
+      >
+        <div
+          class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#DDC7FF] text-[16px] font-bold text-[#1D1F1E]"
+        >
+          1
+        </div>
+        <div class="w-[400px] text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
+          Haz tu propio horario
+        </div>
+        <div class="flex w-[400px] flex-col gap-6">
+          <div class="itemst-start flex flex-row gap-2 text-[#BE94FF]">
+            <div class="size-6">
+              <CheckCircle h={24} w={24} />
+            </div>
+            <div class="text-[#737573]">
+              <b>Control total:</b> Crea y personaliza tu horario de clases de forma autónoma.
+            </div>
+          </div>
+
+          <div class="itemst-start flex flex-row gap-2 text-[#BE94FF]">
+            <div class="size-6">
+              <CheckCircle h={24} w={24} />
+            </div>
+            <div class="text-[#737573]">
+              <b>Límite:</b> Permite configurar un horario con hasta 20 cursos.
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 text-[40px] font-bold text-[#1D1F1E]">50.000 CLP</div>
+      </div>
+
+      <div
+        class="mr-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-16"
+      >
+        <div
+          class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#A1F7A2] text-[16px] font-bold text-[#1D1F1E]"
+        >
+          2
+        </div>
+        <div class="w-[400px] text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
+          Hacemos tu horario por ti
+        </div>
+        <div class="flex w-[400px] flex-col gap-6">
+          <div class="flex flex-row items-start gap-2 text-[#4FD152]">
+            <div class="size-6">
+              <CheckCircle h={24} w={24} />
+            </div>
+            <div class="text-[#737573]">
+              <b>Nosotros nos encargamos:</b> Solo necesitas enviarnos tu carga semanal y nosotros elaboramos
+              el horario para ti.
+            </div>
+          </div>
+        </div>
+        <div class="mt-auto text-[40px] font-bold text-[#1D1F1E]">100.000 CLP</div>
+      </div>
+    </div>
+
+    <div class="mx-auto mt-3 flex flex-col items-center gap-5">
+      <h2 class="text-center text-[40px] font-bold leading-[110%] text-[#1D1F1E]">
+        ¿Cómo empezar?
+      </h2>
+      <h3 class="w-[450px] text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+        Prueba sin compromiso: Accede a nuestra plataforma de test sin necesidad de crear cuenta.
+      </h3>
+      <a href="/test" class="btn-primary btn-medium">
+        <p>Ir a la plataforma de test</p>
+        <ArrowRight h={24} w={24} />
+      </a>
+    </div>
+  </div>
+
+  <!-- weekly load -->
+
+  <div class="flex flex-col items-center gap-20 bg-[#FBFAF9] py-32">
+    <!-- title -->
+    <div class="flex flex-col items-center gap-4">
+      <h2 class="text-center text-[56px] font-bold text-[#1D1F1E]">Cómo crear tu carga semanal</h2>
+      <p class="text-[16px] font-normal text-[#737573]">
+        Utiliza el archivo de ejemplo que te proporcionamos como base. Este archivo consta de cuatro
+        columnas esenciales:
+      </p>
+      <a href="/downloads/carga horaria.xlsx" download class="btn-secondary btn-medium">
+        <ArrowDownTray />
+        <p>Descargar archivo de ejemplo</p>
+      </a>
+    </div>
+
+    <!-- columns -->
+    <div class="flex flex-row gap-14">
+      <!-- teacher -->
+      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+        <div
+          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0F7FF] text-[#1D1F1E]"
+        >
+          <User />
         </div>
 
-        <div class="flex w-[380px] flex-col gap-4">
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            <b>Control total:</b> Crea y personaliza tu horario de clases de forma autónoma.
-          </p>
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            <b>Límite:</b> Permite configurar un horario con hasta 10 cursos.
+        <div class="flex w-[240px] flex-col items-center gap-4">
+          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Profesor</p>
+          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+            Nombre del docente encargado
           </p>
         </div>
       </div>
 
-      <div class="flex h-[580px] w-[672px] flex-col gap-10 rounded-[12px] bg-white pl-16 pt-16">
-        <div class="flex flex-col gap-4">
-          <h3 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Plan $100.000</h3>
-          <h4 class="text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Horario personalizado</h4>
+      <!-- grade -->
+      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+        <div
+          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#FFE0E0] text-[#1D1F1E]"
+        >
+          <AcademicCap />
         </div>
 
-        <div class="flex w-[480px] flex-col gap-4">
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            <b>Nosotros nos encargamos:</b> Solo necesitas enviarnos tu carga semanal y nosotros elaboramos
-            el horario para ti.
+        <div class="flex w-[240px] flex-col items-center gap-4">
+          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Curso</p>
+          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+            Curso o grado correspondiente
+          </p>
+        </div>
+      </div>
+
+      <!-- subject -->
+      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+        <div
+          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0FFEB] text-[#1D1F1E]"
+        >
+          <ListBullet />
+        </div>
+
+        <div class="flex w-[240px] flex-col items-center gap-4">
+          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Asignatura</p>
+          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+            Materia que se impartirá
+          </p>
+        </div>
+      </div>
+
+      <!-- weekly hours -->
+      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+        <div
+          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#ECE0FF] text-[#1D1F1E]"
+        >
+          <Calendar />
+        </div>
+
+        <div class="flex w-[240px] flex-col items-center gap-4">
+          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">
+            Horas Semanales
+          </p>
+          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+            Horas semanales por asignatura
           </p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <!-- nav bar -->
 <div
   class="fixed inset-x-0 top-0 flex h-16 flex-row items-center justify-between border-b border-[#E1E6E4] bg-white px-8"
@@ -163,8 +307,13 @@
     </h1>
   </div>
 
-  <button
-    class="rounded-[8px] border border-[#1D1F1E] px-8 py-2 text-[14px] font-semibold text-[#1D1F1E]"
-    >Login</button
-  >
+  <div class="flex flex-row gap-4">
+    {#if scrollTop > 360}
+      <button class="btn-primary btn-small" transition:fly={{ y: 20, duration: 200 }}
+        >Regístrate</button
+      >
+    {/if}
+
+    <a href="/test" class="btn-secondary btn-small">Plataforma de test</a>
+  </div>
 </div>

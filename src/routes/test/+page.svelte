@@ -9,7 +9,6 @@
     type Block,
     timetable
   } from '$lib/state/Timetable.svelte';
-  import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';
   import currently from '$lib/state/currently.svelte';
@@ -95,66 +94,68 @@
     weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Química', code: 'QUI' } });
     weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Pensamiento', code: 'PEN' } });
 
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºA', code: '6A' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºB', code: '6B' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºA', code: '7A' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºB', code: '7B' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºA', code: '8A' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºB', code: '8B' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MA', code: '1MA' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MB', code: '1MB' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '2M', code: '2M' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '3M', code: '3M' } });
-  weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '4M', code: '4M' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºA', code: '6A' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºB', code: '6B' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºA', code: '7A' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºB', code: '7B' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºA', code: '8A' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºB', code: '8B' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MA', code: '1MA' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MB', code: '1MB' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '2M', code: '2M' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '3M', code: '3M' } });
+    weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '4M', code: '4M' } });
 
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '6ºA', periodId: afternoonPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '6ºB', periodId: afternoonPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '7ºA', periodId: afternoonPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '7ºB', periodId: afternoonPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '8ºA', periodId: afternoonPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '8ºB', periodId: afternoonPeriodId }
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '6ºA', periodId: afternoonPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '6ºB', periodId: afternoonPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '7ºA', periodId: afternoonPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '7ºB', periodId: afternoonPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '8ºA', periodId: afternoonPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '8ºB', periodId: afternoonPeriodId }
+    });
+
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '1MA', periodId: morningPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '1MB', periodId: morningPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '2M', periodId: morningPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '3M', periodId: morningPeriodId }
+    });
+    weeklyLoad.dispatch({
+      event: 'setGradePeriod',
+      payload: { name: '4M', periodId: morningPeriodId }
+    });
+
+    timetable.fromWeeklyLoad(data, weeklyLoad.grades, weeklyLoad.subjects);
   });
 
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '1MA', periodId: morningPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '1MB', periodId: morningPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '2M', periodId: morningPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '3M', periodId: morningPeriodId }
-  });
-  weeklyLoad.dispatch({
-    event: 'setGradePeriod',
-    payload: { name: '4M', periodId: morningPeriodId }
-  });
-
-  timetable.fromWeeklyLoad(data, weeklyLoad.grades, weeklyLoad.subjects);
-  });
+  currently.selectCourses();
 </script>
 
 {#if lessons.list.length > 0}
@@ -249,6 +250,4 @@
       </div>
     {/if}
   {/if}
-{:else}
-  <TimeTableUpload />
 {/if}
