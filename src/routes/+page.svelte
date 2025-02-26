@@ -167,7 +167,7 @@
               <CheckCircle h={24} w={24} />
             </div>
             <div class="text-[#737573]">
-              <b>Límite:</b> Permite configurar un horario con hasta 20 cursos.
+              <b>Límite:</b> Permite configurar un horario con hasta 15 cursos.
             </div>
           </div>
         </div>
