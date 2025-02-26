@@ -171,7 +171,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-3 text-[40px] font-bold text-[#1D1F1E]">50.000 CLP</div>
+        <div class="mt-3 text-[40px] font-bold text-[#1D1F1E]">Gratis</div>
       </div>
 
       <div
