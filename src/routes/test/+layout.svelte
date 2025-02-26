@@ -11,7 +11,7 @@
 <div
   class="flex h-16 flex-row items-center justify-between border-b border-[#E1E6E4] bg-white px-8"
 >
-  <a href="/lp" class="flex flex-row gap-[10px]">
+  <a href="/" class="flex flex-row gap-[10px]">
     <Logo h={30} w={31} />
     <div class="flex items-center justify-center text-[18px] font-bold text-[#1D1F1E]">
       La Hora del Horario
