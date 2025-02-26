@@ -49,3 +49,19 @@
   font-weight: 300;
   src: url('/fonts/open-sauce/light.ttf');
 }
+
+.btn-primary {
+  @apply flex flex-row items-center gap-2 rounded-[8px] bg-[#1D1F1E] px-4 font-semibold text-white hover:bg-[#494D4B] active:bg-[#616663] disabled:bg-[#C6CCC9];
+}
+
+.btn-secondary {
+  @apply flex flex-row items-center gap-2 rounded-[8px] border border-[#1D1F1E] px-4 font-semibold text-[#1D1F1E] hover:border-[#494D4B] hover:text-[#494D4B] active:border-[#616663] active:text-[#616663] disabled:border-[#C6CCC9] disabled:text-[#C6CCC9];
+}
+
+.btn-small {
+  @apply h-10 text-[14px];
+}
+
+.btn-medium {
+  @apply h-14 text-[16px];
+}

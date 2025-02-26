@@ -7,6 +7,8 @@
     type Block,
     type Time
   } from '$lib/state/Timetable.svelte';
+  import classNames from 'classnames';
+  import LockClosed from '../Icons/LockClosed.svelte';
 
   let {
     blockedTimeslot,
@@ -24,8 +26,6 @@
     periodId: string;
   } = $props();
 
-  const bg = $derived(blockedTimeslot ? 'bg-white border-2 border-[#6B7280]' : 'bg-[#F3F4F6]');
-
   const handleOnClick = () => {
     if (blockedTimeslot) {
       blockedTimeslots.dispatch({
@@ -41,6 +41,30 @@
   };
 </script>
 
-<button class={`h-full w-full rounded-[2px] ${bg}`} onclick={handleOnClick}
-  >{blockedTimeslot ? 'bloqueado' : ''}</button
+<button
+  class={classNames(
+    'group flex h-full w-full flex-row items-center justify-center gap-2 rounded-[4px] border-dashed hover:border',
+    { 'border-[#E50000] bg-[#FFEBEB] text-[#E50000]': blockedTimeslot },
+    { 'border-[#545755] bg-[#F3F4F6] hover:text-[#545755]': !blockedTimeslot }
+  )}
+  onclick={handleOnClick}
 >
+  {#if blockedTimeslot}
+    <div class="flex-shrink-0">
+      <LockClosed />
+    </div>
+    <p class="w-min flex-shrink text-left text-[12px] font-semibold group-hover:hidden">
+      Horario Bloqueado
+    </p>
+    <p class="hidden w-min flex-shrink text-left text-[12px] font-semibold group-hover:block">
+      Desbloquear
+    </p>
+  {:else}
+    <div class="hidden flex-shrink-0 group-hover:block">
+      <LockClosed />
+    </div>
+    <p class="hidden w-min flex-shrink text-left text-[12px] font-semibold group-hover:block">
+      Bloquear Horario
+    </p>
+  {/if}
+</button>
