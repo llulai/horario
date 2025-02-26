@@ -34,7 +34,12 @@
         <p class="text-[16px] font-normal text-[#737573]">
           La hora del horario te ayuda a crear tu horario de clases como nunca antes.
         </p>
-        <button class="btn-primary btn-medium !px-16">Regístrate</button>
+        <a
+          href="https://tally.so/r/nGQgBQ"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary btn-medium !px-16">Regístrate</a
+        >
       </div>
     </div>
     <img src="/img/platform-preview.png" alt="preview de la plataforma" class="w-[1182px]" />
@@ -309,8 +314,12 @@
 
   <div class="flex flex-row gap-4">
     {#if scrollTop > 360}
-      <button class="btn-primary btn-small" transition:fly={{ y: 20, duration: 200 }}
-        >Regístrate</button
+      <a
+        href="https://tally.so/r/nGQgBQ"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary btn-small"
+        transition:fly={{ y: 20, duration: 200 }}>Regístrate</a
       >
     {/if}
 
