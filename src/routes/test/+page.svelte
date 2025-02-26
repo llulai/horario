@@ -4,7 +4,7 @@
     grades,
     lessons,
     periods,
-    type Block,
+    type Block
   } from '$lib/state/Timetable.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
   import Summary from '$lib/components/Summary/Summary.svelte';

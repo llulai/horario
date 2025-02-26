@@ -1,17 +1,10 @@
 <script lang="ts">
-  import {
-    periods,
-    Time,
-    type Period,
-    timetable
-  } from '$lib/state/Timetable.svelte';
+  import { periods, Time, type Period, timetable } from '$lib/state/Timetable.svelte';
   import currently from '$lib/state/currently.svelte';
   import { onMount } from 'svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import '/src/app.css';
   let { children } = $props();
-
-
 
   const afternoonPeriodId = 'tarde';
 
