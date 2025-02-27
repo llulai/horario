@@ -260,8 +260,10 @@
   <div class="flex flex-col items-center gap-20 bg-[#FBFAF9] py-32">
     <!-- title -->
     <div class="flex w-[680px] flex-col items-center gap-4 text-center">
-      <h2 class="text-center text-[56px] font-bold text-[#1D1F1E]">Cómo crear tu carga semanal</h2>
-      <p class="text-[16px] font-normal text-[#737573]">
+      <h2 class="text-center text-[56px] font-bold leading-[120%] text-[#1D1F1E]">
+        Cómo crear tu carga semanal
+      </h2>
+      <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
         Utiliza el archivo de ejemplo que te proporcionamos como base. Este archivo consta de cuatro
         columnas esenciales:
       </p>
