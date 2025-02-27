@@ -23,36 +23,36 @@
   import Completion from '$lib/components/Scheduler/Completion.svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
 
-  const morningPeriodId = 'mañana';
-  const afternoonPeriodId = 'tarde';
-  const morningPeriod: Period = {
-    1: [1, new Time(8, 0), new Time(8, 45)],
-    2: [2, new Time(8, 45), new Time(9, 30)],
-    3: [3, new Time(9, 45), new Time(10, 30)],
-    4: [4, new Time(10, 30), new Time(11, 15)],
-    5: [5, new Time(11, 30), new Time(12, 15)],
-    6: [6, new Time(12, 15), new Time(13, 0)],
-    7: [7, new Time(13, 0), new Time(13, 45)],
-    8: [8, new Time(13, 45), new Time(14, 30)]
-  };
-
-  const afternoonPeriod: Period = {
-    1: [1, new Time(14, 0), new Time(14, 45)],
-    2: [2, new Time(14, 45), new Time(15, 30)],
-    3: [3, new Time(15, 45), new Time(16, 30)],
-    4: [4, new Time(16, 30), new Time(17, 15)],
-    5: [5, new Time(17, 30), new Time(18, 15)],
-    6: [6, new Time(18, 15), new Time(19, 0)]
-  };
-
-  periods.dispatch({
-    event: 'addPeriod',
-    payload: { id: morningPeriodId, period: morningPeriod }
-  });
-  periods.dispatch({
-    event: 'addPeriod',
-    payload: { id: afternoonPeriodId, period: afternoonPeriod }
-  });
+  // const morningPeriodId = 'mañana';
+  // const afternoonPeriodId = 'tarde';
+  // const morningPeriod: Period = {
+  //   1: [1, new Time(8, 0), new Time(8, 45)],
+  //   2: [2, new Time(8, 45), new Time(9, 30)],
+  //   3: [3, new Time(9, 45), new Time(10, 30)],
+  //   4: [4, new Time(10, 30), new Time(11, 15)],
+  //   5: [5, new Time(11, 30), new Time(12, 15)],
+  //   6: [6, new Time(12, 15), new Time(13, 0)],
+  //   7: [7, new Time(13, 0), new Time(13, 45)],
+  //   8: [8, new Time(13, 45), new Time(14, 30)]
+  // };
+  //
+  // const afternoonPeriod: Period = {
+  //   1: [1, new Time(14, 0), new Time(14, 45)],
+  //   2: [2, new Time(14, 45), new Time(15, 30)],
+  //   3: [3, new Time(15, 45), new Time(16, 30)],
+  //   4: [4, new Time(16, 30), new Time(17, 15)],
+  //   5: [5, new Time(17, 30), new Time(18, 15)],
+  //   6: [6, new Time(18, 15), new Time(19, 0)]
+  // };
+  //
+  // periods.dispatch({
+  //   event: 'addPeriod',
+  //   payload: { id: morningPeriodId, period: morningPeriod }
+  // });
+  // periods.dispatch({
+  //   event: 'addPeriod',
+  //   payload: { id: afternoonPeriodId, period: afternoonPeriod }
+  // });
 
   onMount(async () => {
     const data = await fetch('/api/test-lessons').then((response) => response.json());

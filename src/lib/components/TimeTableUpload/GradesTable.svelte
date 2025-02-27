@@ -1,6 +1,7 @@
 <script lang="ts">
   import { periods } from '$lib/state/Timetable.svelte';
-  import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
+  import { weeklyLoad, type RawGrade } from '$lib/state/WeeklyLoad.svelte';
+  import Tooltip from '../Base/Tooltip.svelte';
 </script>
 
 <div class="flex w-[789px] flex-col gap-16">
@@ -34,21 +35,46 @@
         }}
       />
       <div class="flex-grow">
-        <select
-          onchange={(event) => {
-            const target = event.target as HTMLSelectElement;
-            weeklyLoad.dispatch({
-              event: 'setGradePeriod',
-              payload: { name: grade.name, periodId: target.value }
-            });
-          }}
-          placeholder="Elige un período"
-        >
-          <option value="">Elige una opción</option>
-          {#each Object.keys(periods.byId) as periodId}
-            <option value={periodId}>{periodId}</option>
-          {/each}
-        </select>
+        {#if Object.keys(periods.byId).length === 0}
+          <Tooltip>
+            {#snippet trigger()}
+              <p class="w-40">
+                Aún no has agregado ningún periodo. Comienza a agregar para verlos aquí.
+              </p>
+            {/snippet}
+            {#snippet content(grade: RawGrade)}
+              <select
+                disabled
+                onchange={(event) => {
+                  const target = event.target as HTMLSelectElement;
+                  weeklyLoad.dispatch({
+                    event: 'setGradePeriod',
+                    payload: { name: grade.name, periodId: target.value }
+                  });
+                }}
+                placeholder="Elige un período"
+              >
+                <option value="">Elige una opción</option>
+              </select>
+            {/snippet}
+          </Tooltip>
+        {:else}
+          <select
+            onchange={(event) => {
+              const target = event.target as HTMLSelectElement;
+              weeklyLoad.dispatch({
+                event: 'setGradePeriod',
+                payload: { name: grade.name, periodId: target.value }
+              });
+            }}
+            placeholder="Elige un período"
+          >
+            <option value="">Elige una opción</option>
+            {#each Object.keys(periods.byId) as periodId}
+              <option value={periodId}>{periodId}</option>
+            {/each}
+          </select>
+        {/if}
       </div>
     </div>
   {/each}
