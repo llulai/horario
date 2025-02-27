@@ -43,7 +43,7 @@
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
-  <WeeklyLoadUpload bind:timetableName {loadWorkload} {handleFileChange} />
+  <WeeklyLoadUpload bind:timetableName bind:timetableFile {loadWorkload} {handleFileChange} />
 {:else if step === 'checkLoadBySubject' && weeklyLoad.weeklyLoads}
   <div class="flex flex-col items-center gap-6">
     <Table weeklyLoad={weeklyLoad.weeklyLoads} by="subject" />

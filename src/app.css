@@ -65,3 +65,7 @@
 .btn-medium {
   @apply h-14 text-[16px];
 }
+
+input[type='text'] {
+  @apply h-[56px] rounded-lg border-[#A5A8A6] pl-4 pr-2 font-normal leading-[130%] text-[#1D1F1E] placeholder-[#A5A8A6] caret-[#008744] hover:border-[#616663] active:border-[#1D1F1E];
+}
