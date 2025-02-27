@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { RawWeeklyLoad } from '$lib/state/WeeklyLoad.svelte';
 
-  const {
+  let {
     weeklyLoad,
     by
   }: {
@@ -94,25 +94,34 @@
   const subjects = getSubjects(weeklyLoad);
 </script>
 
-<table class="table-auto border-collapse border text-center">
+<table class="border-collapse border text-center">
   <thead>
     <tr>
       <th></th>
       {#each grades as grade}
-        <th class="border">{grade}</th>
+        <th class="border bg-[#F7FAF8] text-[14px] font-bold leading-[130%] text-[#1D1F1E]"
+          >{grade}</th
+        >
       {/each}
-      <th>Total</th>
+      <th class="bg-[#F7FAF8] py-[10px] text-[14px] font-bold leading-[130%] text-[#1D1F1E]"
+        >Total</th
+      >
     </tr>
   </thead>
   <tbody>
     {#if by === 'teacher'}
       {#each teachers as teacher}
         <tr>
-          <th class="border px-6 text-left">{teacher}</th>
+          <th
+            class="border bg-[#F7FAF8] px-3 py-[10px] text-left text-[14px] font-bold leading-[130%] text-[#1D1F1E]"
+            >{teacher}</th
+          >
           {#each grades as grade}
-            <td class="border px-4">{tableByTeacher[teacher]?.[grade] ?? ''}</td>
+            <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
+              >{tableByTeacher[teacher]?.[grade] ?? ''}</td
+            >
           {/each}
-          <td class="border px-4"
+          <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
             >{Object.values(tableByTeacher[teacher]).reduce((acc, val) => acc + val, 0)}</td
           >
         </tr>
@@ -120,22 +129,32 @@
     {:else if by === 'subject'}
       {#each subjects as subject}
         <tr>
-          <th class="border px-6 text-left">{subject}</th>
+          <th
+            class="border bg-[#F7FAF8] px-3 py-[10px] text-left text-[14px] font-bold leading-[130%] text-[#1D1F1E]"
+            >{subject}</th
+          >
           {#each grades as grade}
-            <td class="border px-4">{tableBySubject[subject]?.[grade] ?? ''}</td>
+            <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
+              >{tableBySubject[subject]?.[grade] ?? ''}</td
+            >
           {/each}
-          <td class="border px-4"
+          <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
             >{Object.values(tableBySubject[subject]).reduce((acc, val) => acc + val, 0)}</td
           >
         </tr>
       {/each}
     {/if}
     <tr>
-      <th class="border px-6 text-left">Total</th>
+      <th
+        class="border bg-[#F7FAF8] px-3 py-[10px] text-left text-[14px] font-bold leading-[130%] text-[#1D1F1E]"
+        >Total</th
+      >
       {#each grades as grade}
-        <td class="border px-4">{tableByGrade[grade]}</td>
+        <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
+          >{tableByGrade[grade]}</td
+        >
       {/each}
-      <td class="border"
+      <td class="border px-4 text-[14px] font-normal leading-[130%] text-[#616663]"
         >{Object.values(tableByTeacher).reduce(
           (acc, teacher) => acc + Object.values(teacher).reduce((subAcc, val) => subAcc + val, 0),
           0

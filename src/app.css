@@ -69,3 +69,25 @@
 input[type='text'] {
   @apply h-[56px] rounded-lg border-[#A5A8A6] pl-4 pr-2 font-normal leading-[130%] text-[#1D1F1E] placeholder-[#A5A8A6] caret-[#008744] hover:border-[#616663] active:border-[#1D1F1E];
 }
+
+input[type='time'] {
+  @apply h-[56px] rounded-lg border-[#A5A8A6] pl-4 pr-2 font-normal leading-[130%] text-[#1D1F1E] placeholder-[#A5A8A6] caret-[#008744] hover:border-[#616663] active:border-[#1D1F1E];
+}
+
+select {
+  @apply h-[56px] rounded-lg border-[#A5A8A6] font-normal leading-[130%] text-[#A5A8A6] hover:border-[#616663] active:border-[#1D1F1E] disabled:border-[#C6CCC9] disabled:text-[#C6CCC9];
+}
+
+select option {
+  @apply text-[#A5A8A6];
+}
+
+select:has(option:checked:not([value])),
+select:has(option:checked:not([value=''])) {
+  @apply border-[#1D1F1E] text-[#1D1F1E];
+}
+
+select:has(option:checked:not([value])) option,
+select:has(option:checked:not([value=''])) option {
+  @apply border-[#1D1F1E] text-[#1D1F1E];
+}
