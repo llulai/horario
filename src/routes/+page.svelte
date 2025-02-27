@@ -80,7 +80,11 @@
           Arrastra y suelta las clases para asignarlas fácilmente a profesores y cursos.
         </p>
       </div>
-      <img src="/img/intuitive-interface.png" alt="interfaz intuitiva" class="w-[789px]" />
+      <img
+        src="/img/intuitive-interface.png"
+        alt="interfaz intuitiva"
+        class="w-[480px] xl:w-[789px]"
+      />
     </div>
 
     <div class="sticky top-0 flex flex-row items-center justify-center gap-[90px] py-16">
@@ -90,7 +94,11 @@
           Visualiza de forma automática cuáles horarios están disponibles y cuáles no.
         </p>
       </div>
-      <img src="/img/no-conflicts.png" alt="sin conflictos" class="w-[789px] translate-y-8" />
+      <img
+        src="/img/no-conflicts.png"
+        alt="sin conflictos"
+        class="w-[480px] translate-y-6 xl:w-[789px] xl:translate-y-8"
+      />
     </div>
 
     <div class="sticky top-0 flex flex-row items-center justify-center gap-[90px] py-16">
@@ -101,7 +109,11 @@
           rápidamente.
         </p>
       </div>
-      <img src="/img/progress-panel.png" alt="panel de progreso" class="w-[789px] translate-y-16" />
+      <img
+        src="/img/progress-panel.png"
+        alt="panel de progreso"
+        class="w-[480px] translate-y-12 xl:w-[789px] xl:translate-y-16"
+      />
     </div>
   </div>
 
@@ -167,17 +179,19 @@
 
     <div class="grid grid-cols-2 grid-rows-1 items-center gap-8">
       <div
-        class="ml-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-16"
+        class="ml-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
       >
         <div
           class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#DDC7FF] text-[16px] font-bold text-[#1D1F1E]"
         >
           1
         </div>
-        <div class="w-[400px] text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
+        <div
+          class="w-[300px] text-[40px] font-bold leading-[110%] text-[#1D1F1E] xl:w-[400px] xl:text-[48px]"
+        >
           Haz tu propio horario
         </div>
-        <div class="flex w-[400px] flex-col gap-6">
+        <div class="flex w-[300px] flex-col gap-6 xl:w-[400px]">
           <div class="itemst-start flex flex-row gap-2 text-[#BE94FF]">
             <div class="size-6">
               <CheckCircle h={24} w={24} />
@@ -200,17 +214,19 @@
       </div>
 
       <div
-        class="mr-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-16"
+        class="mr-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
       >
         <div
           class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#A1F7A2] text-[16px] font-bold text-[#1D1F1E]"
         >
           2
         </div>
-        <div class="w-[400px] text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
+        <div
+          class="w-[300px] text-[40px] font-bold leading-[110%] text-[#1D1F1E] xl:w-[400px] xl:text-[48px]"
+        >
           Hacemos tu horario por ti
         </div>
-        <div class="flex w-[400px] flex-col gap-6">
+        <div class="flex w-[300px] flex-col gap-6 xl:w-[400px]">
           <div class="flex flex-row items-start gap-2 text-[#4FD152]">
             <div class="size-6">
               <CheckCircle h={24} w={24} />
@@ -243,7 +259,7 @@
 
   <div class="flex flex-col items-center gap-20 bg-[#FBFAF9] py-32">
     <!-- title -->
-    <div class="flex flex-col items-center gap-4">
+    <div class="flex w-[680px] flex-col items-center gap-4 text-center">
       <h2 class="text-center text-[56px] font-bold text-[#1D1F1E]">Cómo crear tu carga semanal</h2>
       <p class="text-[16px] font-normal text-[#737573]">
         Utiliza el archivo de ejemplo que te proporcionamos como base. Este archivo consta de cuatro
@@ -256,70 +272,76 @@
     </div>
 
     <!-- columns -->
-    <div class="flex flex-row gap-14">
-      <!-- teacher -->
-      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
-        <div
-          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0F7FF] text-[#1D1F1E]"
-        >
-          <User />
+    <div class="flex flex-col gap-14 2xl:flex-row">
+      <div class="flex flex-row gap-14 2xl:contents">
+        <!-- teacher -->
+        <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+          <div
+            class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0F7FF] text-[#1D1F1E]"
+          >
+            <User />
+          </div>
+
+          <div class="flex w-[240px] flex-col items-center gap-4">
+            <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Profesor</p>
+            <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+              Nombre del docente encargado
+            </p>
+          </div>
         </div>
 
-        <div class="flex w-[240px] flex-col items-center gap-4">
-          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Profesor</p>
-          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
-            Nombre del docente encargado
-          </p>
-        </div>
-      </div>
+        <!-- grade -->
+        <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+          <div
+            class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#FFE0E0] text-[#1D1F1E]"
+          >
+            <AcademicCap />
+          </div>
 
-      <!-- grade -->
-      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
-        <div
-          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#FFE0E0] text-[#1D1F1E]"
-        >
-          <AcademicCap />
-        </div>
-
-        <div class="flex w-[240px] flex-col items-center gap-4">
-          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Curso</p>
-          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
-            Curso o grado correspondiente
-          </p>
-        </div>
-      </div>
-
-      <!-- subject -->
-      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
-        <div
-          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0FFEB] text-[#1D1F1E]"
-        >
-          <ListBullet />
-        </div>
-
-        <div class="flex w-[240px] flex-col items-center gap-4">
-          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Asignatura</p>
-          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
-            Materia que se impartirá
-          </p>
+          <div class="flex w-[240px] flex-col items-center gap-4">
+            <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">Curso</p>
+            <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+              Curso o grado correspondiente
+            </p>
+          </div>
         </div>
       </div>
 
-      <!-- weekly hours -->
-      <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
-        <div
-          class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#ECE0FF] text-[#1D1F1E]"
-        >
-          <Calendar />
+      <div class="flex flex-row gap-14 2xl:contents">
+        <!-- subject -->
+        <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+          <div
+            class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#E0FFEB] text-[#1D1F1E]"
+          >
+            <ListBullet />
+          </div>
+
+          <div class="flex w-[240px] flex-col items-center gap-4">
+            <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">
+              Asignatura
+            </p>
+            <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+              Materia que se impartirá
+            </p>
+          </div>
         </div>
 
-        <div class="flex w-[240px] flex-col items-center gap-4">
-          <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">
-            Horas Semanales
-          </p>
-          <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
-            Horas semanales por asignatura
-          </p>
+        <!-- weekly hours -->
+        <div class="flex flex-col items-center gap-10 rounded-xl border border-[#E1E6E4] p-10">
+          <div
+            class="flex size-14 flex-row items-center justify-center rounded-lg bg-[#ECE0FF] text-[#1D1F1E]"
+          >
+            <Calendar />
+          </div>
+
+          <div class="flex w-[240px] flex-col items-center gap-4">
+            <p class="text-center text-[32px] font-bold leading-[110%] text-[#1D1F1E]">
+              Horas Semanales
+            </p>
+            <p class="text-center text-[16px] font-normal leading-[140%] text-[#737573]">
+              Horas semanales por asignatura
+            </p>
+          </div>
         </div>
       </div>
     </div>
