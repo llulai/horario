@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type Block, type Period, periods, Time } from '$lib/state/Timetable.svelte';
-  import Minus from '../Icons/Minus.svelte';
-  import Plus from '../Icons/Plus.svelte';
+  import Minus from '$lib/components/Icons/Minus.svelte';
+  import Plus from '$lib/components/Icons/Plus.svelte';
 
   const { closePeriodManager }: { closePeriodManager: () => void } = $props();
 

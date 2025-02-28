@@ -1,4 +1,5 @@
 <script lang="ts">
+  import currently from '$lib/state/currently.svelte';
   import { timetable } from '$lib/state/Timetable.svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import GradesTable from './GradesTable.svelte';
@@ -14,7 +15,7 @@
     | 'addSubjectCodes'
     | 'addGradesBlocks';
 
-  let step = $state<Step>('addGradesBlocks');
+  let step = $state<Step>('uploadWeeklyLoad');
   let timetableName = $state<string>('');
   let timetableFile = $state<File | null>(null);
 
@@ -102,7 +103,13 @@
   <form
     onsubmit={(event) => {
       event.preventDefault();
-      timetable.fromWeeklyLoad(weeklyLoad.weeklyLoads, weeklyLoad.grades, weeklyLoad.subjects);
+      timetable.fromWeeklyLoad(
+        weeklyLoad.weeklyLoads,
+        weeklyLoad.grades,
+        weeklyLoad.subjects,
+        false
+      );
+      currently.selectCourses();
     }}
     class="grid grid-cols-[320px_1fr] items-start gap-40 px-8 py-14"
   >

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ArrowUpTray from '../Icons/ArrowUpTray.svelte';
-  import MagnifyingGlass from '../Icons/MagnifyingGlass.svelte';
-  import Trash from '../Icons/Trash.svelte';
+  import ArrowUpTray from '$lib/components/Icons/ArrowUpTray.svelte';
+  import MagnifyingGlass from '$lib/components/Icons/MagnifyingGlass.svelte';
+  import Trash from '$lib/components/Icons/Trash.svelte';
 
   let {
     timetableName = $bindable(),
@@ -9,7 +9,7 @@
     loadWorkload,
     handleFileChange
   } = $props();
-  let fileInput: HTMLInputElement;
+  let fileInput = $state<HTMLInputElement>();
 </script>
 
 <div class="absolute inset-x-0 bottom-0 top-10 grid grid-cols-[555px_1fr] p-8">
@@ -58,7 +58,7 @@
           type="button"
           class="btn-secondary btn-medium"
           onclick={() => {
-            fileInput.click();
+            fileInput?.click();
           }}
         >
           <MagnifyingGlass />

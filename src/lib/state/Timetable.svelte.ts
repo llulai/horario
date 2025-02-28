@@ -28,8 +28,15 @@ export class Time {
     return this.hour * 60 + this.minute;
   }
 }
+
+type DBTime = {
+  hour: number;
+  minute: number;
+};
 export type Period = Partial<Record<Block, readonly [block: Block, start: Time, end: Time]>>;
+export type DBPeriod = Partial<Record<Block, readonly [block: Block, start: DBTime, end: DBTime]>>;
 type Timeslot = readonly [day: Day, block: Block, start: Time, end: Time];
+type DBTimeslot = readonly [day: Day, block: Block, start: DBTime, end: DBTime];
 
 //////////////////
 //// PERIODS ////
@@ -47,7 +54,7 @@ type Periods = {
   dispatch: (event: PeriodEvent) => void;
 };
 
-const Speriods = $state<Record<string, Period>>({});
+let Speriods = $state<Record<string, Period>>({});
 
 export const periods: Periods = {
   get byId() {
@@ -106,6 +113,14 @@ export type Lesson = {
   gradeName: string;
   subjectName: string;
   timeslot: Timeslot | null;
+};
+
+type DBLesson = {
+  id: string;
+  teacherName: string;
+  gradeName: string;
+  subjectName: string;
+  timeslot: DBTimeslot | null;
 };
 
 type LessonEvent =
@@ -170,10 +185,12 @@ export const lessons: Lessons = {
     switch (event) {
       case 'setLessonTimeslot': {
         Slessons[payload.lessonId].timeslot = payload.timeslot;
+        saveToDB();
         break;
       }
       case 'removeLessonTimeslot': {
         Slessons[payload.lessonId].timeslot = null;
+        saveToDB();
         break;
       }
       default:
@@ -255,6 +272,14 @@ export type BlockedTimeslot = {
   periodId: string;
 };
 
+type DBBlockedTimeslot = {
+  id: string;
+  kind: 'grade' | 'teacher';
+  name: string;
+  timeslot: DBTimeslot;
+  periodId: string;
+};
+
 type BlockedTimeslotEvent =
   | {
       event: 'addBlockedTimeslot';
@@ -324,10 +349,12 @@ export const blockedTimeslots: BlockedTimeslots = {
         const id = uuidv4();
         const { name, kind, timeslot, periodId } = payload;
         SblockedTimeslots[id] = { id, kind, name, timeslot, periodId };
+        saveToDB();
         break;
       }
       case 'removeBlockedTimeslot': {
         delete SblockedTimeslots[payload.id];
+        saveToDB();
         break;
       }
       default:
@@ -340,22 +367,53 @@ export const blockedTimeslots: BlockedTimeslots = {
 //// TIMETABLE ////
 //////////////////
 
+let Stest = $state(true);
+
+const saveToDB = () => {
+  if (!Stest) {
+    console.warn('saving');
+    fetch('/api/timetable', {
+      method: 'POST',
+      body: JSON.stringify({
+        grades: Sgrades,
+        subjects: Ssubjects,
+        lessons: Slessons,
+        blockedTimeslots: SblockedTimeslots,
+        periods: Speriods
+      })
+    });
+  }
+};
+
 export type TimeTable = {
   fromWeeklyLoad: (
     weeklyLoads: RawWeeklyLoad[],
     grades: RawGrade[],
-    subjects: RawSubject[]
+    subjects: RawSubject[],
+    test: boolean
   ) => void;
-  // loadFromJSON: (json: string) => void;
-  // saveToJSON: () => string;
+  fromJSON: (data: {
+    grades: Record<string, Grade>;
+    subjects: Record<string, Subject>;
+    lessons: Record<string, DBLesson>;
+    blockedTimeslots: Record<string, DBBlockedTimeslot>;
+    periods: Record<
+      string,
+      Partial<
+        Record<Block, [Block, { hour: number; minute: number }, { hour: number; minute: number }]>
+      >
+    >;
+  }) => void;
 };
 
 // this function loads the timetable from a list of weekly loads
 const fromWeeklyLoad = (
   weeklyLoads: RawWeeklyLoad[],
   grades: RawGrade[],
-  subjects: RawSubject[]
+  subjects: RawSubject[],
+  test: boolean = true
 ) => {
+  console.warn('loading');
   const newLessons: Record<string, Lesson> = {};
 
   if (
@@ -388,8 +446,61 @@ const fromWeeklyLoad = (
   // @ts-expect-error: all subjects will have a code
   Ssubjects = Object.fromEntries(subjects.map((subject) => [subject.name, subject]));
   SblockedTimeslots = {};
+
+  if (!test) {
+    saveToDB();
+  }
 };
 
 export const timetable: TimeTable = {
-  fromWeeklyLoad
+  fromWeeklyLoad,
+  fromJSON({ grades, subjects, lessons, blockedTimeslots, periods }) {
+    const parsedPeriods: Record<string, Period> = {};
+
+    Object.entries(periods).forEach(([name, period]) => {
+      parsedPeriods[name] = {};
+      Object.values(period).forEach(([block, start, end]) => {
+        parsedPeriods[name][block] = [
+          block,
+          new Time(start.hour, start.minute),
+          new Time(end.hour, end.minute)
+        ];
+      });
+    });
+
+    const parsedLessons: Record<string, Lesson> = {};
+
+    Object.entries(lessons).forEach(([id, lesson]) => {
+      const { timeslot } = lesson;
+      const parsedTimeslot =
+        timeslot === null
+          ? null
+          : ([
+              timeslot[0],
+              timeslot[1],
+              new Time(timeslot[2].hour, timeslot[2].minute),
+              new Time(timeslot[3].hour, timeslot[3].minute)
+            ] as const);
+      parsedLessons[id] = { ...lesson, timeslot: parsedTimeslot };
+    });
+
+    const parsedBlockedTimeslots: Record<string, BlockedTimeslot> = {};
+    Object.entries(blockedTimeslots).forEach(([id, blockedTimeslot]) => {
+      const { timeslot } = blockedTimeslot;
+      const parsedTimeslot = [
+        timeslot[0],
+        timeslot[1],
+        new Time(timeslot[2].hour, timeslot[2].minute),
+        new Time(timeslot[3].hour, timeslot[3].minute)
+      ] as const;
+      parsedBlockedTimeslots[id] = { ...blockedTimeslot, timeslot: parsedTimeslot };
+    });
+
+    Slessons = parsedLessons;
+    Sgrades = grades;
+    Ssubjects = subjects;
+    SblockedTimeslots = parsedBlockedTimeslots;
+    Speriods = parsedPeriods;
+    Stest = false;
+  }
 };

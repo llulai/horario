@@ -22,7 +22,7 @@ test('fromWeeklyLoad function creates lessons and maps them correctly', () => {
     { name: 'LEN', code: 'LEN' }
   ];
 
-  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects);
+  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects, true);
 
   expect(Object.keys(lessons.list)).toHaveLength(15);
   expect(Object.keys(subjects.list)).toHaveLength(2);
@@ -38,7 +38,7 @@ test('timetable implements setLessonTimeslot correctly', () => {
 
   const rawSubjects = [{ name: 'MAT', code: 'MAT' }];
 
-  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects);
+  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects, true);
 
   const lessonId = lessons.list[0].id;
 
@@ -60,7 +60,7 @@ test('timetable implements removeLessonTimeslot correctly', () => {
 
   const rawSubjects = [{ name: 'MAT', code: 'MAT' }];
 
-  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects);
+  timetable.fromWeeklyLoad(weeklyLoads, rawGrades, rawSubjects, true);
 
   // send dispatch action
   const lessonId = lessons.list[0].id;

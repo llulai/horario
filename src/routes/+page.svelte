@@ -9,6 +9,8 @@
   import User from '$lib/components/Icons/User.svelte';
   import { fly } from 'svelte/transition';
 
+  let { data } = $props();
+
   let scrollTop = $state(0);
 
   // @ts-expect-error: type event
@@ -20,7 +22,7 @@
   const description =
     'Haz el horario de tu colegio en tiempo récord. Descubre cómo funciona la plataforma y pruébalo gratis.';
   const thumbnail = '/img/platform-preview.png';
-  const pageUrl = 'https://lahoradelhorario.cl';
+  const pageUrl = 'https://www.lahoradelhorario.cl';
 </script>
 
 <svelte:head>
@@ -372,6 +374,10 @@
       >
     {/if}
 
-    <a href="/test" class="btn-secondary btn-small">Plataforma de test</a>
+    {#if data.user}
+      <a href="/horario" data-sveltekit-reload class="btn-secondary btn-small">Plataforma</a>
+    {:else}
+      <a href="/test" class="btn-secondary btn-small">Plataforma de test</a>
+    {/if}
   </div>
 </div>

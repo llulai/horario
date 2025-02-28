@@ -8,7 +8,7 @@
     type Time
   } from '$lib/state/Timetable.svelte';
   import classNames from 'classnames';
-  import LockClosed from '../Icons/LockClosed.svelte';
+  import LockClosed from '$lib/components/Icons/LockClosed.svelte';
 
   let {
     blockedTimeslot,

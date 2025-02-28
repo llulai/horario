@@ -1,7 +1,7 @@
 <script lang="ts">
   import { periods } from '$lib/state/Timetable.svelte';
   import { weeklyLoad, type RawGrade } from '$lib/state/WeeklyLoad.svelte';
-  import Tooltip from '../Base/Tooltip.svelte';
+  import Tooltip from '$lib/components/Base/Tooltip.svelte';
 </script>
 
 <div class="flex w-[789px] flex-col gap-16">
