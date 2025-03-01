@@ -7,6 +7,7 @@
   import ListBullet from '$lib/components/Icons/ListBullet.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
   import User from '$lib/components/Icons/User.svelte';
+  import Features from '$lib/components/Landing/Features.svelte';
   import Hero from '$lib/components/Landing/Hero.svelte';
   import { fly } from 'svelte/transition';
 
@@ -55,50 +56,7 @@
 
   <!-- features -->
 
-  <div class="mx-8 w-full">
-    <div class="sticky top-0 flex flex-row items-center justify-center gap-[90px] py-16">
-      <div class="flex w-[390px] flex-col gap-4">
-        <h2 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Interfaz Intuitiva</h2>
-        <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-          Arrastra y suelta las clases para asignarlas fácilmente a profesores y cursos.
-        </p>
-      </div>
-      <img
-        src="/img/intuitive-interface.png"
-        alt="interfaz intuitiva"
-        class="w-[480px] xl:w-[789px]"
-      />
-    </div>
-
-    <div class="sticky top-0 flex flex-row items-center justify-center gap-[90px] py-16">
-      <div class="flex w-[390px] flex-col gap-4 bg-white">
-        <h2 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Sin conflictos</h2>
-        <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-          Visualiza de forma automática cuáles horarios están disponibles y cuáles no.
-        </p>
-      </div>
-      <img
-        src="/img/no-conflicts.png"
-        alt="sin conflictos"
-        class="w-[480px] translate-y-6 xl:w-[789px] xl:translate-y-8"
-      />
-    </div>
-
-    <div class="sticky top-0 flex flex-row items-center justify-center gap-[90px] py-16">
-      <div class="flex w-[390px] flex-col gap-4 bg-white">
-        <h2 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Panel de progreso</h2>
-        <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-          Te orientamos para que priorices la asignación de clases y completes tu horario
-          rápidamente.
-        </p>
-      </div>
-      <img
-        src="/img/progress-panel.png"
-        alt="panel de progreso"
-        class="w-[480px] translate-y-12 xl:w-[789px] xl:translate-y-16"
-      />
-    </div>
-  </div>
+  <Features />
 
   <!-- chilean case -->
   <div class="flex flex-col items-center gap-14 bg-[#ECE0FF] py-32">
