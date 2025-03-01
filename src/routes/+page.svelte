@@ -7,6 +7,7 @@
   import ListBullet from '$lib/components/Icons/ListBullet.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
   import User from '$lib/components/Icons/User.svelte';
+  import Hero from '$lib/components/Landing/Hero.svelte';
   import { fly } from 'svelte/transition';
 
   let { data } = $props();
@@ -45,32 +46,12 @@
 </svelte:head>
 
 <div
-  class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden pt-8"
+  class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden"
   onscroll={handleScroll}
 >
   <!-- hero -->
 
-  <div
-    class="mx-8 flex flex-col items-center gap-24 rounded-[32px] bg-[url(/img/background-hero.png)] bg-cover px-24 pt-24"
-  >
-    <div class="flex w-full flex-row items-start justify-center gap-32">
-      <h1 class="w-[725px] text-[72px] font-bold leading-[110%] text-[#1D1F1E]">
-        Haz el horario de tu colegio en tiempo récord
-      </h1>
-      <div class="flex w-[320px] flex-col items-start gap-6 pt-24">
-        <p class="text-[16px] font-normal text-[#737573]">
-          La hora del horario te ayuda a crear tu horario de clases como nunca antes.
-        </p>
-        <a
-          href="https://tally.so/r/nGQgBQ"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-primary btn-medium !px-16">Regístrate</a
-        >
-      </div>
-    </div>
-    <img src="/img/platform-preview.png" alt="preview de la plataforma" class="w-[1182px]" />
-  </div>
+  <Hero />
 
   <!-- features -->
 
@@ -354,7 +335,7 @@
 
 <!-- nav bar -->
 <div
-  class="fixed inset-x-0 top-0 flex h-16 flex-row items-center justify-between border-b border-[#E1E6E4] bg-white px-8"
+  class="fixed inset-x-0 top-0 flex h-16 flex-row items-center justify-between border-b border-[#E1E6E4] bg-white px-4 sm:px-8"
 >
   <div class="flex flex-row gap-[10px]">
     <Logo h={30} w={31} />
@@ -363,7 +344,7 @@
     </h1>
   </div>
 
-  <div class="flex flex-row gap-4">
+  <div class="hidden flex-row gap-4 sm:flex">
     {#if scrollTop > 360}
       <a
         href="https://tally.so/r/nGQgBQ"
