@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="lg-text-[40px] mt-auto text-[24px] font-bold text-[#1D1F1E]">100.000 CLP</div>
+      <div class="mt-auto text-[24px] font-bold text-[#1D1F1E] lg:text-[40px]">100.000 CLP</div>
     </div>
   </div>
 
