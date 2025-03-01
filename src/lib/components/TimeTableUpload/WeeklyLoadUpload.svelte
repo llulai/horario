@@ -4,12 +4,7 @@
   import Trash from '$lib/components/Icons/Trash.svelte';
   import ArrowDownTray from '$lib/components/Icons/ArrowDownTray.svelte';
 
-  let {
-    timetableName = $bindable(),
-    timetableFile = $bindable(),
-    loadWorkload,
-    handleFileChange
-  } = $props();
+  let { timetableFile = $bindable(), loadWorkload, handleFileChange } = $props();
   let fileInput = $state<HTMLInputElement>();
 </script>
 
@@ -108,7 +103,7 @@
       type="button"
       class="btn-primary btn-medium w-fit !px-8"
       onclick={loadWorkload}
-      disabled={!timetableFile || !timetableName}>Comenzar con el Horario</button
+      disabled={!timetableFile}>Comenzar con el Horario</button
     >
   </div>
   <div class="h-full overflow-hidden rounded-[16px]">

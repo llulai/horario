@@ -15,7 +15,7 @@
 
   <div class="grid grid-cols-1 grid-rows-2 items-center gap-8 p-4 md:grid-cols-2 md:grid-rows-1">
     <div
-      class="ml-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
+      class="mx-auto flex h-full w-fit flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 lg:ml-auto lg:mr-0 xl:p-16"
     >
       <div
         class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#DDC7FF] text-[16px] font-bold text-[#1D1F1E]"
@@ -23,7 +23,7 @@
         1
       </div>
       <div
-        class="max-w-[400px] text-[32px] font-bold leading-[110%] text-[#1D1F1E] lg:text-[40px] xl:w-[400px] xl:text-[48px]"
+        class="max-w-[380px] text-[32px] font-bold leading-[110%] text-[#1D1F1E] lg:text-[40px] xl:w-[400px] xl:text-[48px]"
       >
         Haz tu propio horario
       </div>
@@ -50,7 +50,7 @@
     </div>
 
     <div
-      class="mr-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
+      class="mx-auto flex h-full w-fit flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 lg:ml-0 lg:mr-auto xl:p-16"
     >
       <div
         class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#A1F7A2] text-[16px] font-bold text-[#1D1F1E]"
@@ -58,9 +58,9 @@
         2
       </div>
       <div
-        class="max-w-[400px] text-[32px] font-bold leading-[110%] text-[#1D1F1E] lg:text-[40px] xl:text-[48px]"
+        class="max-w-[380px] text-[32px] font-bold leading-[110%] text-[#1D1F1E] lg:text-[40px] xl:text-[48px]"
       >
-        Hacemos tu horario por ti
+        Hacemos tu horario
       </div>
       <div class="flex max-w-[400px] flex-col gap-6 text-[14px] md:text-[16px]">
         <div class="flex flex-row items-start gap-2 text-[#4FD152]">

@@ -16,7 +16,6 @@
     | 'addGradesBlocks';
 
   let step = $state<Step>('uploadWeeklyLoad');
-  let timetableName = $state<string>('');
   let timetableFile = $state<File | null>(null);
 
   let addPeriod = $state(false);
@@ -45,7 +44,7 @@
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
-  <WeeklyLoadUpload bind:timetableName bind:timetableFile {loadWorkload} {handleFileChange} />
+  <WeeklyLoadUpload bind:timetableFile {loadWorkload} {handleFileChange} />
 {:else if step === 'checkLoadBySubject' && weeklyLoad.weeklyLoads}
   <div class="grid grid-cols-[320px_1fr] items-start gap-8 px-8 py-14">
     <div class="flex flex-col">
