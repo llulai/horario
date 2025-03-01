@@ -1,15 +1,14 @@
 <script>
   import AcademicCap from '$lib/components/Icons/AcademicCap.svelte';
   import ArrowDownTray from '$lib/components/Icons/ArrowDownTray.svelte';
-  import ArrowRight from '$lib/components/Icons/ArrowRight.svelte';
   import Calendar from '$lib/components/Icons/Calendar.svelte';
-  import CheckCircle from '$lib/components/Icons/CheckCircle.svelte';
   import ListBullet from '$lib/components/Icons/ListBullet.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
   import User from '$lib/components/Icons/User.svelte';
   import ChileanCase from '$lib/components/Landing/ChileanCase.svelte';
   import Features from '$lib/components/Landing/Features.svelte';
   import Hero from '$lib/components/Landing/Hero.svelte';
+  import Pricing from '$lib/components/Landing/Pricing.svelte';
   import { fly } from 'svelte/transition';
 
   let { data } = $props();
@@ -53,96 +52,8 @@
 >
   <Hero />
   <Features />
-
-  <!-- chilean case -->
   <ChileanCase />
-
-  <!-- pricing -->
-  <div class="flex flex-col gap-14 py-32">
-    <div class="flex flex-col items-center gap-4">
-      <h2 class="text-[56px] font-bold text-[#1D1F1E]">Tarifas y planes</h2>
-      <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-        ¡Elige el plan que se ajuste a tus necesidades!
-      </p>
-    </div>
-
-    <div class="grid grid-cols-2 grid-rows-1 items-center gap-8">
-      <div
-        class="ml-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
-      >
-        <div
-          class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#DDC7FF] text-[16px] font-bold text-[#1D1F1E]"
-        >
-          1
-        </div>
-        <div
-          class="w-[300px] text-[40px] font-bold leading-[110%] text-[#1D1F1E] xl:w-[400px] xl:text-[48px]"
-        >
-          Haz tu propio horario
-        </div>
-        <div class="flex w-[300px] flex-col gap-6 xl:w-[400px]">
-          <div class="itemst-start flex flex-row gap-2 text-[#BE94FF]">
-            <div class="size-6">
-              <CheckCircle h={24} w={24} />
-            </div>
-            <div class="text-[#737573]">
-              <b>Control total:</b> Crea y personaliza tu horario de clases de forma autónoma.
-            </div>
-          </div>
-
-          <div class="itemst-start flex flex-row gap-2 text-[#BE94FF]">
-            <div class="size-6">
-              <CheckCircle h={24} w={24} />
-            </div>
-            <div class="text-[#737573]">
-              <b>Límite:</b> Permite configurar un horario con hasta 25 cursos.
-            </div>
-          </div>
-        </div>
-        <div class="mt-3 text-[40px] font-bold text-[#1D1F1E]">Gratis</div>
-      </div>
-
-      <div
-        class="mr-auto flex h-full flex-col items-start gap-8 rounded-[12px] border border-[#E1E6E4] p-12 xl:p-16"
-      >
-        <div
-          class="flex size-10 flex-row items-center justify-center rounded-[8px] bg-[#A1F7A2] text-[16px] font-bold text-[#1D1F1E]"
-        >
-          2
-        </div>
-        <div
-          class="w-[300px] text-[40px] font-bold leading-[110%] text-[#1D1F1E] xl:w-[400px] xl:text-[48px]"
-        >
-          Hacemos tu horario por ti
-        </div>
-        <div class="flex w-[300px] flex-col gap-6 xl:w-[400px]">
-          <div class="flex flex-row items-start gap-2 text-[#4FD152]">
-            <div class="size-6">
-              <CheckCircle h={24} w={24} />
-            </div>
-            <div class="text-[#737573]">
-              <b>Nosotros nos encargamos:</b> Solo necesitas enviarnos tu carga semanal y nosotros elaboramos
-              el horario para ti.
-            </div>
-          </div>
-        </div>
-        <div class="mt-auto text-[40px] font-bold text-[#1D1F1E]">100.000 CLP</div>
-      </div>
-    </div>
-
-    <div class="mx-auto mt-3 flex flex-col items-center gap-5">
-      <h2 class="text-center text-[40px] font-bold leading-[110%] text-[#1D1F1E]">
-        ¿Cómo empezar?
-      </h2>
-      <h3 class="w-[450px] text-center text-[16px] font-normal leading-[140%] text-[#737573]">
-        Prueba sin compromiso: Accede a nuestra plataforma de test sin necesidad de crear cuenta.
-      </h3>
-      <a href="/test" class="btn-primary btn-medium">
-        <p>Ir a la plataforma de test</p>
-        <ArrowRight h={24} w={24} />
-      </a>
-    </div>
-  </div>
+  <Pricing />
 
   <!-- weekly load -->
 

@@ -48,7 +48,9 @@
     </p>
   </div>
 
-  <div class="flex w-full flex-row items-start gap-4 overflow-x-scroll px-4 md:gap-8 md:px-8">
+  <div
+    class="mx-auto flex w-full max-w-[1793px] flex-row items-start gap-4 overflow-x-scroll px-4 md:gap-8 md:px-8"
+  >
     {#each examples as example}
       {@render exampleSnippet(example.title, example.description, example.bgURL)}
     {/each}
