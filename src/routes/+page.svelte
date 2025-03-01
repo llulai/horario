@@ -7,6 +7,7 @@
   import ListBullet from '$lib/components/Icons/ListBullet.svelte';
   import Logo from '$lib/components/Icons/Logo.svelte';
   import User from '$lib/components/Icons/User.svelte';
+  import ChileanCase from '$lib/components/Landing/ChileanCase.svelte';
   import Features from '$lib/components/Landing/Features.svelte';
   import Hero from '$lib/components/Landing/Hero.svelte';
   import { fly } from 'svelte/transition';
@@ -50,64 +51,11 @@
   class="absolute inset-x-0 bottom-0 top-16 space-y-12 overflow-x-hidden"
   onscroll={handleScroll}
 >
-  <!-- hero -->
-
   <Hero />
-
-  <!-- features -->
-
   <Features />
 
   <!-- chilean case -->
-  <div class="flex flex-col items-center gap-14 bg-[#ECE0FF] py-32">
-    <div class="flex w-[646px] flex-col items-center gap-4">
-      <h2 class="text-center text-[56px] font-bold leading-[120%] text-[#1D1F1E]">
-        Adaptado a Colegios de Chile
-      </h2>
-      <p class="text-center text-[16px] font-normal text-[#737573]">
-        Con La hora del horario podrás:
-      </p>
-    </div>
-
-    <div class="flex w-full flex-row items-start gap-8 overflow-x-scroll px-8">
-      <div
-        class="h-[728px] w-[555px] flex-shrink-0 rounded-[12px] bg-[url(/img/sequential-courses-background.png)] bg-contain pl-16 pt-16"
-      >
-        <div class="flex w-[380px] flex-col gap-4">
-          <h3 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
-            Asignar cursos consecutivos
-          </h3>
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            Programa el mismo curso en dos horas lectivas seguidas sin complicaciones.
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="h-[728px] w-[555px] flex-shrink-0 rounded-[12px] bg-[url(/img/manage-electives-background.png)] bg-contain pl-16 pt-16"
-      >
-        <div class="flex w-[380px] flex-col gap-4">
-          <h3 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">Gestionar electivos</h3>
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            Coordina electivos para diferentes cursos en el mismo horario.
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="h-[728px] w-[555px] flex-shrink-0 rounded-[12px] bg-[url(/img/multiple-periods-background.png)] bg-contain pl-16 pt-16"
-      >
-        <div class="flex w-[432px] flex-col gap-4">
-          <h3 class="text-[48px] font-bold leading-[110%] text-[#1D1F1E]">
-            Manejar múltiples jornadas
-          </h3>
-          <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
-            Configura horarios para diversas jornadas de forma sencilla.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ChileanCase />
 
   <!-- pricing -->
   <div class="flex flex-col gap-14 py-32">
