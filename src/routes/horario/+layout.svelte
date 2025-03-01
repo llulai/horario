@@ -5,7 +5,7 @@
   import { lessons, timetable } from '$lib/state/Timetable.svelte';
   import { onMount } from 'svelte';
 
-  let { children } = $props();
+  let { children, data } = $props();
 
   let loading = $state(true);
 
@@ -21,7 +21,7 @@
   });
 </script>
 
-<NavBar showTimetableButtons={!loading && lessons.list.length > 0} />
+<NavBar showTimetableButtons={!loading && lessons.list.length > 0} user={data.user} />
 
 {#if loading}
   <div class="absolute inset-x-0 bottom-0 top-16 flex flex-row items-center justify-center">

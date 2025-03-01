@@ -4,26 +4,27 @@
   import { onMount } from 'svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import '/src/app.css';
+  import { page } from '$app/stores';
   let { children } = $props();
 
-  const afternoonPeriodId = 'tarde';
+  const loadTestData = async () => {
+    const afternoonPeriodId = 'tarde';
 
-  const afternoonPeriod: Period = {
-    1: [1, new Time(14, 0), new Time(14, 45)],
-    2: [2, new Time(14, 45), new Time(15, 30)],
-    3: [3, new Time(15, 45), new Time(16, 30)],
-    4: [4, new Time(16, 30), new Time(17, 15)],
-    5: [5, new Time(17, 30), new Time(18, 15)],
-    6: [6, new Time(18, 15), new Time(19, 0)],
-    7: [7, new Time(19, 0), new Time(19, 45)]
-  };
+    const afternoonPeriod: Period = {
+      1: [1, new Time(14, 0), new Time(14, 45)],
+      2: [2, new Time(14, 45), new Time(15, 30)],
+      3: [3, new Time(15, 45), new Time(16, 30)],
+      4: [4, new Time(16, 30), new Time(17, 15)],
+      5: [5, new Time(17, 30), new Time(18, 15)],
+      6: [6, new Time(18, 15), new Time(19, 0)],
+      7: [7, new Time(19, 0), new Time(19, 45)]
+    };
 
-  periods.dispatch({
-    event: 'addPeriod',
-    payload: { id: afternoonPeriodId, period: afternoonPeriod }
-  });
+    periods.dispatch({
+      event: 'addPeriod',
+      payload: { id: afternoonPeriodId, period: afternoonPeriod }
+    });
 
-  onMount(async () => {
     const data = await fetch('/api/test-lessons').then((response) => response.json());
     weeklyLoad.dispatch({ event: 'loadWeeklyLoad', payload: { weeeklyLoads: data } });
 
@@ -89,8 +90,13 @@
       event: 'setGradePeriod',
       payload: { name: '5ºB', periodId: afternoonPeriodId }
     });
-
     timetable.fromWeeklyLoad(data, weeklyLoad.grades, weeklyLoad.subjects, true);
+  };
+
+  onMount(async () => {
+    if ($page.url.pathname !== '/horario') {
+      await loadTestData();
+    }
   });
 
   currently.selectCourses();

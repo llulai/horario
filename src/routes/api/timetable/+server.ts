@@ -39,7 +39,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       .select();
 
     if (responseError) {
-      console.warn('responseError', responseError);
       return error(500, { message: 'Failed to create the data' });
     }
 
@@ -47,4 +46,20 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   return json({ error: 'User not authenticated' });
+};
+
+export const DELETE: RequestHandler = async ({ locals }) => {
+  const { user } = await locals.safeGetSession();
+  if (user) {
+    const { error: responseError } = await locals.supabase
+      .from('timetable')
+      .delete()
+      .eq('id', user.id);
+
+    if (responseError === null) {
+      return new Response('ok');
+    }
+  }
+
+  return error(500, { message: 'Failed to delete the data' });
 };

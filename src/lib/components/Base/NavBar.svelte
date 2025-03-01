@@ -3,11 +3,16 @@
   import Logo from '$lib/components/Icons/Logo.svelte';
   import Plus from '$lib/components/Icons/Plus.svelte';
   import currently from '$lib/state/currently.svelte';
+  import type { User } from '@supabase/supabase-js';
+  import { AlertDialog } from 'bits-ui';
 
   let selectedCourses = $derived(currently.selected?.name === 'grades');
   let selectedTeachers = $derived(currently.selected?.name === 'teachers');
 
-  const { showTimetableButtons } = $props<{ showTimetableButtons: boolean }>();
+  const { user, showTimetableButtons } = $props<{
+    user: User | null;
+    showTimetableButtons: boolean;
+  }>();
 </script>
 
 <div
@@ -45,30 +50,62 @@
         <div class={`size-1 rounded-full ${selectedTeachers ? 'bg-[#008744]' : 'bg-white'}`}></div>
       </button>
     </div>
-    <div class="flex flex-row gap-10">
+  {/if}
+  <div class="flex flex-row gap-10">
+    {#if showTimetableButtons}
       <!-- export timetable -->
-      <button
-        class="flex w-fit flex-row items-center gap-2 rounded-[8px] py-2 pl-4 pr-6 text-[14px] font-semibold text-[#545755]"
-      >
+      <button class="btn-tertiary btn-small">
         <ArrowDownTray h={24} w={24} />
         <p>Exportar Horario</p>
       </button>
-      <!-- new timetable -->
-      <button
-        class="flex w-fit flex-row items-center gap-2 rounded-[8px] bg-[#1D1F1E] py-2 pl-4 pr-6 text-[14px] font-semibold text-white"
-      >
-        <Plus h={24} w={24} />
-        <p>Nuevo Horario</p>
-      </button>
 
-      <!-- logout -->
-      <!-- <form method="post" action="account?/signout" use:enhance={handleSignOut}> -->
-      <!--   <button -->
-      <!--     type="submit" -->
-      <!--     class="w-fit rounded-[2px] bg-red-500 px-3 py-1 text-[12px] font-medium text-white" -->
-      <!--     disabled={loading}>Salir</button -->
-      <!--   > -->
-      <!-- </form> -->
-    </div>
-  {/if}
+      <!-- new timetable -->
+      <AlertDialog.Root>
+        <AlertDialog.Trigger class="btn-primary btn-small">
+          <Plus h={24} w={24} />
+          <p>Nuevo Horario</p>
+        </AlertDialog.Trigger>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay class="absolute inset-0 bg-black/40" />
+
+          <AlertDialog.Content
+            class="fixed inset-1/2 flex h-fit w-[640px] -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-[12px] bg-white px-20 py-10"
+          >
+            <AlertDialog.Title>
+              <h1 class="text-[32px] font-bold text-[#1D1F1E]">Crear nuevo horario</h1>
+            </AlertDialog.Title>
+            <AlertDialog.Description
+              class="mt-6 w-[480px] text-[16px] font-normal leading-[130%] text-[#616663]"
+              >Al crear un nuevo horario se eliminará el horario que tienes ahora. Esta acción no se
+              puede deshacer.</AlertDialog.Description
+            >
+
+            <form
+              class="mt-16 flex flex-row gap-10"
+              onsubmit={(event) => {
+                event.preventDefault();
+                fetch('/api/timetable', { method: 'DELETE' }).then(() => {
+                  window.location.reload();
+                });
+              }}
+            >
+              <AlertDialog.Cancel class="btn-primary btn-medium w-56 justify-center" type="button"
+                >Cancelar</AlertDialog.Cancel
+              >
+              <AlertDialog.Action class="btn-secondary btn-medium w-56 justify-center" type="submit"
+                >Continuar</AlertDialog.Action
+              >
+            </form>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog.Root>
+    {/if}
+
+    <!--logout -->
+    {#if user}
+      <form method="post" action="account?/signout">
+        <button type="submit" class="btn-secondary btn-small">Salir</button>
+      </form>
+    {/if}
+  </div>
 </div>

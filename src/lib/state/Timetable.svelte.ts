@@ -371,7 +371,6 @@ let Stest = $state(true);
 
 const saveToDB = () => {
   if (!Stest) {
-    console.warn('saving');
     fetch('/api/timetable', {
       method: 'POST',
       body: JSON.stringify({
@@ -413,7 +412,6 @@ const fromWeeklyLoad = (
   subjects: RawSubject[],
   test: boolean = true
 ) => {
-  console.warn('loading');
   const newLessons: Record<string, Lesson> = {};
 
   if (
@@ -446,10 +444,9 @@ const fromWeeklyLoad = (
   // @ts-expect-error: all subjects will have a code
   Ssubjects = Object.fromEntries(subjects.map((subject) => [subject.name, subject]));
   SblockedTimeslots = {};
+  Stest = test;
 
-  if (!test) {
-    saveToDB();
-  }
+  saveToDB();
 };
 
 export const timetable: TimeTable = {

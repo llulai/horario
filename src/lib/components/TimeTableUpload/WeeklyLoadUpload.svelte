@@ -2,6 +2,7 @@
   import ArrowUpTray from '$lib/components/Icons/ArrowUpTray.svelte';
   import MagnifyingGlass from '$lib/components/Icons/MagnifyingGlass.svelte';
   import Trash from '$lib/components/Icons/Trash.svelte';
+  import ArrowDownTray from '$lib/components/Icons/ArrowDownTray.svelte';
 
   let {
     timetableName = $bindable(),
@@ -12,8 +13,8 @@
   let fileInput = $state<HTMLInputElement>();
 </script>
 
-<div class="absolute inset-x-0 bottom-0 top-10 grid grid-cols-[555px_1fr] p-8">
-  <div class="my-auto flex flex-col gap-16">
+<div class="absolute inset-x-0 bottom-0 top-16 grid grid-cols-[555px_1fr] grid-rows-1 gap-32 p-8">
+  <div class="flex flex-col gap-16 py-28">
     <!-- title -->
     <div class="flex flex-col gap-2 text-[40px] font-bold leading-[120%] text-[#1D1F1E]">
       <h1>Comencemos.</h1>
@@ -21,16 +22,16 @@
     </div>
 
     <!-- form -->
-    <div class="flex flex-col gap-1">
-      <label for="timetable-name" class="text-[16px] font-semibold leading-[130%] text-[#1D1F1E]"
-        >Nombre del horario</label
-      >
-      <input
-        type="text"
-        id="timetable-name"
-        bind:value={timetableName}
-        placeholder="Horario 2025"
-      />
+    <div class="flex flex-col gap-6">
+      <p class="text-[16px] font-normal leading-[140%] text-[#737573]">
+        Utiliza el archivo de ejemplo que te proporcionamos como base. Este archivo consta de cuatro
+        columnas esenciales:
+      </p>
+
+      <a href="/downloads/carga horaria.xlsx" download class="btn-secondary btn-medium w-fit">
+        <ArrowDownTray />
+        <p>Descargar archivo de ejemplo</p>
+      </a>
     </div>
 
     <!-- file upload -->
@@ -110,46 +111,11 @@
       disabled={!timetableFile || !timetableName}>Comenzar con el Horario</button
     >
   </div>
-</div>
-
-<!-- <div class="absolute inset-x-0 bottom-0 top-10 flex flex-col items-center">
-  <div class="flex flex-col items-end gap-12 p-10">
-    <div class="flex flex-col gap-6">
-      <!-- name -->
-<!-- <div class="flex flex-col gap-2">
-        <label for="timetable-name" class="text-[12px] text-[#6B7280]">Nombre del horario</label>
-        <input
-          class="w-[300px] rounded-[2px] border-[#6B7280] px-3 py-1 text-[12px] font-medium placeholder:text-[#6B7280]/50"
-          id="timetable-name"
-          bind:value={timetableName}
-          placeholder="Horario mañana JPL"
-        />
-      </div>
-
-      <!-- file -->
-<!-- <div class="flex flex-col gap-2">
-        <label for="timetable-name" class="text-[12px] text-[#6B7280]">Carga horaria semanal</label>
-        <button
-          class="w-fit rounded-[2px] bg-[#E2E8F1] px-3 py-1 text-[12px] font-medium text-[#6B7280]"
-          onclick={() => {
-            fileInput.click();
-          }}>Elegir archivo</button
-        >
-        <input
-          bind:this={fileInput}
-          id="timetable-name"
-          class="hidden"
-          type="file"
-          onchange={handleFileChange}
-        />
-      </div>
-    </div>
-
-    <!-- FIXME: disable button until file is uploaded -->
-<!-- <button
-      type="button"
-      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
-      onclick={loadWorkload}>Comenzar con el horario</button
-    >
+  <div class="h-full overflow-hidden rounded-[16px]">
+    <img
+      class="h-full w-full object-cover object-left-top"
+      src="/img/screen-decoration.png"
+      alt="decoration"
+    />
   </div>
-</div> -->
+</div>
