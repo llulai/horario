@@ -59,6 +59,8 @@ export type WeeklyLoad = {
   subjectsReady: boolean;
   gradesReady: boolean;
   dispatch: (event: WeeklyLoadEvent) => void;
+  toJSON: () => string;
+  fromJSON: (json: string) => void;
 };
 
 // this function loads the timetable from a list of weekly loads
@@ -129,5 +131,13 @@ export const weeklyLoad: WeeklyLoad = {
         break;
       }
     }
+  },
+  toJSON: () =>
+    JSON.stringify({ subjects: Ssubjects, grades: Sgrades, weeklyLoads: SrawWeeklyLoads }),
+  fromJSON: (json: string) => {
+    const data = JSON.parse(json);
+    Ssubjects = data.subjects;
+    Sgrades = data.grades;
+    SrawWeeklyLoads = data.weeklyLoads;
   }
 };

@@ -45,11 +45,12 @@
   </div>
   <div class="flex flex-row gap-10">
     <!-- new timetable -->
-    <button
+    <a
       class="flex w-fit flex-row items-center gap-2 rounded-[8px] bg-[#1D1F1E] py-2 pl-4 pr-6 text-[14px] font-semibold text-white"
+      href="/login"
     >
       <p>Regístrate</p>
-    </button>
+    </a>
   </div>
 </div>
 {@render children()}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import currently from '$lib/state/currently.svelte';
   import { timetable } from '$lib/state/Timetable.svelte';
   import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
   import GradesTable from './GradesTable.svelte';
@@ -8,16 +9,16 @@
   import WeeklyLoadUpload from './WeeklyLoadUpload.svelte';
 
   type Step =
-    | 'addPeriod'
     | 'uploadWeeklyLoad'
     | 'checkLoadBySubject'
     | 'checkLoadByTeacher'
     | 'addSubjectCodes'
     | 'addGradesBlocks';
-  let step = $state<Step>('uploadWeeklyLoad');
 
-  let timetableName = $state<string>('');
+  let step = $state<Step>('uploadWeeklyLoad');
   let timetableFile = $state<File | null>(null);
+
+  let addPeriod = $state(false);
 
   const loadWorkload = async () => {
     if (timetableFile) {
@@ -43,28 +44,38 @@
 </script>
 
 {#if step === 'uploadWeeklyLoad'}
-  <WeeklyLoadUpload bind:timetableName {loadWorkload} {handleFileChange} />
+  <WeeklyLoadUpload bind:timetableFile {loadWorkload} {handleFileChange} />
 {:else if step === 'checkLoadBySubject' && weeklyLoad.weeklyLoads}
-  <div class="flex flex-col items-center gap-6">
+  <div class="grid grid-cols-[320px_1fr] items-start gap-8 px-8 py-14">
+    <div class="flex flex-col">
+      <h3 class="text-[14px] font-bold leading-[130%] text-[#616663]">Paso 1 de 4</h3>
+      <h1 class="mt-3 text-[40px] font-bold leading-[120%] text-[#1D1F1E]">
+        Resumen por asignatura
+      </h1>
+      <button
+        class="btn-primary btn-medium mt-10 w-fit !px-8"
+        onclick={() => {
+          step = 'checkLoadByTeacher';
+        }}>Continuar</button
+      >
+    </div>
     <Table weeklyLoad={weeklyLoad.weeklyLoads} by="subject" />
-    <button
-      type="button"
-      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
-      onclick={() => {
-        step = 'checkLoadByTeacher';
-      }}>Comenzar con el horario</button
-    >
   </div>
 {:else if step === 'checkLoadByTeacher' && weeklyLoad.weeklyLoads}
-  <div class="flex flex-col items-center gap-6">
+  <div class="grid grid-cols-[320px_1fr] items-start gap-8 px-8 py-14">
+    <div class="flex flex-col">
+      <h3 class="text-[14px] font-bold leading-[130%] text-[#616663]">Paso 2 de 4</h3>
+      <h1 class="mt-3 text-[40px] font-bold leading-[120%] text-[#1D1F1E]">
+        Resumen por profesores
+      </h1>
+      <button
+        class="btn-primary btn-medium mt-10 w-fit !px-8"
+        onclick={() => {
+          step = 'addSubjectCodes';
+        }}>Continuar</button
+      >
+    </div>
     <Table weeklyLoad={weeklyLoad.weeklyLoads} by="teacher" />
-    <button
-      type="button"
-      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
-      onclick={() => {
-        step = 'addSubjectCodes';
-      }}>Comenzar con el horario</button
-    >
   </div>
 {:else if step === 'addSubjectCodes' && weeklyLoad.subjects}
   <form
@@ -72,38 +83,63 @@
       event.preventDefault();
       step = 'addGradesBlocks';
     }}
-    class="flex flex-col items-center gap-6"
+    class="grid grid-cols-[320px_1fr] items-start gap-40 px-8 py-14"
   >
+    <div class="sticky top-14 flex flex-col">
+      <h3 class="text-[14px] font-bold leading-[130%] text-[#616663]">Paso 3 de 4</h3>
+      <h1 class="mt-3 text-[40px] font-bold leading-[120%] text-[#1D1F1E]">
+        Define un código para cada asignatura
+      </h1>
+      <button
+        disabled={!weeklyLoad.subjectsReady}
+        type="submit"
+        class="btn-primary btn-medium mt-10 w-fit !px-8">Continuar</button
+      >
+    </div>
     <SubjectsTable />
-    <button
-      type="submit"
-      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
-      >Comenzar con el horario</button
-    >
   </form>
 {:else if step === 'addGradesBlocks' && weeklyLoad.grades}
   <form
     onsubmit={(event) => {
       event.preventDefault();
-      timetable.fromWeeklyLoad(weeklyLoad.weeklyLoads, weeklyLoad.grades, weeklyLoad.subjects);
+      timetable.fromWeeklyLoad(
+        weeklyLoad.weeklyLoads,
+        weeklyLoad.grades,
+        weeklyLoad.subjects,
+        false
+      );
+      currently.selectCourses();
     }}
-    class="flex flex-col items-center gap-6"
+    class="grid grid-cols-[320px_1fr] items-start gap-40 px-8 py-14"
   >
-    <GradesTable
-      openPeriodManager={() => {
-        step = 'addPeriod';
+    <div class="sticky top-14 flex flex-col">
+      <h3 class="text-[14px] font-bold leading-[130%] text-[#616663]">Paso 4 de 4</h3>
+      <h1 class="mt-3 text-[40px] font-bold leading-[120%] text-[#1D1F1E]">
+        Define un código para cada curso
+      </h1>
+      <div class="flex flex-row gap-4">
+        <button
+          disabled={!weeklyLoad.gradesReady || !weeklyLoad.subjectsReady}
+          type="submit"
+          class="btn-primary btn-medium mt-10 w-fit !px-8">Continuar</button
+        >
+        <button
+          type="button"
+          class="btn-secondary btn-medium mt-10 w-fit text-nowrap !px-8"
+          onclick={() => {
+            addPeriod = true;
+          }}>Agregar Jornada</button
+        >
+      </div>
+    </div>
+
+    <GradesTable />
+  </form>
+  {#if addPeriod}
+    <PeriodManager
+      closePeriodManager={() => {
+        addPeriod = false;
       }}
     />
-    <button
-      type="submit"
-      class="w-fit rounded-[2px] bg-blue-500 px-3 py-1 text-[12px] font-medium text-white"
-      >Comenzar con el horario</button
-    >
-  </form>
-{:else if step === 'addPeriod'}
-  <PeriodManager
-    closePeriodManager={() => {
-      step = 'addGradesBlocks';
-    }}
-  />
+  {/if}
 {/if}

@@ -25,9 +25,9 @@
       >
         <!-- status bar -->
         <div
-          class="flew-row col-span-2 flex w-full items-center justify-between border-b border-[#E1E6E4] px-[61px]"
+          class="flew-row col-span-2 flex w-full items-center justify-between gap-10 border-b border-[#E1E6E4] px-[61px]"
         >
-          <div class="flex flex-row items-center gap-3">
+          <div class="flex flex-shrink-0 flex-row items-center gap-3">
             <h2 class="text-[32px] font-bold text-[#1D1F1E]">{currently.selected.name}</h2>
             <Tag kind={currently.selected.kind} name={currently.selected.name} />
           </div>
@@ -37,7 +37,7 @@
             <Completion kind={currently.selected.kind} name={currently.selected.name} />
           </div>
 
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-shrink-0 flex-col gap-2">
             {#if currently.selected.kind === 'teacher'}
               {#each Object.keys(periods.byTeacher[currently.selected.name]) as periodId}
                 <div class="flex flex-row gap-2 text-[14px] font-medium text-[#545755]">

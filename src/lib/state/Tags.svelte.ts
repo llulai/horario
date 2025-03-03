@@ -1,4 +1,11 @@
-import { blockedTimeslots, lessons, timetable, type Lesson } from '$lib/state/Timetable.svelte';
+import {
+  blockedTimeslots,
+  grades,
+  lessons,
+  periods,
+  type Block,
+  type Lesson
+} from '$lib/state/Timetable.svelte';
 import type { ByTimeslot } from './Availability.svelte';
 import availability, { getByTimeslot } from './Availability.svelte';
 
@@ -20,9 +27,28 @@ export const isConflict = (availability: ByTimeslot<boolean>): boolean =>
 
 const byTeacher = $derived.by(() => {
   const tagsByTeacher: Record<string, Set<Tag>> = {};
+  const availabilityByTeacher: Record<string, Record<string, ByTimeslot<boolean>>> = {};
 
   Object.keys(lessons.byTeacher).forEach((teacher) => {
+    // set tabsByTeacher to initial state
     tagsByTeacher[teacher] = new Set<Tag>();
+
+    // set availabilityByTeacher to initial state
+    availabilityByTeacher[teacher] = {};
+    Object.entries(periods.byTeacher[teacher]).forEach(([periodId, period]) => {
+      const maxBlock = Object.keys(period).length as Block;
+      availabilityByTeacher[teacher][periodId] = getByTimeslot(maxBlock, true);
+    });
+  });
+  // update availabilityByTeacher with blocked timeslots
+  Object.entries(blockedTimeslots.byTeacher).forEach(([teacherName, blockedTimeslots]) => {
+    blockedTimeslots.forEach((blockedTimeslot) => {
+      const {
+        periodId,
+        timeslot: [day, block]
+      } = blockedTimeslot;
+      availabilityByTeacher[teacherName][periodId][day][block] = false;
+    });
   });
 
   // set completed tags
@@ -33,54 +59,46 @@ const byTeacher = $derived.by(() => {
   }
 
   // set priority tags
-  // for (const [teacherName, teacherLessons] of Object.entries(lessons.byTeacher)) {
-  //   const teacherLoad = teacherLessons.reduce((sum) => sum + 1, 0);
-  //   const availabilityByTeacher = Object.fromEntries(
-  //     Object.keys(lessons.byTeacher).map((teacher) => [
-  //       teacher,
-  //       getByTimeslot(timetable.maxBlocks, true)
-  //     ])
-  //   );
-  //
-  //   Object.values(blockedTimeslots.byTeacher).forEach((blockedTimeslots) => {
-  //     blockedTimeslots.forEach((blockedTimeslot) => {
-  //       const {
-  //         name,
-  //         timeslot: [day, block]
-  //       } = blockedTimeslot;
-  //       availabilityByTeacher[name][day][block] = false;
-  //     });
-  //   });
-  //
-  //   const teacherAvailability = Object.values(availabilityByTeacher[teacherName]).reduce(
-  //     (sum, dailyAvailability) =>
-  //       sum +
-  //       Object.values(dailyAvailability).reduce(
-  //         (sum, blockAvailability) => sum + Number(blockAvailability),
-  //         0
-  //       ),
-  //     0
-  //   );
-  //
-  //   if (teacherLoad / teacherAvailability > 0.75) {
-  //     tagsByTeacher[teacherName].add('priority');
-  //   }
-  // }
+  Object.entries(lessons.byTeacher).forEach(([teacherName, teacherLessons]) => {
+    const availableSlotsByPeriod: Record<string, number> = {};
+    const lessonsByPeriod: Record<string, number> = {};
 
-  // set low-availability tags
-  // lessons.list.forEach((lesson: Lesson) => {
-  //   const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
-  //     (sum, dailyAvailability) =>
-  //       sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
-  //     0
-  //   );
-  //
-  //   if (availableTimeslots === 0 && !lesson.timeslot) {
-  //     tagsByTeacher[lesson.teacherName].add('conflict');
-  //   } else if (availableTimeslots <= 3 && !lesson.timeslot) {
-  //     tagsByTeacher[lesson.teacherName].add('low-availability');
-  //   }
-  // });
+    Object.keys(periods.byTeacher[teacherName]).forEach((periodId) => {
+      lessonsByPeriod[periodId] = Object.values(teacherLessons).filter(
+        (lesson) => grades.byName[lesson.gradeName].periodId === periodId
+      ).length;
+      availableSlotsByPeriod[periodId] = Object.values(
+        availabilityByTeacher[teacherName][periodId]
+      ).reduce(
+        (sum, dailyAvailability) =>
+          sum +
+          Object.values(dailyAvailability).reduce(
+            (sum, blockAvailability) => sum + Number(blockAvailability),
+            0
+          ),
+        0
+      );
+
+      if (lessonsByPeriod[periodId] / availableSlotsByPeriod[periodId] > 0.75) {
+        tagsByTeacher[teacherName].add('priority');
+      }
+    });
+  });
+
+  // set low-availability and conflict tags
+  lessons.list.forEach((lesson: Lesson) => {
+    const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
+      (sum, dailyAvailability) =>
+        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
+      0
+    );
+
+    if (availableTimeslots === 0 && !lesson.timeslot) {
+      tagsByTeacher[lesson.teacherName].add('conflict');
+    } else if (availableTimeslots <= 3 && !lesson.timeslot) {
+      tagsByTeacher[lesson.teacherName].add('low-availability');
+    }
+  });
 
   return tagsByTeacher;
 });
@@ -100,19 +118,19 @@ const byGrade = $derived.by(() => {
   }
 
   // set low-availability tags
-  // lessons.list.forEach((lesson: Lesson) => {
-  //   const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
-  //     (sum, dailyAvailability) =>
-  //       sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
-  //     0
-  //   );
-  //
-  //   if (availableTimeslots === 0 && !lesson.timeslot) {
-  //     tagsByGrade[lesson.gradeName].add('conflict');
-  //   } else if (availableTimeslots <= 3 && !lesson.timeslot) {
-  //     tagsByGrade[lesson.gradeName].add('low-availability');
-  //   }
-  // });
+  lessons.list.forEach((lesson: Lesson) => {
+    const availableTimeslots = Object.values(availability.byLesson[lesson.id]).reduce(
+      (sum, dailyAvailability) =>
+        sum + Object.values(dailyAvailability).reduce((sum, block) => sum + Number(block), 0),
+      0
+    );
+
+    if (availableTimeslots === 0 && !lesson.timeslot) {
+      tagsByGrade[lesson.gradeName].add('conflict');
+    } else if (availableTimeslots <= 3 && !lesson.timeslot) {
+      tagsByGrade[lesson.gradeName].add('low-availability');
+    }
+  });
 
   return tagsByGrade;
 });

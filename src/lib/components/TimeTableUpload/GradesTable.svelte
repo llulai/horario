@@ -1,63 +1,81 @@
 <script lang="ts">
   import { periods } from '$lib/state/Timetable.svelte';
-  import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
-
-  const { openPeriodManager }: { openPeriodManager: () => void } = $props();
+  import { weeklyLoad, type RawGrade } from '$lib/state/WeeklyLoad.svelte';
+  import Tooltip from '$lib/components/Base/Tooltip.svelte';
 </script>
 
-<table class="table-auto border-collapse border text-center">
-  <thead>
-    <tr>
-      <th>Curso</th>
-      <th>Código</th>
-      <th>Período</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each weeklyLoad.grades as subject}
-      <tr>
-        <th class="border px-6 text-left">{subject.name}</th>
-        <td
-          ><input
-            type="text"
-            required={true}
-            minlength="2"
-            maxlength="3"
-            onchange={(event) => {
-              const target = event.target as HTMLInputElement;
-              weeklyLoad.dispatch({
-                event: 'setGradeCode',
-                payload: { name: subject.name, code: target.value }
-              });
-            }}
-          />
-        </td>
-        <td>
+<div class="flex w-[789px] flex-col gap-16">
+  <div
+    class="flex flex-row items-center gap-8 pr-4 text-[20px] font-bold leading-[130%] text-[#1D1F1E]"
+  >
+    <div class="w-24">Curso</div>
+    <div class="w-[200px]">Código</div>
+    <div>Período</div>
+  </div>
+  {#each weeklyLoad.grades as grade}
+    <div
+      class="flex flex-row items-center gap-8 rounded-[12px] border border-[#DCE0DD] py-4 pl-8 pr-4"
+    >
+      <div class="w-16 text-[16px] font-bold leading-[130%] text-[#616663]">
+        {grade.name}
+      </div>
+      <input
+        class="w-[200px]"
+        type="text"
+        placeholder="Ingresa tu código"
+        required={true}
+        minlength="2"
+        maxlength="3"
+        onchange={(event) => {
+          const target = event.target as HTMLInputElement;
+          weeklyLoad.dispatch({
+            event: 'setGradeCode',
+            payload: { name: grade.name, code: target.value }
+          });
+        }}
+      />
+      <div class="flex-grow">
+        {#if Object.keys(periods.byId).length === 0}
+          <Tooltip>
+            {#snippet content()}
+              <p class="w-40">
+                Aún no has agregado ningún periodo. Comienza a agregar para verlos aquí.
+              </p>
+            {/snippet}
+            {#snippet trigger(grade: RawGrade)}
+              <select
+                disabled
+                onchange={(event) => {
+                  const target = event.target as HTMLSelectElement;
+                  weeklyLoad.dispatch({
+                    event: 'setGradePeriod',
+                    payload: { name: grade.name, periodId: target.value }
+                  });
+                }}
+                placeholder="Elige un período"
+              >
+                <option value="">Elige una opción</option>
+              </select>
+            {/snippet}
+          </Tooltip>
+        {:else}
           <select
             onchange={(event) => {
               const target = event.target as HTMLSelectElement;
               weeklyLoad.dispatch({
                 event: 'setGradePeriod',
-                payload: { name: subject.name, periodId: target.value }
+                payload: { name: grade.name, periodId: target.value }
               });
             }}
+            placeholder="Elige un período"
           >
-            <option></option>
+            <option value="">Elige una opción</option>
             {#each Object.keys(periods.byId) as periodId}
               <option value={periodId}>{periodId}</option>
             {/each}
           </select>
-        </td>
-      </tr>
-    {/each}
-    <tr>
-      <td rowspan="3" class="p-2">
-        <button
-          type="button"
-          class="place-self-end rounded-sm bg-green-500 p-2 text-[12px] font-medium text-white"
-          onclick={openPeriodManager}>agregar período</button
-        >
-      </td>
-    </tr>
-  </tbody>
-</table>
+        {/if}
+      </div>
+    </div>
+  {/each}
+</div>

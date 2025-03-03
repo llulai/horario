@@ -4,11 +4,7 @@
     grades,
     lessons,
     periods,
-    subjects,
-    Time,
-    type Period,
-    type Block,
-    timetable
+    type Block
   } from '$lib/state/Timetable.svelte';
   import TimeTableUpload from '$lib/components/TimeTableUpload/TimeTableUpload.svelte';
   import Scheduler from '$lib/components/Scheduler/Scheduler.svelte';
@@ -16,146 +12,10 @@
   import currently from '$lib/state/currently.svelte';
   import CalendarGrid from '$lib/components/CalendarGrid.svelte';
   import Calendar from '$lib/components/Summary/Calendar.svelte';
-  import { onMount } from 'svelte';
   import Tag from '$lib/components/Scheduler/Tag.svelte';
   import Toggle from '$lib/components/Toggle.svelte';
   import CompletionBar from '$lib/components/Scheduler/CompletionBar.svelte';
   import Completion from '$lib/components/Scheduler/Completion.svelte';
-  import { weeklyLoad } from '$lib/state/WeeklyLoad.svelte';
-
-  // const morningPeriodId = 'mañana';
-  // const afternoonPeriodId = 'tarde';
-  // const morningPeriod: Period = {
-  //   1: [1, new Time(8, 0), new Time(8, 45)],
-  //   2: [2, new Time(8, 45), new Time(9, 30)],
-  //   3: [3, new Time(9, 45), new Time(10, 30)],
-  //   4: [4, new Time(10, 30), new Time(11, 15)],
-  //   5: [5, new Time(11, 30), new Time(12, 15)],
-  //   6: [6, new Time(12, 15), new Time(13, 0)],
-  //   7: [7, new Time(13, 0), new Time(13, 45)],
-  //   8: [8, new Time(13, 45), new Time(14, 30)]
-  // };
-  //
-  // const afternoonPeriod: Period = {
-  //   1: [1, new Time(14, 0), new Time(14, 45)],
-  //   2: [2, new Time(14, 45), new Time(15, 30)],
-  //   3: [3, new Time(15, 45), new Time(16, 30)],
-  //   4: [4, new Time(16, 30), new Time(17, 15)],
-  //   5: [5, new Time(17, 30), new Time(18, 15)],
-  //   6: [6, new Time(18, 15), new Time(19, 0)]
-  // };
-
-  // periods.dispatch({
-  //   event: 'addPeriod',
-  //   payload: { id: morningPeriodId, period: morningPeriod }
-  // });
-  // periods.dispatch({
-  //   event: 'addPeriod',
-  //   payload: { id: afternoonPeriodId, period: afternoonPeriod }
-  // });
-
-  // onMount(async () => {
-  //   const data = await fetch('/api/lessons').then((response) => response.json());
-  //   weeklyLoad.dispatch({ event: 'loadWeeklyLoad', payload: { weeeklyLoads: data } });
-  //
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Artes Visuales', code: 'ArV' }
-  //   });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Biología', code: 'BIO' } });
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Ciencias Naturales', code: 'CsN' }
-  //   });
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Educación Física', code: 'EdF' }
-  //   });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Tecnología', code: 'TEC' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Filosofía', code: 'FIL' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Física', code: 'FIS' } });
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Ciencias para la Ciudadanía', code: 'CIU' }
-  //   });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Historia', code: 'HIS' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Electivo', code: 'ELE' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Inglés', code: 'ING' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Lenguaje', code: 'LEN' } });
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Lenguaje Común', code: 'LCM' }
-  //   });
-  //   weeklyLoad.dispatch({
-  //     event: 'setSubjectCode',
-  //     payload: { name: 'Lenguaje Electivo', code: 'LEL' }
-  //   });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Matemática', code: 'MAT' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Música', code: 'MUS' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Orientación', code: 'ORI' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Química', code: 'QUI' } });
-  //   weeklyLoad.dispatch({ event: 'setSubjectCode', payload: { name: 'Pensamiento', code: 'PEN' } });
-  //
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºA', code: '6A' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '6ºB', code: '6B' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºA', code: '7A' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '7ºB', code: '7B' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºA', code: '8A' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '8ºB', code: '8B' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MA', code: '1MA' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '1MB', code: '1MB' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '2M', code: '2M' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '3M', code: '3M' } });
-  // weeklyLoad.dispatch({ event: 'setGradeCode', payload: { name: '4M', code: '4M' } });
-
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '6ºA', periodId: afternoonPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '6ºB', periodId: afternoonPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '7ºA', periodId: afternoonPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '7ºB', periodId: afternoonPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '8ºA', periodId: afternoonPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '8ºB', periodId: afternoonPeriodId }
-  // });
-  //
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '1MA', periodId: morningPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '1MB', periodId: morningPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '2M', periodId: morningPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '3M', periodId: morningPeriodId }
-  // });
-  // weeklyLoad.dispatch({
-  //   event: 'setGradePeriod',
-  //   payload: { name: '4M', periodId: morningPeriodId }
-  // });
-
-  // timetable.fromWeeklyLoad(data, weeklyLoad.grades, weeklyLoad.subjects);
-  // });
 </script>
 
 {#if lessons.list.length > 0}
