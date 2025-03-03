@@ -39,16 +39,15 @@ const byTeacher = $derived.by(() => {
       const maxBlock = Object.keys(period).length as Block;
       availabilityByTeacher[teacher][periodId] = getByTimeslot(maxBlock, true);
     });
-
-    // update availabilityByTeacher with blocked timeslots
-    Object.entries(blockedTimeslots.byTeacher).forEach(([teacherName, blockedTimeslots]) => {
-      blockedTimeslots.forEach((blockedTimeslot) => {
-        const {
-          periodId,
-          timeslot: [day, block]
-        } = blockedTimeslot;
-        availabilityByTeacher[teacherName][periodId][day][block] = false;
-      });
+  });
+  // update availabilityByTeacher with blocked timeslots
+  Object.entries(blockedTimeslots.byTeacher).forEach(([teacherName, blockedTimeslots]) => {
+    blockedTimeslots.forEach((blockedTimeslot) => {
+      const {
+        periodId,
+        timeslot: [day, block]
+      } = blockedTimeslot;
+      availabilityByTeacher[teacherName][periodId][day][block] = false;
     });
   });
 

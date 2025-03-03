@@ -16,8 +16,6 @@
   import CompletionBar from '$lib/components/Scheduler/CompletionBar.svelte';
   import Completion from '$lib/components/Scheduler/Completion.svelte';
   import { tags } from '$lib/state/Tags.svelte';
-
-  $inspect(tags);
 </script>
 
 {#if lessons.list.length > 0}
