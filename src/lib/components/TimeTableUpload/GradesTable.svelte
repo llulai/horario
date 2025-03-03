@@ -37,12 +37,12 @@
       <div class="flex-grow">
         {#if Object.keys(periods.byId).length === 0}
           <Tooltip>
-            {#snippet trigger()}
+            {#snippet content()}
               <p class="w-40">
                 Aún no has agregado ningún periodo. Comienza a agregar para verlos aquí.
               </p>
             {/snippet}
-            {#snippet content(grade: RawGrade)}
+            {#snippet trigger(grade: RawGrade)}
               <select
                 disabled
                 onchange={(event) => {
