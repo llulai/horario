@@ -50,7 +50,7 @@ type PeriodEvent = {
 type Periods = {
   byId: Record<string, Period>;
   byTeacher: Record<string, Record<string, Period>>;
-  byGrade: Record<string, Period | null>;
+  byGrade: Record<string, Period>;
   dispatch: (event: PeriodEvent) => void;
 };
 
@@ -62,10 +62,7 @@ export const periods: Periods = {
   },
   get byGrade() {
     return Object.fromEntries(
-      Object.values(Sgrades).map((grade) => [
-        grade.name,
-        grade.periodId ? Speriods[grade.periodId] : null
-      ])
+      Object.values(Sgrades).map((grade) => [grade.name, Speriods[grade.periodId]])
     );
   },
   get byTeacher() {
@@ -115,7 +112,7 @@ export type Lesson = {
   timeslot: Timeslot | null;
 };
 
-type DBLesson = {
+export type DBLesson = {
   id: string;
   teacherName: string;
   gradeName: string;
@@ -234,7 +231,7 @@ export const subjects: Subjects = {
 //// GRADES ////
 ///////////////
 
-type Grade = {
+export type Grade = {
   name: string;
   code: string;
   periodId: string;

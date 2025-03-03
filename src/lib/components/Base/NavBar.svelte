@@ -54,7 +54,21 @@
   <div class="flex flex-row gap-10">
     {#if showTimetableButtons}
       <!-- export timetable -->
-      <button class="btn-tertiary btn-small">
+      <button
+        class="btn-tertiary btn-small"
+        onclick={async () => {
+          const response = await fetch('/api/export');
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'horario.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }}
+      >
         <ArrowDownTray h={24} w={24} />
         <p>Exportar Horario</p>
       </button>
