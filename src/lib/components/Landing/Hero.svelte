@@ -14,7 +14,7 @@
         La hora del horario te ayuda a crear tu horario de clases como nunca antes.
       </p>
       <a
-        href="https://tally.so/r/nGQgBQ"
+        href="/login"
         target="_blank"
         rel="noopener noreferrer"
         class="btn-primary btn-medium !px-16">Regístrate</a

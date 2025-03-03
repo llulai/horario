@@ -67,7 +67,7 @@
   <div class="hidden flex-row gap-4 lg:flex">
     {#if scrollTop > 360}
       <a
-        href="https://tally.so/r/nGQgBQ"
+        href="/login"
         target="_blank"
         rel="noopener noreferrer"
         class="btn-primary btn-small"
