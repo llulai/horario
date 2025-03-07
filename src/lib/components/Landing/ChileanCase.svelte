@@ -5,17 +5,17 @@
     {
       title: 'Asignar cursos consecutivos',
       description: 'Programa el mismo curso en dos horas lectivas seguidas sin complicaciones.',
-      bgURL: '/img/sequential-courses-background.png'
+      bgURL: 'bg-[url(/img/sequential-courses-background.png)]'
     },
     {
       title: 'Gestionar electivos',
       description: 'Coordina electivos para diferentes cursos en el mismo horario.',
-      bgURL: '/img/manage-electives-background.png'
+      bgURL: 'bg-[url(/img/manage-electives-background.png)]'
     },
     {
       title: 'Manejar múltiples jornadas',
       description: 'Configura horarios para diversas jornadas de forma sencilla.',
-      bgURL: '/img/multiple-periods-background.png'
+      bgURL: 'bg-[url(/img/multiple-periods-background.png)]'
     }
   ];
 </script>
@@ -24,7 +24,7 @@
   <div
     class={classNames(
       'aspect-[0.7623] w-[300px] flex-shrink-0 rounded-[12px] bg-contain p-8 md:w-[440px] md:p-16 xl:w-[555px]',
-      `bg-[url(${bgURL})]`
+      bgURL
     )}
   >
     <div class="flex flex-col gap-2 md:gap-4">
